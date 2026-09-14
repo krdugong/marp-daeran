@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>데이터 편집기 · 마프대란 알리미</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+<style>
+:root{--ink:#12161C;--muted:#5B6470;--line:#E3E7EB;--surface:#F4F6F8;--blue:#1D4ED8;--flame:#C0392B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface);color:var(--ink);font-family:Pretendard,system-ui,sans-serif;line-height:1.6;font-feature-settings:"tnum"}
+.wrap{max-width:640px;margin:0 auto;padding:28px 20px 80px}
+h1{font-size:22px;font-weight:800;letter-spacing:-.03em;margin:0 0 6px}
+h2{font-size:15px;font-weight:700;margin:0 0 12px}
+p.lede{color:var(--muted);font-size:13px;margin:0 0 22px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+input,select,textarea{width:100%;font-family:inherit;font-size:14px;padding:10px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink)}
+textarea{min-height:150px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.5}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1.6fr 1fr 1fr}
+button{font-family:inherit;font-size:14px;font-weight:700;border:0;border-radius:10px;padding:12px 16px;cursor:pointer;background:var(--ink);color:#fff}
+button.sec{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+button.mini{padding:7px 11px;font-size:12px;font-weight:600}
+button.danger{background:#fff;color:var(--flame);border:1px solid var(--line)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.preview{background:var(--ink);color:#fff;border-radius:14px;padding:20px;margin-bottom:16px}
+.preview .n{font-size:44px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.preview .n.on{color:#FF8A7A}
+.preview .m{font-size:13px;opacity:.75;margin-top:6px}
+.deal{border:1px solid var(--line);border-radius:11px;padding:14px;margin-bottom:10px}
+.deal .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.deal .t{font-weight:700;font-size:14px}
+.deal .rate{color:var(--blue);font-weight:800}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--surface);color:var(--muted)}
+.tag.live{background:#E7F0FF;color:var(--blue)}
+.msg{font-size:13px;padding:11px 13px;border-radius:9px;margin-bottom:14px}
+.msg.warn{background:#FFF6D6;border:1px solid #E8D48A}
+.msg.ok{background:#E7F7EC;border:1px solid #A8DDB8}
+.steps{font-size:13px;color:var(--muted);padding-left:18px;margin:0}
+.steps li{margin-bottom:5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>데이터 편집기</h1>
+<p class="lede">여기서 고치고 JSON을 복사해 깃허브의 data/discount.json 에 붙여넣으면 끝입니다. 나머지는 자동으로 다시 그려집니다.</p>
+
+<div id="loader" class="card">
+  <h2>데이터 불러오기</h2>
+  <div id="loadmsg" class="msg warn">data/discount.json 을 찾는 중입니다.</div>
+  <label>직접 붙여넣기</label>
+  <textarea id="paste" placeholder="discount.json 내용을 통째로 붙여넣으십시오"></textarea>
+  <div class="row"><button id="loadPaste">불러오기</button></div>
+</div>
+
+<div id="app" style="display:none">
+  <div class="preview">
+    <div id="pvNum" class="n">—</div>
+    <div id="pvMsg" class="m"></div>
+  </div>
+
+  <div class="card">
+    <h2>오늘 기본 할인율</h2>
+    <div class="grid g2">
+      <div><label>날짜</label><input type="date" id="date"></div>
+      <div><label>기본 할인코드 할인율 (%)</label><input type="number" id="base" min="0" max="99" step="0.5"></div>
+    </div>
+    <div class="row"><button id="saveDay">이 날짜에 기록</button></div>
+  </div>
+
+  <div class="card">
+    <h2>숨은 할인</h2>
+    <div id="deals"></div>
+    <div class="grid g3" style="margin-top:14px">
+      <div><label>이름</label><input id="dLabel" placeholder="이달의 트렌드 제품 3개 담기"></div>
+      <div><label>추가 할인 (%)</label><input type="number" id="dRate" min="0" max="99" step="0.5"></div>
+      <div><label>계산 방식</label><select id="dStack"><option value="multiply">곱해서 적용</option><option value="add">단순 더하기</option></select></div>
+    </div>
+    <div class="grid g2" style="margin-top:12px">
+      <div><label>시작일</label><input type="date" id="dStart"></div>
+      <div><label>종료일</label><input type="date" id="dEnd"></div>
+    </div>
+    <div style="margin-top:12px"><label>적용 방법 설명</label><input id="dHowto" placeholder="트렌드 카테고리에서 3개를 담으면 장바구니에서 자동 적용됩니다."></div>
+    <div class="row"><button id="addDeal">숨은 할인 추가</button></div>
+  </div>
+
+  <div class="card">
+    <h2>깃허브에 반영하기</h2>
+    <ol class="steps">
+      <li>아래 JSON을 복사합니다.</li>
+      <li>깃허브 저장소에서 data/discount.json 을 열고 연필 아이콘을 누릅니다.</li>
+      <li>전체 선택 후 붙여넣고 Commit changes 를 누릅니다.</li>
+      <li>몇 분 뒤 사이트가 자동으로 갱신됩니다.</li>
+    </ol>
+    <textarea id="out" readonly style="margin-top:14px"></textarea>
+    <div class="row">
+      <button id="copy">JSON 복사</button>
+      <button id="download" class="sec">파일로 저장</button>
+    </div>
+    <div id="saved"></div>
+  </div>
+</div>
+</div>
+
+<script>
+var db=null;
+var $=function(id){return document.getElementById(id)};
+var r1=function(n){return Math.round(n*10)/10};
+var pct=function(n){return (Number.isInteger(n)?n:n.toFixed(1))+'%'};
+
+function stackRate(base,ds){
+  var mult=1-base/100, add=0;
+  ds.forEach(function(d){ d.stack==='add' ? add+=d.rate : mult*=(1-d.rate/100); });
+  return r1((1-mult)*100+add);
+}
+function dealsOn(date){
+  return (db.deals||[]).filter(function(d){return !d.disabled && date>=d.start && date<=d.end});
+}
+function todayStr(){
+  var n=new Date(Date.now()+9*3600*1000);
+  return n.toISOString().slice(0,10);
+}
+
+function start(data){
+  db=data;
+  if(!db.entries) db.entries=[];
+  if(!db.deals) db.deals=[];
+  $('loader').style.display='none';
+  $('app').style.display='block';
+  var t=todayStr();
+  $('date').value=t;
+  var cur=db.entries.filter(function(e){return e.date===t})[0];
+  $('base').value = cur ? (cur.base!==undefined?cur.base:cur.rate) : '';
+  $('dStart').value=t;
+  render();
+}
+
+function render(){
+  var d=$('date').value||todayStr();
+  var base=parseFloat($('base').value);
+  var ds=dealsOn(d);
+  if(!isNaN(base)){
+    var eff=stackRate(base,ds);
+    var on=eff>=db.threshold;
+    $('pvNum').textContent=pct(eff);
+    $('pvNum').className='n'+(on?' on':'');
+    $('pvMsg').textContent=(on?'대란 기준을 넘습니다. ':'대란 기준까지 '+r1(db.threshold-eff)+'%p 남았습니다. ')
+      +'기본 '+base+'% 에 숨은 할인 '+ds.length+'건 적용';
+  } else {
+    $('pvNum').textContent='—';
+    $('pvNum').className='n';
+    $('pvMsg').textContent='기본 할인율을 입력하면 실질 할인율을 계산합니다.';
+  }
+
+  $('deals').innerHTML = (db.deals.length?'':'<p class="lede" style="margin:0">등록된 숨은 할인이 없습니다.</p>')
+    + db.deals.map(function(x,i){
+    var live = d>=x.start && d<=x.end && !x.disabled;
+    return '<div class="deal"><div class="top"><span class="t">'+esc(x.label)+' <span class="rate">+'+x.rate+'%</span></span>'
+      +'<span class="tag'+(live?' live':'')+'">'+(x.disabled?'중지':(live?'적용 중':'기간 밖'))+'</span></div>'
+      +'<div class="lede" style="margin:0 0 10px">'+esc(x.howto||'')+'<br>'+x.start+' ~ '+x.end
+      +' · '+(x.stack==='add'?'단순 더하기':'곱해서 적용')+'</div>'
+      +'<div class="row" style="margin:0"><button class="mini sec" data-toggle="'+i+'">'+(x.disabled?'다시 켜기':'잠시 중지')+'</button>'
+      +'<button class="mini danger" data-del="'+i+'">삭제</button></div></div>';
+  }).join('');
+
+  $('deals').querySelectorAll('[data-del]').forEach(function(b){
+    b.onclick=function(){ if(confirm('삭제하시겠습니까?')){ db.deals.splice(+b.dataset.del,1); render(); } };
+  });
+  $('deals').querySelectorAll('[data-toggle]').forEach(function(b){
+    b.onclick=function(){ var x=db.deals[+b.dataset.toggle]; x.disabled=!x.disabled; render(); };
+  });
+
+  $('out').value=JSON.stringify(db,null,2);
+}
+function esc(s){return String(s).replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c]})}
+
+$('date').addEventListener('change',function(){
+  var cur=db.entries.filter(function(e){return e.date===$('date').value})[0];
+  $('base').value=cur?(cur.base!==undefined?cur.base:cur.rate):'';
+  render();
+});
+$('base').addEventListener('input',render);
+
+$('saveDay').onclick=function(){
+  var d=$('date').value, b=parseFloat($('base').value);
+  if(!d||isNaN(b)){alert('날짜와 기본 할인율을 모두 입력하십시오.');return;}
+  var i=db.entries.findIndex(function(e){return e.date===d});
+  var row={date:d,base:b,source:'manual'};
+  if(i>=0) db.entries[i]=row; else db.entries.push(row);
+  db.entries.sort(function(a,b2){return a.date.localeCompare(b2.date)});
+  render();
+  note($('saveDay'),'기록했습니다');
+};
+
+$('addDeal').onclick=function(){
+  var label=$('dLabel').value.trim(), rate=parseFloat($('dRate').value);
+  var s=$('dStart').value, e=$('dEnd').value;
+  if(!label||isNaN(rate)||!s||!e){alert('이름, 할인율, 기간을 모두 입력하십시오.');return;}
+  if(e<s){alert('종료일이 시작일보다 빠릅니다.');return;}
+  db.deals.push({id:'d'+Date.now(),label:label,rate:rate,stack:$('dStack').value,start:s,end:e,howto:$('dHowto').value.trim()});
+  ['dLabel','dRate','dHowto','dEnd'].forEach(function(k){$(k).value=''});
+  render();
+  note($('addDeal'),'추가했습니다');
+};
+
+$('copy').onclick=function(){
+  navigator.clipboard.writeText($('out').value).then(function(){note($('copy'),'복사됨')});
+};
+$('download').onclick=function(){
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([$('out').value],{type:'application/json'}));
+  a.download='discount.json'; a.click();
+};
+function note(btn,text){var t=btn.textContent;btn.textContent=text;setTimeout(function(){btn.textContent=t},1200)}
+
+$('loadPaste').onclick=function(){
+  try{ start(JSON.parse($('paste').value)); }catch(e){ alert('JSON 형식이 잘못되었습니다: '+e.message); }
+};
+
+fetch('data/discount.json',{cache:'no-store'})
+  .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+  .then(start)
+  .catch(function(){
+    $('loadmsg').className='msg warn';
+    $('loadmsg').textContent='파일을 자동으로 불러오지 못했습니다. 파일을 직접 열었을 때 생기는 정상적인 제약입니다. 아래에 내용을 붙여넣으십시오.';
+  });
+</script>
+</body>
+</html>
