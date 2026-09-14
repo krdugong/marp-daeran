@@ -141,6 +141,18 @@ const css = `
 *{box-sizing:border-box}
 body{margin:0;background:#fff;color:var(--ink);font-family:Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum"}
 .wrap{max-width:560px;margin:0 auto;padding:0 20px 72px}
+.heroMain,.heroSide{max-width:100%}
+.cols{display:block}
+.cols>section h2:first-child{margin-top:44px}
+@media(min-width:880px){
+.wrap{max-width:1040px;padding:0 40px 96px}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:start;padding-top:8px}
+.heroSide{padding-top:64px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 56px}
+.cols .full{grid-column:1 / -1}
+h1{font-size:36px}
+.big{font-size:86px}
+}
 a{color:inherit}
 header.top{display:flex;justify-content:space-between;align-items:center;height:56px;border-bottom:1px solid var(--line);margin-bottom:28px}
 .logo{font-weight:800;letter-spacing:-.02em;text-decoration:none;font-size:15px}
@@ -262,44 +274,64 @@ const home = page({
   canonical: `${SITE.origin}/`,
   jsonld: { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
   body: `
+<div class="hero">
+<div class="heroMain">
 <span class="state ${isDaeran ? 'on' : 'off'}">${isDaeran ? '지금 대란입니다' : '지금은 대란이 아닙니다'}</span>
 <h1>배너에 안 걸린 할인까지<br>합쳐서 계산했습니다</h1>
 <p class="lede">기본 할인코드에 조건부 추가 할인까지 쌓은 실질 할인율입니다. ${kdate(last.date)} 기준입니다.</p>
 <div class="big ${isDaeran ? 'on' : ''}">${pct(last.eff)}</div>
 <p class="sub">${prevAvg !== null ? `전월 평균 ${pct(prevAvg)} 대비 ${delta > 0 ? '+' : ''}${delta}%p` : '이달 수집 시작'}${isDaeran ? '' : `, 대란 기준까지 ${gap}%p`}</p>
 ${bonus > 0 ? `<p class="formula">기본 ${last.base}% 에 숨은 할인 ${last.deals.length}건을 더해 <b>${pct(last.eff)}</b>가 됩니다.</p>` : ''}
-${gauge()}
 <a class="cta" href="${esc(SITE.affiliate)}" rel="sponsored nofollow">할인코드 확인하고 구매하기</a>
+</div>
+<div class="heroSide">
+${gauge()}
 <dl class="stats">
   <div><dt>이달 평균</dt><dd>${pct(thisAvg)}</dd></div>
   <div><dt>마지막 대란</dt><dd>${lastEvent ? kdate(lastEvent.end) : '기록 없음'}</dd></div>
   <div><dt>평균 주기</dt><dd>${cycle ? `약 ${cycle}일` : '집계 중'}</dd></div>
 </dl>
+</div>
+</div>
 
+<div class="cols">
+<section>
 <h2>지금 쌓을 수 있는 숨은 할인</h2>
 <p class="lede">배너에 크게 걸리지 않아 모르고 지나치기 쉬운 조건들입니다.</p>
 ${dealList}
+</section>
 
+<section>
+<h2>지금 쓸 수 있는 할인코드</h2>
+${codeList}
+</section>
+
+<section class="full">
 <h2>최근 ${series.length}일 할인율</h2>
 <p class="lede">진한 선이 실질 할인율, 점선이 기본 할인율입니다. 붉은 구간이 대란이고 가로 점선이 대란 기준선 ${TH}%입니다.</p>
 ${trend()}
+</section>
 
-<h2>지금 쓸 수 있는 할인코드</h2>
-${codeList}
-
+<section>
 <h2>대란 기록</h2>
 <table>
 <thead><tr><th>기간</th><th>일수</th><th class="n">최고 할인율</th></tr></thead>
 <tbody>${recent.slice(0, 5).map(e => `<tr><td>${kdate(e.start)}${e.start === e.end ? '' : ` – ${kdate(e.end)}`}</td><td>${e.days}일</td><td class="n">${pct(e.max)}</td></tr>`).join('')}</tbody>
 </table>
 <a class="cta ghost" href="./daeran.html">전체 대란 기록 보기</a>
+</section>
 
+<section>
 <h2>자주 묻는 질문</h2>
 ${FAQ.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}
+</section>
 
+<section class="full">
 <h2>숨은 할인이 뜨면 단톡방에 올립니다</h2>
 <p class="lede">새 조건을 찾아내는 즉시 단톡방에 올립니다. 대란이 시작될 때도 바로 알려드립니다.</p>
 <a class="cta" href="${SITE.kakao}">알림 단톡방 들어가기</a>
+</section>
+</div>
 `,
 });
 
@@ -311,23 +343,36 @@ const daeran = page({
     { '@type': 'ListItem', position: 1, name: '홈', item: `${SITE.origin}/` },
     { '@type': 'ListItem', position: 2, name: '대란 기록', item: `${SITE.origin}/daeran.html` }] },
   body: `
+<div class="hero">
+<div class="heroMain">
 <h1>마이프로틴 대란 기록</h1>
 <p class="lede">숨은 할인까지 합친 실질 할인율이 ${TH}% 이상으로 관측된 구간입니다. 예측이 아니라 실제 기록입니다.</p>
+<p class="lede">${rows[0].date.replace(/-/g, '.')}부터 ${rows.length}일치를 수집했습니다.${daysSince !== null ? ` 마지막 대란은 ${daysSince}일 전입니다.` : ''}</p>
+<a class="cta" href="${SITE.kakao}">알림 단톡방 들어가기</a>
+<a class="cta ghost" href="./index.html">오늘 할인율 보기</a>
+</div>
+<div class="heroSide">
 <dl class="stats">
   <div><dt>총 대란</dt><dd>${events.length}회</dd></div>
   <div><dt>최고 할인율</dt><dd>${pct(peak)}</dd></div>
   <div><dt>평균 주기</dt><dd>${cycle ? `약 ${cycle}일` : '집계 중'}</dd></div>
 </dl>
-<p class="lede">${rows[0].date.replace(/-/g, '.')}부터 ${rows.length}일치를 수집했습니다.${daysSince !== null ? ` 마지막 대란은 ${daysSince}일 전입니다.` : ''}</p>
+</div>
+</div>
+
+<div class="cols">
+<section class="full" style="margin-top:44px">
 ${trend()}
+</section>
+<section class="full">
 <h2>전체 기록</h2>
 <table>
 <thead><tr><th>기간</th><th>일수</th><th class="n">최고 할인율</th></tr></thead>
 <tbody>${recent.map(e => `<tr><td>${kdate(e.start)}${e.start === e.end ? '' : ` – ${kdate(e.end)}`}</td><td>${e.days}일</td><td class="n">${pct(e.max)}</td></tr>`).join('')}</tbody>
 </table>
 <p class="lede">할인율은 보통 전날 저녁에 바뀝니다. 저녁 이후 관측값은 다음 날짜의 행사로 기록합니다.</p>
-<a class="cta" href="${SITE.kakao}">알림 단톡방 들어가기</a>
-<a class="cta ghost" href="./index.html">오늘 할인율 보기</a>
+</section>
+</div>
 `,
 });
 
