@@ -3,73 +3,247 @@
   "threshold": 39,
   "deals": [
     {
-      "id": "trend-2609",
-      "label": "이달의 트렌드 제품 3개 담기",
-      "rate": 8,
+      "id": "d1789402510351",
+      "label": "이달의 트렌드 제품 1개 담기",
+      "rate": 7,
       "stack": "multiply",
-      "start": "2026-09-01",
-      "end": "2026-09-30",
-      "howto": "트렌드 카테고리에서 3개를 담으면 장바구니에서 자동 적용됩니다.",
-      "note": "예시 데이터입니다. 실제 조건으로 교체하십시오."
+      "start": "2026-09-15",
+      "end": "2026-10-31",
+      "howto": "이달의 트렌드 제품 1개 담기"
     },
     {
-      "id": "app-only",
-      "label": "앱 전용 코드",
-      "rate": 5,
+      "id": "d1789402566771",
+      "label": "12만원 이상 결제시 5천원 추가할인",
+      "rate": 4,
       "stack": "multiply",
-      "start": "2026-09-08",
-      "end": "2026-09-20",
-      "howto": "마이프로틴 앱에서 결제할 때만 적용됩니다.",
-      "note": "예시 데이터입니다. 실제 조건으로 교체하십시오."
+      "start": "2026-09-15",
+      "end": "2026-10-31",
+      "howto": "앱전용이지만 PC에서도 적용"
     }
   ],
   "codes": [
-    { "label": "말왕", "code": "HORSEKING", "note": "유튜버 제휴 코드" },
-    { "label": "팬카페", "code": "FANCAFE", "note": "공식 팬카페 코드" }
+    {
+      "label": "말왕",
+      "code": "HORSEKING",
+      "note": "유튜버 제휴 코드"
+    },
+    {
+      "label": "팬카페",
+      "code": "FANCAFE",
+      "note": "공식 팬카페 코드"
+    }
   ],
   "referral": "NED6-R3",
   "entries": [
-    { "date": "2026-08-05", "base": 36, "source": "sample" },
-    { "date": "2026-08-06", "base": 36, "source": "sample" },
-    { "date": "2026-08-07", "base": 37, "source": "sample" },
-    { "date": "2026-08-08", "base": 37, "source": "sample" },
-    { "date": "2026-08-09", "base": 35, "source": "sample" },
-    { "date": "2026-08-10", "base": 36, "source": "sample" },
-    { "date": "2026-08-11", "base": 37, "source": "sample" },
-    { "date": "2026-08-12", "base": 37, "source": "sample" },
-    { "date": "2026-08-13", "base": 38, "source": "sample" },
-    { "date": "2026-08-14", "base": 38, "source": "sample" },
-    { "date": "2026-08-15", "base": 42, "source": "sample" },
-    { "date": "2026-08-16", "base": 42, "source": "sample" },
-    { "date": "2026-08-17", "base": 41, "source": "sample" },
-    { "date": "2026-08-18", "base": 40, "source": "sample" },
-    { "date": "2026-08-19", "base": 37, "source": "sample" },
-    { "date": "2026-08-20", "base": 36, "source": "sample" },
-    { "date": "2026-08-21", "base": 36, "source": "sample" },
-    { "date": "2026-08-22", "base": 37, "source": "sample" },
-    { "date": "2026-08-23", "base": 37, "source": "sample" },
-    { "date": "2026-08-24", "base": 35, "source": "sample" },
-    { "date": "2026-08-25", "base": 36, "source": "sample" },
-    { "date": "2026-08-26", "base": 37, "source": "sample" },
-    { "date": "2026-08-27", "base": 38, "source": "sample" },
-    { "date": "2026-08-28", "base": 38, "source": "sample" },
-    { "date": "2026-08-29", "base": 37, "source": "sample" },
-    { "date": "2026-08-30", "base": 36, "source": "sample" },
-    { "date": "2026-08-31", "base": 36, "source": "sample" },
-    { "date": "2026-09-01", "base": 37, "source": "sample" },
-    { "date": "2026-09-02", "base": 37, "source": "sample" },
-    { "date": "2026-09-03", "base": 38, "source": "sample" },
-    { "date": "2026-09-04", "base": 36, "source": "sample" },
-    { "date": "2026-09-05", "base": 36, "source": "sample" },
-    { "date": "2026-09-06", "base": 37, "source": "sample" },
-    { "date": "2026-09-07", "base": 37, "source": "sample" },
-    { "date": "2026-09-08", "base": 38, "source": "sample" },
-    { "date": "2026-09-09", "base": 41, "source": "sample" },
-    { "date": "2026-09-10", "base": 41, "source": "sample" },
-    { "date": "2026-09-11", "base": 40, "source": "sample" },
-    { "date": "2026-09-12", "base": 37, "source": "sample" },
-    { "date": "2026-09-13", "base": 36, "source": "sample" },
-    { "date": "2026-09-14", "base": 37, "source": "sample" },
-    { "date": "2026-09-15", "base": 37, "source": "sample" }
+    {
+      "date": "2026-08-05",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-06",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-07",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-08",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-09",
+      "base": 35,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-10",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-11",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-12",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-13",
+      "base": 38,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-14",
+      "base": 38,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-15",
+      "base": 42,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-16",
+      "base": 42,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-17",
+      "base": 41,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-18",
+      "base": 40,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-19",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-20",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-21",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-22",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-23",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-24",
+      "base": 35,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-25",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-26",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-27",
+      "base": 38,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-28",
+      "base": 38,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-29",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-30",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-08-31",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-01",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-02",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-03",
+      "base": 38,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-04",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-05",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-06",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-07",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-08",
+      "base": 38,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-09",
+      "base": 41,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-10",
+      "base": 41,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-11",
+      "base": 40,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-12",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-13",
+      "base": 36,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-14",
+      "base": 37,
+      "source": "sample"
+    },
+    {
+      "date": "2026-09-15",
+      "base": 37,
+      "source": "sample"
+    }
   ]
 }
