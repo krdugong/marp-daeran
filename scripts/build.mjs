@@ -26,6 +26,7 @@ const hasSample = rows.some(r => r.source === 'sample') || DEALS.some(d => (d.no
 
 const r1 = n => Math.round(n * 10) / 10;
 const pct = n => (Number.isInteger(n) ? n : n.toFixed(1)) + '%';
+const esc = s => String(s).replace(/&/g, '&amp;');
 const kdate = s => `${+s.slice(5, 7)}월 ${+s.slice(8, 10)}일`;
 
 const dealsOn = date => DEALS.filter(d => date >= d.start && date <= d.end);
@@ -129,6 +130,8 @@ const FAQ = [
    '수집한 데이터에서 평상시 할인율이 한 구간에 몰려 있고, 행사가 열리는 날만 그 위로 떨어져 나옵니다. 두 분포가 갈라지는 지점을 기준으로 삼았습니다. 마이프로틴이 정한 숫자가 아니라 이 사이트의 관측 기준입니다.'],
   ['다음 대란은 언제인가요?',
    cycle ? `지금까지 관측된 대란은 ${events.length}회이고 시작일 기준 평균 간격은 약 ${cycle}일입니다. 마이프로틴은 일정을 미리 공개하지 않습니다. 이 페이지는 예측이 아니라 기록입니다.` : '기록이 더 쌓이면 평균 주기를 표시합니다.'],
+  ['알림은 어디서 받나요?',
+   '카카오톡 알림 단톡방에서 받습니다. 대란이 시작될 때와 새로운 숨은 할인 조건을 찾았을 때 올립니다.'],
   ['대란이면 무조건 사는 게 이득인가요?',
    '아닙니다. 평소와 차이는 몇 %p 수준입니다. 지금 당장 필요한 제품이라면 대란을 기다리며 미루는 것보다 지금 사는 편이 나을 수 있습니다.'],
 ];
@@ -217,12 +220,12 @@ ${SITE.naverVerify ? `<meta name="naver-site-verification" content="${SITE.naver
 <div class="wrap">
 <header class="top">
   <a class="logo" href="./index.html">${SITE.brand}</a>
-  <a class="sub" href="${SITE.kakao}">대란 알림 받기</a>
+  <a class="sub" href="${SITE.kakao}">알림 단톡방</a>
 </header>
 ${hasSample ? '<p class="warn">이 페이지는 예시 데이터로 생성되었습니다. data/discount.json 을 실제 값으로 교체한 뒤 배포하십시오.</p>' : ''}
 ${body}
 <footer>
-  <nav><a href="./index.html">홈</a><a href="./daeran.html">대란 기록</a><a href="${SITE.kakao}">알림</a></nav>
+  <nav><a href="./index.html">홈</a><a href="./daeran.html">대란 기록</a><a href="${SITE.kakao}">알림 단톡방</a></nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 수집 시점의 관측값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 마이프로틴에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표이며 본 사이트와 무관합니다.</p>
@@ -266,7 +269,7 @@ const home = page({
 <p class="sub">${prevAvg !== null ? `전월 평균 ${pct(prevAvg)} 대비 ${delta > 0 ? '+' : ''}${delta}%p` : '이달 수집 시작'}${isDaeran ? '' : `, 대란 기준까지 ${gap}%p`}</p>
 ${bonus > 0 ? `<p class="formula">기본 ${last.base}% 에 숨은 할인 ${last.deals.length}건을 더해 <b>${pct(last.eff)}</b>가 됩니다.</p>` : ''}
 ${gauge()}
-<a class="cta" href="${SITE.affiliate}" rel="sponsored nofollow">할인코드 확인하고 구매하기</a>
+<a class="cta" href="${esc(SITE.affiliate)}" rel="sponsored nofollow">할인코드 확인하고 구매하기</a>
 <dl class="stats">
   <div><dt>이달 평균</dt><dd>${pct(thisAvg)}</dd></div>
   <div><dt>마지막 대란</dt><dd>${lastEvent ? kdate(lastEvent.end) : '기록 없음'}</dd></div>
@@ -294,9 +297,9 @@ ${codeList}
 <h2>자주 묻는 질문</h2>
 ${FAQ.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).join('')}
 
-<h2>숨은 할인이 뜨면 알려드립니다</h2>
-<p class="lede">새 조건을 찾아내는 즉시 카카오톡으로 보내드립니다.</p>
-<a class="cta" href="${SITE.kakao}">카카오톡 채널 추가하기</a>
+<h2>숨은 할인이 뜨면 단톡방에 올립니다</h2>
+<p class="lede">새 조건을 찾아내는 즉시 단톡방에 올립니다. 대란이 시작될 때도 바로 알려드립니다.</p>
+<a class="cta" href="${SITE.kakao}">알림 단톡방 들어가기</a>
 `,
 });
 
@@ -323,7 +326,7 @@ ${trend()}
 <tbody>${recent.map(e => `<tr><td>${kdate(e.start)}${e.start === e.end ? '' : ` – ${kdate(e.end)}`}</td><td>${e.days}일</td><td class="n">${pct(e.max)}</td></tr>`).join('')}</tbody>
 </table>
 <p class="lede">할인율은 보통 전날 저녁에 바뀝니다. 저녁 이후 관측값은 다음 날짜의 행사로 기록합니다.</p>
-<a class="cta" href="${SITE.kakao}">대란 알림 받기</a>
+<a class="cta" href="${SITE.kakao}">알림 단톡방 들어가기</a>
 <a class="cta ghost" href="./index.html">오늘 할인율 보기</a>
 `,
 });

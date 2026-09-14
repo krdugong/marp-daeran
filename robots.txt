@@ -1,7 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
 
 User-agent: Yeti
 Allow: /
+Disallow: /admin.html
 
-Sitemap: https://example.github.io/marp-daeran/sitemap.xml
+Sitemap: https://krdugong.github.io/marp-daeran/sitemap.xml
