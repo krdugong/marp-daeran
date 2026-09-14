@@ -8,10 +8,10 @@ import path from 'node:path';
 
 // ── 배포 전 반드시 고치십시오 ──────────────────
 const SITE = {
-  origin: 'https://example.github.io/marp-daeran',
+  origin: 'https://krdugong.github.io/marp-daeran',
   brand: '마프대란 알리미',
-  kakao: 'https://pf.kakao.com/_XXXXX/friend',
-  affiliate: 'https://www.myprotein.co.kr/',
+  kakao: 'https://open.kakao.com/o/gh0XALIi',
+  affiliate: 'https://www.awin1.com/cread.php?awinmid=10751&awinaffid=325265&clickref=alimi-homepage&ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3',
   naverVerify: '',
 };
 // ───────────────────────────────────────────────
