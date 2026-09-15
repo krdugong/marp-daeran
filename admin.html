@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>데이터 편집기 · 마프대란 알리미</title>
+<title>가격 기록 편집기 · 마프대란 알리미</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
 <style>
-:root{--ink:#12161C;--muted:#5B6470;--line:#E3E7EB;--surface:#F4F6F8;--blue:#1D4ED8;--flame:#C0392B}
+:root{--ink:#12161C;--muted:#5B6470;--line:#E3E7EB;--surface:#F4F6F8;--blue:#1D4ED8;--flame:#C0392B;--amber:#C57B22}
 *{box-sizing:border-box}
 body{margin:0;background:var(--surface);color:var(--ink);font-family:Pretendard,system-ui,sans-serif;line-height:1.6;font-feature-settings:"tnum"}
-.wrap{max-width:640px;margin:0 auto;padding:28px 20px 80px}
+.wrap{max-width:700px;margin:0 auto;padding:28px 20px 80px}
 h1{font-size:22px;font-weight:800;letter-spacing:-.03em;margin:0 0 6px}
 h2{font-size:15px;font-weight:700;margin:0 0 12px}
 p.lede{color:var(--muted);font-size:13px;margin:0 0 22px}
@@ -20,78 +20,119 @@ input,select,textarea{width:100%;font-family:inherit;font-size:14px;padding:10px
 textarea{min-height:150px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.5}
 .grid{display:grid;gap:12px}
 .g2{grid-template-columns:1fr 1fr}
-.g3{grid-template-columns:1.6fr 1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+.g4{grid-template-columns:1.6fr 1fr 1fr .8fr}
 button{font-family:inherit;font-size:14px;font-weight:700;border:0;border-radius:10px;padding:12px 16px;cursor:pointer;background:var(--ink);color:#fff}
 button.sec{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
 button.mini{padding:7px 11px;font-size:12px;font-weight:600}
 button.danger{background:#fff;color:var(--flame);border:1px solid var(--line)}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tab{border:1px solid var(--line);background:#fff;border-radius:99px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.tab.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tab .tag{font-size:11px;font-weight:700;padding:1px 7px;border-radius:99px;margin-left:6px}
+.tab.active .tag{background:rgba(255,255,255,.18)}
+.tab .tag.record{background:#FBEAE7;color:var(--flame)}
+.tab .tag.deal{background:#FDEEDC;color:var(--amber)}
+.tab .tag.good{background:#E7F0FF;color:var(--blue)}
+.tab .tag.normal{background:var(--surface);color:var(--muted)}
 .preview{background:var(--ink);color:#fff;border-radius:14px;padding:20px;margin-bottom:16px}
-.preview .n{font-size:44px;font-weight:800;letter-spacing:-.04em;line-height:1}
-.preview .n.on{color:#FF8A7A}
+.preview .tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;margin-bottom:8px}
+.preview .n{font-size:40px;font-weight:800;letter-spacing:-.04em;line-height:1}
 .preview .m{font-size:13px;opacity:.75;margin-top:6px}
-.deal{border:1px solid var(--line);border-radius:11px;padding:14px;margin-bottom:10px}
-.deal .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-.deal .t{font-weight:700;font-size:14px}
-.deal .rate{color:var(--blue);font-weight:800}
-.tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--surface);color:var(--muted)}
-.tag.live{background:#E7F0FF;color:var(--blue)}
+.entry{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}
+.entry .d{width:64px;color:var(--muted);flex-shrink:0}
+.entry .p{flex:1}
+.entry .p b{font-size:14px}
+.entry .p em{display:block;font-style:normal;font-size:12px;color:var(--muted)}
+.entry .tier{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;flex-shrink:0}
+.tier.record{background:#FBEAE7;color:var(--flame)}
+.tier.deal{background:#FDEEDC;color:var(--amber)}
+.tier.good{background:#E7F0FF;color:var(--blue)}
+.tier.normal{background:var(--surface);color:var(--muted)}
+.entry .del{background:none;border:0;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 6px}
 .msg{font-size:13px;padding:11px 13px;border-radius:9px;margin-bottom:14px}
 .msg.warn{background:#FFF6D6;border:1px solid #E8D48A}
-.msg.ok{background:#E7F7EC;border:1px solid #A8DDB8}
 .steps{font-size:13px;color:var(--muted);padding-left:18px;margin:0}
 .steps li{margin-bottom:5px}
+details.settings summary{font-size:13px;color:var(--muted);cursor:pointer;padding:4px 0}
 </style>
 </head>
 <body>
 <div class="wrap">
-<h1>데이터 편집기</h1>
-<p class="lede">여기서 고치고 JSON을 복사해 깃허브의 data/discount.json 에 붙여넣으면 끝입니다. 나머지는 자동으로 다시 그려집니다.</p>
+<h1>가격 기록 편집기</h1>
+<p class="lede">상품을 고르고, 날짜·결제금액·서빙 수만 넣으면 1회분당 가격과 판정이 자동 계산됩니다. 새 상품도 여기서 추가할 수 있습니다. 다 됐으면 JSON을 복사해 깃허브의 data/products.json 에 붙여넣으십시오.</p>
 
 <div id="loader" class="card">
   <h2>데이터 불러오기</h2>
-  <div id="loadmsg" class="msg warn">data/discount.json 을 찾는 중입니다.</div>
+  <div id="loadmsg" class="msg warn">data/products.json 을 찾는 중입니다.</div>
   <label>직접 붙여넣기</label>
-  <textarea id="paste" placeholder="discount.json 내용을 통째로 붙여넣으십시오"></textarea>
+  <textarea id="paste" placeholder="products.json 내용을 통째로 붙여넣으십시오"></textarea>
   <div class="row"><button id="loadPaste">불러오기</button></div>
 </div>
 
 <div id="app" style="display:none">
+  <div id="tabs" class="tabs"></div>
+
   <div class="preview">
+    <div id="pvTag" class="tag">—</div>
     <div id="pvNum" class="n">—</div>
     <div id="pvMsg" class="m"></div>
   </div>
 
   <div class="card">
-    <h2>오늘 기본 할인율</h2>
-    <div class="grid g2">
+    <h2>가격 기록 추가·수정</h2>
+    <div class="grid g3">
       <div><label>날짜</label><input type="date" id="date"></div>
-      <div><label>기본 할인코드 할인율 (%)</label><input type="number" id="base" min="0" max="99" step="0.5"></div>
+      <div><label>결제금액 (원)</label><input type="number" id="price" min="0" step="100"></div>
+      <div><label>서빙 수</label><input type="number" id="servings" min="1" step="1"></div>
     </div>
-    <div class="row"><button id="saveDay">이 날짜에 기록</button></div>
+    <div style="margin-top:12px"><label>메모 (선택)</label><input id="note" placeholder="예: 트렌드 제품 1개 담기 + 12만원 추가할인 적용"></div>
+    <div class="row"><button id="saveEntry">이 날짜로 기록</button></div>
   </div>
 
   <div class="card">
-    <h2>숨은 할인</h2>
-    <div id="deals"></div>
-    <div class="grid g3" style="margin-top:14px">
-      <div><label>이름</label><input id="dLabel" placeholder="이달의 트렌드 제품 3개 담기"></div>
-      <div><label>추가 할인 (%)</label><input type="number" id="dRate" min="0" max="99" step="0.5"></div>
-      <div><label>계산 방식</label><select id="dStack"><option value="multiply">곱해서 적용</option><option value="add">단순 더하기</option></select></div>
+    <h2>이 상품의 최근 기록</h2>
+    <div id="entries"></div>
+  </div>
+
+  <div class="card">
+    <details class="settings" open>
+      <summary>이 상품 설정</summary>
+      <div class="grid g3" style="margin-top:14px">
+        <div><label>상품명</label><input id="pName"></div>
+        <div><label>기본 서빙 수</label><input type="number" id="pServings" min="1"></div>
+        <div><label>대란 기준 (%)</label><input type="number" id="pMargin" min="1" max="50" step="0.5"></div>
+      </div>
+      <p class="lede" style="margin-top:10px">기본 서빙 수는 위 입력폼에 미리 채워지는 값일 뿐입니다. 실제 계산은 각 기록에 넣은 서빙 수를 그대로 씁니다. 대표 상품(홈 화면)으로 지정하려면 아래 체크박스를 쓰십시오. 하나만 지정할 수 있습니다.</p>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer">
+        <input type="checkbox" id="pFeatured" style="width:auto">
+        <span style="font-size:13px;color:var(--ink)">이 상품을 대표 상품(홈 화면)으로 지정</span>
+      </label>
+      <div class="row">
+        <button class="sec" id="saveSettings">설정 저장</button>
+        <button class="danger" id="deleteProduct">이 상품 삭제</button>
+      </div>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>새 상품 추가</h2>
+    <div class="grid g4">
+      <div><label>상품명</label><input id="npName" placeholder="클리어 웨이 아이솔레이트 2kg"></div>
+      <div><label>슬러그 (영문, 파일명)</label><input id="npSlug" placeholder="clear-whey-2kg"></div>
+      <div><label>기본 서빙 수</label><input type="number" id="npServings" value="40" min="1"></div>
+      <div><label>대란 기준(%)</label><input type="number" id="npMargin" value="6" min="1" max="50" step="0.5"></div>
     </div>
-    <div class="grid g2" style="margin-top:12px">
-      <div><label>시작일</label><input type="date" id="dStart"></div>
-      <div><label>종료일</label><input type="date" id="dEnd"></div>
-    </div>
-    <div style="margin-top:12px"><label>적용 방법 설명</label><input id="dHowto" placeholder="트렌드 카테고리에서 3개를 담으면 장바구니에서 자동 적용됩니다."></div>
-    <div class="row"><button id="addDeal">숨은 할인 추가</button></div>
+    <p class="lede" style="margin-top:10px">슬러그는 영문, 숫자, 하이픈만 쓰십시오. products/슬러그.html 파일명이 됩니다.</p>
+    <div class="row"><button id="addProduct">상품 추가</button></div>
   </div>
 
   <div class="card">
     <h2>깃허브에 반영하기</h2>
     <ol class="steps">
       <li>아래 JSON을 복사합니다.</li>
-      <li>깃허브 저장소에서 data/discount.json 을 열고 연필 아이콘을 누릅니다.</li>
+      <li>깃허브 저장소에서 data/products.json 을 열고 연필 아이콘을 누릅니다.</li>
       <li>전체 선택 후 붙여넣고 Commit changes 를 누릅니다.</li>
       <li>몇 분 뒤 사이트가 자동으로 갱신됩니다.</li>
     </ol>
@@ -100,110 +141,193 @@ button.danger{background:#fff;color:var(--flame);border:1px solid var(--line)}
       <button id="copy">JSON 복사</button>
       <button id="download" class="sec">파일로 저장</button>
     </div>
-    <div id="saved"></div>
   </div>
 </div>
 </div>
 
 <script>
-var db=null;
+var db=null, currentSlug=null;
 var $=function(id){return document.getElementById(id)};
-var r1=function(n){return Math.round(n*10)/10};
-var pct=function(n){return (Number.isInteger(n)?n:n.toFixed(1))+'%'};
+var won=function(n){return Math.round(n).toLocaleString('ko-KR')+'원'};
+var TIER_LABEL={record:'역대 최저가',deal:'대란가',good:'평균 이하',normal:'평시가'};
 
-function stackRate(base,ds){
-  var mult=1-base/100, add=0;
-  ds.forEach(function(d){ d.stack==='add' ? add+=d.rate : mult*=(1-d.rate/100); });
-  return r1((1-mult)*100+add);
-}
-function dealsOn(date){
-  return (db.deals||[]).filter(function(d){return !d.disabled && date>=d.start && date<=d.end});
-}
 function todayStr(){
   var n=new Date(Date.now()+9*3600*1000);
   return n.toISOString().slice(0,10);
 }
+function daysBetween(a,b){ return (new Date(a)-new Date(b))/86400000; }
+function currentProduct(){ return db.products.filter(function(p){return p.slug===currentSlug})[0]; }
+
+function withPerServing(entries,excludeDate){
+  return entries.filter(function(e){return e.date!==excludeDate})
+    .map(function(e){ return Object.assign({},e,{perServing:e.price/e.servings}); });
+}
+function statsFor(rows, targetDate, targetPerServing, margin, windowDays){
+  var windowRows = rows.filter(function(r){ return r.date<=targetDate && daysBetween(targetDate,r.date)<=windowDays; });
+  var pool = windowRows.map(function(r){return r.perServing}).concat([targetPerServing]);
+  var avg = pool.reduce(function(s,v){return s+v},0)/pool.length;
+  var priorRows = rows.filter(function(r){ return r.date<targetDate; });
+  var minPrior = priorRows.length ? Math.min.apply(null, priorRows.map(function(r){return r.perServing})) : targetPerServing;
+  var dealLine = avg*(1-margin/100);
+  var tier;
+  if(targetPerServing<=minPrior) tier='record';
+  else if(targetPerServing<=dealLine) tier='deal';
+  else if(targetPerServing<=avg) tier='good';
+  else tier='normal';
+  return {avg:avg,dealLine:dealLine,minPrior:minPrior,tier:tier};
+}
+function latestTier(p){
+  if(!p.entries.length) return 'normal';
+  var rows=p.entries.map(function(e){return Object.assign({},e,{perServing:e.price/e.servings})})
+    .sort(function(a,b){return a.date.localeCompare(b.date)});
+  var last=rows[rows.length-1];
+  var s=statsFor(rows.filter(function(r){return r.date!==last.date}), last.date, last.perServing, p.dealMarginPct, 90);
+  return s.tier;
+}
 
 function start(data){
   db=data;
-  if(!db.entries) db.entries=[];
-  if(!db.deals) db.deals=[];
+  if(!db.products) db.products=[];
+  currentSlug = (db.products.filter(function(p){return p.featured})[0] || db.products[0] || {}).slug;
   $('loader').style.display='none';
   $('app').style.display='block';
+  renderTabs();
+  selectProduct(currentSlug);
+}
+
+function renderTabs(){
+  $('tabs').innerHTML = db.products.map(function(p){
+    var tier = latestTier(p);
+    return '<button type="button" class="tab'+(p.slug===currentSlug?' active':'')+'" data-slug="'+p.slug+'">'
+      +p.name+(p.featured?' 🏠':'')+' <span class="tag '+tier+'">'+TIER_LABEL[tier]+'</span></button>';
+  }).join('');
+  $('tabs').querySelectorAll('.tab').forEach(function(b){
+    b.onclick=function(){ selectProduct(b.dataset.slug); };
+  });
+}
+
+function selectProduct(slug){
+  currentSlug=slug;
+  renderTabs();
+  var p=currentProduct();
+  if(!p) return;
   var t=todayStr();
   $('date').value=t;
-  var cur=db.entries.filter(function(e){return e.date===t})[0];
-  $('base').value = cur ? (cur.base!==undefined?cur.base:cur.rate) : '';
-  $('dStart').value=t;
+  loadIntoForm(t);
+  $('pName').value=p.name;
+  $('pServings').value=p.defaultServings;
+  $('pMargin').value=p.dealMarginPct;
+  $('pFeatured').checked=!!p.featured;
   render();
 }
 
+function loadIntoForm(date){
+  var p=currentProduct();
+  var cur=p.entries.filter(function(e){return e.date===date})[0];
+  $('price').value = cur ? cur.price : '';
+  $('servings').value = cur ? cur.servings : p.defaultServings;
+  $('note').value = cur ? (cur.note||'') : '';
+}
+
 function render(){
+  var p=currentProduct();
+  if(!p) return;
   var d=$('date').value||todayStr();
-  var base=parseFloat($('base').value);
-  var ds=dealsOn(d);
-  if(!isNaN(base)){
-    var eff=stackRate(base,ds);
-    var on=eff>=db.threshold;
-    $('pvNum').textContent=pct(eff);
-    $('pvNum').className='n'+(on?' on':'');
-    $('pvMsg').textContent=(on?'대란 기준을 넘습니다. ':'대란 기준까지 '+r1(db.threshold-eff)+'%p 남았습니다. ')
-      +'기본 '+base+'% 에 숨은 할인 '+ds.length+'건 적용';
+  var price=parseFloat($('price').value), servings=parseFloat($('servings').value);
+
+  if(!isNaN(price) && servings>0){
+    var ps=price/servings;
+    var rows=withPerServing(p.entries,d);
+    var s=statsFor(rows,d,ps,p.dealMarginPct,90);
+    $('pvTag').textContent=TIER_LABEL[s.tier];
+    $('pvTag').className='tag tier '+s.tier;
+    $('pvNum').textContent=won(ps)+' / 1회분';
+    $('pvMsg').textContent='결제 '+won(price)+' · '+servings+'회분 · 최근 90일 평균 '+won(s.avg)+' · 대란 기준 '+won(s.dealLine)+' 이하';
   } else {
+    $('pvTag').textContent='—'; $('pvTag').className='tag';
     $('pvNum').textContent='—';
-    $('pvNum').className='n';
-    $('pvMsg').textContent='기본 할인율을 입력하면 실질 할인율을 계산합니다.';
+    $('pvMsg').textContent='결제금액과 서빙 수를 입력하면 판정을 미리 계산합니다.';
   }
 
-  $('deals').innerHTML = (db.deals.length?'':'<p class="lede" style="margin:0">등록된 숨은 할인이 없습니다.</p>')
-    + db.deals.map(function(x,i){
-    var live = d>=x.start && d<=x.end && !x.disabled;
-    return '<div class="deal"><div class="top"><span class="t">'+esc(x.label)+' <span class="rate">+'+x.rate+'%</span></span>'
-      +'<span class="tag'+(live?' live':'')+'">'+(x.disabled?'중지':(live?'적용 중':'기간 밖'))+'</span></div>'
-      +'<div class="lede" style="margin:0 0 10px">'+esc(x.howto||'')+'<br>'+x.start+' ~ '+x.end
-      +' · '+(x.stack==='add'?'단순 더하기':'곱해서 적용')+'</div>'
-      +'<div class="row" style="margin:0"><button class="mini sec" data-toggle="'+i+'">'+(x.disabled?'다시 켜기':'잠시 중지')+'</button>'
-      +'<button class="mini danger" data-del="'+i+'">삭제</button></div></div>';
-  }).join('');
+  var sorted=[...p.entries].sort(function(a,b){return b.date.localeCompare(a.date)}).slice(0,15);
+  var allRows=p.entries.map(function(e){return Object.assign({},e,{perServing:e.price/e.servings})});
+  $('entries').innerHTML = (sorted.length?'':'<p class="lede" style="margin:0">아직 기록이 없습니다.</p>')
+    + sorted.map(function(e){
+      var ps=e.price/e.servings;
+      var s=statsFor(allRows.filter(function(r){return r.date!==e.date}), e.date, ps, p.dealMarginPct, 90);
+      return '<div class="entry"><span class="d">'+e.date.slice(5)+'</span>'
+        +'<span class="p"><b>'+won(ps)+'</b><em>결제 '+won(e.price)+' · '+e.servings+'회분'+(e.note?' · '+e.note:'')+'</em></span>'
+        +'<span class="tier '+s.tier+'">'+TIER_LABEL[s.tier]+'</span>'
+        +'<button class="del" data-edit="'+e.date+'" title="수정">✎</button>'
+        +'<button class="del" data-del="'+e.date+'" title="삭제">✕</button></div>';
+    }).join('');
 
-  $('deals').querySelectorAll('[data-del]').forEach(function(b){
-    b.onclick=function(){ if(confirm('삭제하시겠습니까?')){ db.deals.splice(+b.dataset.del,1); render(); } };
+  $('entries').querySelectorAll('[data-edit]').forEach(function(b){
+    b.onclick=function(){ $('date').value=b.dataset.edit; loadIntoForm(b.dataset.edit); render(); window.scrollTo({top:0,behavior:'smooth'}); };
   });
-  $('deals').querySelectorAll('[data-toggle]').forEach(function(b){
-    b.onclick=function(){ var x=db.deals[+b.dataset.toggle]; x.disabled=!x.disabled; render(); };
+  $('entries').querySelectorAll('[data-del]').forEach(function(b){
+    b.onclick=function(){
+      if(!confirm(b.dataset.del+' 기록을 삭제하시겠습니까?')) return;
+      p.entries=p.entries.filter(function(e){return e.date!==b.dataset.del});
+      render(); renderTabs();
+    };
   });
 
   $('out').value=JSON.stringify(db,null,2);
 }
-function esc(s){return String(s).replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c]})}
 
-$('date').addEventListener('change',function(){
-  var cur=db.entries.filter(function(e){return e.date===$('date').value})[0];
-  $('base').value=cur?(cur.base!==undefined?cur.base:cur.rate):'';
-  render();
-});
-$('base').addEventListener('input',render);
+$('date').addEventListener('change',function(){ loadIntoForm($('date').value); render(); });
+['price','servings','note'].forEach(function(id){ $(id).addEventListener('input',render); });
 
-$('saveDay').onclick=function(){
-  var d=$('date').value, b=parseFloat($('base').value);
-  if(!d||isNaN(b)){alert('날짜와 기본 할인율을 모두 입력하십시오.');return;}
-  var i=db.entries.findIndex(function(e){return e.date===d});
-  var row={date:d,base:b,source:'manual'};
-  if(i>=0) db.entries[i]=row; else db.entries.push(row);
-  db.entries.sort(function(a,b2){return a.date.localeCompare(b2.date)});
-  render();
-  note($('saveDay'),'기록했습니다');
+$('saveEntry').onclick=function(){
+  var p=currentProduct();
+  var d=$('date').value, price=parseFloat($('price').value), servings=parseFloat($('servings').value);
+  if(!d||isNaN(price)||!servings){alert('날짜, 결제금액, 서빙 수를 모두 입력하십시오.');return;}
+  var row={date:d,price:price,servings:servings,note:$('note').value.trim(),source:'manual'};
+  var i=p.entries.findIndex(function(e){return e.date===d});
+  if(i>=0) p.entries[i]=row; else p.entries.push(row);
+  p.entries.sort(function(a,b){return a.date.localeCompare(b.date)});
+  render(); renderTabs();
+  note($('saveEntry'),'기록했습니다');
 };
 
-$('addDeal').onclick=function(){
-  var label=$('dLabel').value.trim(), rate=parseFloat($('dRate').value);
-  var s=$('dStart').value, e=$('dEnd').value;
-  if(!label||isNaN(rate)||!s||!e){alert('이름, 할인율, 기간을 모두 입력하십시오.');return;}
-  if(e<s){alert('종료일이 시작일보다 빠릅니다.');return;}
-  db.deals.push({id:'d'+Date.now(),label:label,rate:rate,stack:$('dStack').value,start:s,end:e,howto:$('dHowto').value.trim()});
-  ['dLabel','dRate','dHowto','dEnd'].forEach(function(k){$(k).value=''});
-  render();
-  note($('addDeal'),'추가했습니다');
+$('saveSettings').onclick=function(){
+  var p=currentProduct();
+  p.name=$('pName').value.trim();
+  p.defaultServings=parseInt($('pServings').value,10)||90;
+  p.dealMarginPct=parseFloat($('pMargin').value)||6;
+  if($('pFeatured').checked){
+    db.products.forEach(function(x){ x.featured = (x.slug===p.slug); });
+  } else {
+    p.featured=false;
+  }
+  render(); renderTabs();
+  note($('saveSettings'),'저장됨');
+};
+
+$('deleteProduct').onclick=function(){
+  var p=currentProduct();
+  if(db.products.length<=1){ alert('상품이 하나뿐이라 삭제할 수 없습니다.'); return; }
+  if(!confirm('"'+p.name+'" 상품과 그 기록을 전부 삭제하시겠습니까? 되돌릴 수 없습니다.')) return;
+  var wasFeatured=p.featured;
+  db.products=db.products.filter(function(x){return x.slug!==p.slug});
+  if(wasFeatured) db.products[0].featured=true;
+  selectProduct(db.products[0].slug);
+  note($('deleteProduct'),'삭제됨');
+};
+
+$('addProduct').onclick=function(){
+  var name=$('npName').value.trim(), slug=$('npSlug').value.trim();
+  var servings=parseInt($('npServings').value,10)||1;
+  var margin=parseFloat($('npMargin').value)||6;
+  if(!name||!slug){ alert('상품명과 슬러그를 모두 입력하십시오.'); return; }
+  if(!/^[a-z0-9-]+$/.test(slug)){ alert('슬러그는 영문 소문자, 숫자, 하이픈만 쓸 수 있습니다.'); return; }
+  if(db.products.some(function(p){return p.slug===slug})){ alert('이미 있는 슬러그입니다.'); return; }
+  db.products.push({slug:slug,name:name,defaultServings:servings,dealMarginPct:margin,featured:false,entries:[]});
+  $('npName').value=''; $('npSlug').value=''; $('npServings').value='90'; $('npMargin').value='6';
+  renderTabs();
+  selectProduct(slug);
+  note($('addProduct'),'추가했습니다');
 };
 
 $('copy').onclick=function(){
@@ -212,7 +336,7 @@ $('copy').onclick=function(){
 $('download').onclick=function(){
   var a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([$('out').value],{type:'application/json'}));
-  a.download='discount.json'; a.click();
+  a.download='products.json'; a.click();
 };
 function note(btn,text){var t=btn.textContent;btn.textContent=text;setTimeout(function(){btn.textContent=t},1200)}
 
@@ -220,7 +344,7 @@ $('loadPaste').onclick=function(){
   try{ start(JSON.parse($('paste').value)); }catch(e){ alert('JSON 형식이 잘못되었습니다: '+e.message); }
 };
 
-fetch('data/discount.json',{cache:'no-store'})
+fetch('data/products.json',{cache:'no-store'})
   .then(function(r){ if(!r.ok) throw 0; return r.json(); })
   .then(start)
   .catch(function(){
