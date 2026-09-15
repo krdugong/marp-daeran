@@ -7,7 +7,7 @@
 <title>데이터 편집기 · 마프대란 알리미</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
 <style>
-:root{--bg:#FFFBF2;--card:#FFFFFF;--ink:#20201C;--muted:#7A7364;--line:#EBE3D1;--accent:#FF5A36;--teal:#0F6B5C;--amber:#D98E04;--amber-soft:#FBEBC7}
+:root{--bg:#FFFFFF;--card:#FFFFFF;--ink:#12161C;--muted:#5B6470;--line:#E3E7EB;--flame:#C0392B;--blue:#1D4ED8;--flame-soft:#FBEAE7;--amber:#D98E04;--amber-soft:#FBEBC7}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,system-ui,sans-serif;line-height:1.6;font-feature-settings:"tnum"}
 .wrap{max-width:640px;margin:0 auto;padding:28px 20px 80px}
@@ -24,7 +24,7 @@ textarea{min-height:150px;font-family:ui-monospace,SFMono-Regular,Menlo,monospac
 button{font-family:inherit;font-size:14px;font-weight:800;border:0;border-radius:10px;padding:12px 16px;cursor:pointer;background:var(--ink);color:#fff}
 button.sec{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
 button.mini{padding:7px 11px;font-size:12px;font-weight:700}
-button.danger{background:#fff;color:var(--accent);border:1.5px solid var(--line)}
+button.danger{background:#fff;color:var(--blue);border:1.5px solid var(--line)}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .preview{background:var(--ink);color:#fff;border-radius:14px;padding:20px;margin-bottom:16px}
 .preview .n{font-size:44px;font-weight:800;letter-spacing:-.04em;line-height:1}
@@ -33,9 +33,9 @@ button.danger{background:#fff;color:var(--accent);border:1.5px solid var(--line)
 .deal{border:1.5px dashed var(--amber);background:var(--amber-soft);border-radius:4px 12px 12px 4px;padding:14px;margin-bottom:10px}
 .deal .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
 .deal .t{font-weight:800;font-size:14px}
-.deal .rate{color:var(--accent);font-weight:800}
+.deal .rate{color:var(--blue);font-weight:800}
 .tag{display:inline-block;font-size:11px;font-weight:800;padding:3px 8px;border-radius:99px;background:#F2ECDC;color:var(--muted)}
-.tag.live{background:#DCEEE9;color:var(--teal)}
+.tag.live{background:var(--flame-soft);color:var(--flame)}
 .msg{font-size:13px;padding:11px 13px;border-radius:9px;margin-bottom:14px}
 .msg.warn{background:var(--amber-soft);border:1.5px solid var(--amber)}
 .steps{font-size:13px;color:var(--muted);padding-left:18px;margin:0}

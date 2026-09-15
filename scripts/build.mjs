@@ -14,6 +14,7 @@ const SITE = {
   brand: '마프대란 알리미',
   kakao: 'https://open.kakao.com/o/gh0XALIi',
   affiliate: 'https://www.awin1.com/cread.php?awinmid=10751&awinaffid=325265&clickref=alimi-homepage&ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3',
+  youtube: 'https://www.youtube.com/@마프대란알리미',
   naverVerify: '',
 };
 // ───────────────────────────────────────────────
@@ -82,13 +83,13 @@ function gauge() {
   return `<svg class="gauge" viewBox="0 0 ${W} ${H}" role="img" aria-label="실질 할인율 ${last.eff}퍼센트, 대란 기준 ${TH}퍼센트">
   <rect x="${x(lo)}" y="42" width="${x(TH) - x(lo)}" height="14" rx="7" fill="var(--track)"/>
   <rect x="${x(TH)}" y="42" width="${x(hi) - x(TH)}" height="14" rx="7" fill="var(--track-hot)"/>
-  <line x1="${x(TH)}" y1="26" x2="${x(TH)}" y2="70" stroke="var(--teal)" stroke-width="2" stroke-dasharray="3 3"/>
-  <text x="${x(TH) + 6}" y="22" class="g-note" fill="var(--teal)">대란 ${TH}%</text>
-  ${bonus > 0 ? `<line x1="${x(last.base)}" y1="49" x2="${x(last.eff)}" y2="49" stroke="var(--accent)" stroke-width="14" stroke-linecap="round" opacity=".25"/>
+  <line x1="${x(TH)}" y1="26" x2="${x(TH)}" y2="70" stroke="var(--flame)" stroke-width="2" stroke-dasharray="3 3"/>
+  <text x="${x(TH) + 6}" y="22" class="g-note" fill="var(--flame)">대란 ${TH}%</text>
+  ${bonus > 0 ? `<line x1="${x(last.base)}" y1="49" x2="${x(last.eff)}" y2="49" stroke="var(--blue)" stroke-width="14" stroke-linecap="round" opacity=".25"/>
   <circle cx="${x(last.base)}" cy="49" r="5" fill="#8A8272"/>
   <text x="${x(last.base)}" y="34" class="g-tick" text-anchor="middle">기본 ${last.base}%</text>` : ''}
   ${ticks.map(t => `<text x="${x(t)}" y="90" class="g-tick" text-anchor="middle">${t}</text>`).join('')}
-  <circle cx="${x(last.eff)}" cy="49" r="11" fill="${isDaeran ? 'var(--teal)' : 'var(--accent)'}"/>
+  <circle cx="${x(last.eff)}" cy="49" r="11" fill="${isDaeran ? 'var(--flame)' : 'var(--blue)'}"/>
   <circle cx="${x(last.eff)}" cy="49" r="4" fill="#fff"/>
 </svg>`;
 }
@@ -103,15 +104,15 @@ function trend() {
   const bands = events.filter(e => e.end >= series[0].date).map(e => {
     const s = series.findIndex(d => d.date === e.start), en = series.findIndex(d => d.date === e.end);
     if (s < 0) return '';
-    return `<rect x="${x(s) - 2}" y="${T}" width="${Math.max(x(en) - x(s) + 4, 5)}" height="${H - T - B}" fill="var(--teal)" opacity=".12"/>`;
+    return `<rect x="${x(s) - 2}" y="${T}" width="${Math.max(x(en) - x(s) + 4, 5)}" height="${H - T - B}" fill="var(--flame)" opacity=".12"/>`;
   }).join('');
   const labels = [Math.ceil(lo) + 1, Math.round((lo + hi) / 2), Math.floor(hi) - 1].map(v => `<text x="4" y="${y(v) + 4}" class="g-tick">${v}</text>`).join('');
   return `<svg class="trend" viewBox="0 0 ${W} ${H}" role="img" aria-label="최근 ${series.length}일 실질 할인율 추이">
   ${bands}${labels}
-  <line x1="${L}" y1="${y(TH)}" x2="${W - R}" y2="${y(TH)}" stroke="var(--teal)" stroke-width="1" stroke-dasharray="4 4"/>
+  <line x1="${L}" y1="${y(TH)}" x2="${W - R}" y2="${y(TH)}" stroke="var(--flame)" stroke-width="1" stroke-dasharray="4 4"/>
   <path d="${pathOf('base')}" fill="none" stroke="#C9BFA8" stroke-width="1.5" stroke-dasharray="3 3"/>
-  <path d="${pathOf('eff')}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
-  <circle cx="${x(series.length - 1)}" cy="${y(last.eff)}" r="5" fill="${isDaeran ? 'var(--teal)' : 'var(--accent)'}"/>
+  <path d="${pathOf('eff')}" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="${x(series.length - 1)}" cy="${y(last.eff)}" r="5" fill="${isDaeran ? 'var(--flame)' : 'var(--blue)'}"/>
   <text x="${L}" y="${H - 6}" class="g-tick">${kdate(series[0].date)}</text>
   <text x="${W - R}" y="${H - 6}" class="g-tick" text-anchor="end">오늘</text>
 </svg>`;
@@ -130,93 +131,97 @@ const FAQ = [
    '아닙니다. 평소와 차이는 몇 %p 수준입니다. 지금 당장 필요한 제품이라면 대란을 기다리며 미루는 것보다 지금 사는 편이 나을 수 있습니다.'],
 ];
 
-// ── 새 색채: 크림 배경 + 주황 강조 + 딥 틸(대란). 대시보드보다 커뮤니티 게시판에 가깝게. ──
+// ── 깔끔한 톤: 흰 배경 + 파랑/빨강 최소 포인트. 장식 요소를 걷어냈습니다. ──
 const css = `
 :root{
-  --bg:#FFFBF2;--card:#FFFFFF;--ink:#20201C;--muted:#7A7364;--line:#EBE3D1;
-  --accent:#FF5A36;--accent-soft:#FFE4DB;--teal:#0F6B5C;--teal-soft:#DCEEE9;
-  --amber:#D98E04;--amber-soft:#FBEBC7;--track:#EDE7D8;--track-hot:#F6D9CE
+  --bg:#FFFFFF;--card:#FFFFFF;--ink:#12161C;--muted:#5B6470;--line:#E3E7EB;--surface:#F4F6F8;
+  --blue:#1D4ED8;--flame:#C0392B;--flame-soft:#FBEAE7;--amber-soft:#FBEBC7;
+  --track:#DDE3EA;--track-hot:#F6D9D3
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;line-height:1.62;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum"}
-.wrap{max-width:560px;margin:0 auto;padding:0 20px 72px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,-apple-system,BlinkMacSystemFont,system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;font-feature-settings:"tnum"}
 a{color:inherit}
-header.top{display:flex;justify-content:space-between;align-items:center;height:60px;border-bottom:2px solid var(--ink);margin-bottom:26px}
-.brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-.brand .mark{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.brand .word{font-weight:800;letter-spacing:-.02em;font-size:15px}
-.top a.sub{font-size:13px;color:var(--ink);text-decoration:none;font-weight:700;background:var(--amber-soft);padding:7px 12px;border-radius:99px}
-h1{font-size:27px;font-weight:800;letter-spacing:-.03em;line-height:1.35;margin:0 0 10px}
-h2{font-size:17px;font-weight:800;letter-spacing:-.01em;margin:46px 0 14px;display:flex;align-items:center;gap:8px}
-h2::before{content:'';width:9px;height:9px;border-radius:2px;background:var(--accent);flex-shrink:0}
+.headerInner,.utilInner,.heroInner,.wrap{max-width:560px;margin:0 auto;padding-left:20px;padding-right:20px}
+.wrap{padding-top:0;padding-bottom:72px}
+header.top{background:#fff;border-bottom:1px solid var(--line)}
+.headerInner{height:56px;display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:6px;text-decoration:none;font-weight:800;letter-spacing:-.02em;font-size:15px}
+.headerInner a.sub{font-size:13px;color:var(--muted);text-decoration:none}
+.utilBar{border-bottom:1px solid var(--line)}
+.utilInner{padding:9px 0;display:flex;gap:6px 18px;flex-wrap:wrap;justify-content:center;font-size:12px;color:var(--muted)}
+.heroInner{padding:28px 0 8px}
+h1{font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1.35;margin:0 0 10px}
+h2{font-size:17px;font-weight:700;letter-spacing:-.01em;margin:44px 0 12px}
 p{margin:0 0 12px}
 .lede{color:var(--muted);font-size:14px}
-.state{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;padding:5px 12px;border-radius:999px;margin-bottom:16px;border:1.5px solid transparent}
-.state.on{background:var(--teal-soft);color:var(--teal);border-color:var(--teal)}
-.state.off{background:var(--card);color:var(--muted);border-color:var(--line)}
-.numWrap{position:relative;display:inline-block;margin:4px 0 6px}
-.big{font-size:66px;font-weight:800;letter-spacing:-.045em;line-height:1;position:relative;z-index:1}
-.big.on{color:var(--teal)}
-.underline{position:absolute;left:-4px;right:-4px;bottom:-2px;height:16px;z-index:0}
+.state{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;margin-bottom:14px}
+.state.on{background:var(--flame-soft);color:var(--flame)}
+.state.off{background:var(--surface);color:var(--muted)}
+.numWrap{display:inline-block;margin:4px 0 6px}
+.big{font-size:64px;font-weight:800;letter-spacing:-.045em;line-height:1}
+.big.on{color:var(--flame)}
 .sub{font-size:14px;color:var(--muted);margin-bottom:18px}
 .formula{font-size:14px;color:var(--muted);margin:0 0 16px}
-.formula b{color:var(--accent);font-weight:800}
+.formula b{color:var(--blue);font-weight:700}
 svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
-.g-tick{font-size:11px;fill:#9B917C}
-.g-note{font-size:11px;font-weight:800}
-.cta{display:block;text-align:center;background:var(--ink);color:#fff;text-decoration:none;font-weight:800;font-size:15px;padding:16px;border-radius:14px;margin:8px 0;box-shadow:3px 3px 0 var(--accent)}
-.cta.ghost{background:var(--card);color:var(--ink);box-shadow:none;border:1.5px solid var(--ink)}
-.cta:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--accent)}
-.cta.ghost:hover{transform:none;box-shadow:none}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
-.stats div{background:var(--card);border:1.5px solid var(--ink);border-radius:12px;padding:13px 10px}
-.stats dt{font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600}
-.stats dd{margin:0;font-size:16px;font-weight:800;letter-spacing:-.02em}
+.g-tick{font-size:11px;fill:#8A939E}
+.g-note{font-size:11px;font-weight:700}
+.cta{display:block;text-align:center;background:var(--ink);color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:15px;border-radius:12px;margin:8px 0}
+.cta.ghost{background:var(--surface);color:var(--ink)}
+.cta:hover{opacity:.88}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:20px 0}
+.stats div{background:#fff;padding:14px 12px}
+.stats dt{font-size:12px;color:var(--muted);margin-bottom:4px}
+.stats dd{margin:0;font-size:17px;font-weight:700;letter-spacing:-.02em}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{text-align:left;padding:11px 4px;border-bottom:1px solid var(--line)}
-th{font-size:12px;color:var(--muted);font-weight:700}
-td.n{text-align:right;font-weight:800}
+th{font-size:12px;color:var(--muted);font-weight:600}
+td.n{text-align:right;font-weight:700}
 .codes{list-style:none;padding:0;margin:0}
 .codes li{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
-.codes .name{flex:1;font-size:14px;font-weight:600}
-.codes .name em{display:block;font-style:normal;font-size:12px;color:var(--muted);font-weight:400}
-.codes code{font-weight:800;font-size:15px;letter-spacing:.02em;background:var(--amber-soft);padding:2px 8px;border-radius:6px}
-.codes button{border:1.5px solid var(--ink);background:#fff;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
-.codes button:focus-visible,.cta:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.hidden-deals{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px}
-.hidden-deals li{background:var(--amber-soft);border:1.5px dashed #B98A2E;border-radius:4px 14px 14px 4px;padding:14px 16px}
-.hidden-deals li:nth-child(odd){transform:rotate(-.6deg)}
-.hidden-deals li:nth-child(even){transform:rotate(.6deg)}
+.codes .name{flex:1;font-size:14px}
+.codes .name em{display:block;font-style:normal;font-size:12px;color:var(--muted)}
+.codes code{font-weight:700;font-size:15px;letter-spacing:.02em}
+.codes button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.codes button:focus-visible,.cta:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.hidden-deals{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+.hidden-deals li{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 10px 10px 0;padding:14px 16px}
 .hidden-deals .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-.hidden-deals .t{font-size:15px;font-weight:800;letter-spacing:-.01em}
-.hidden-deals .r{font-size:18px;font-weight:800;color:var(--accent);white-space:nowrap}
-.hidden-deals .d{font-size:13px;color:#6B5E3F;margin-top:5px}
-.hidden-deals .when{font-size:12px;color:#8A7A50;margin-top:6px;font-weight:600}
+.hidden-deals .t{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.hidden-deals .r{font-size:17px;font-weight:800;color:var(--blue);white-space:nowrap}
+.hidden-deals .d{font-size:13px;color:var(--muted);margin-top:5px}
+.hidden-deals .when{font-size:12px;color:#8A939E;margin-top:6px}
 details{border-bottom:1px solid var(--line)}
-summary{cursor:pointer;padding:15px 0;font-size:14px;font-weight:700;list-style:none;display:flex;justify-content:space-between;align-items:center}
-summary::after{content:'+';font-size:20px;font-weight:400;color:var(--muted)}
-details[open] summary::after{content:'–'}
+summary{cursor:pointer;padding:14px 0;font-size:14px;font-weight:600;list-style:none}
 summary::-webkit-details-marker{display:none}
 details p{font-size:14px;color:var(--muted);padding-bottom:14px}
-footer{margin-top:56px;padding-top:20px;border-top:2px solid var(--ink);font-size:12px;color:var(--muted)}
+footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
 footer nav{margin-bottom:10px}
-footer nav a{margin-right:14px;text-decoration:none;font-weight:700;color:var(--ink)}
-.warn{background:var(--amber-soft);border:1.5px solid var(--amber);border-radius:10px;padding:12px;font-size:13px;margin-bottom:20px}
+footer nav a{margin-right:14px;text-decoration:none}
+.warn{background:#FFF6D6;border:1px solid #E8D48A;border-radius:10px;padding:12px;font-size:13px;margin-bottom:20px}
+.ytPromo{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border-left:3px solid var(--blue);border-radius:0 12px 12px 0;padding:16px}
+.ytPromo .ytIcon{width:34px;height:34px;border-radius:8px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ytPromo .ytKicker{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin:0 0 3px}
+.ytPromo .ytTitle{font-size:15px;font-weight:700;margin:0 0 5px;letter-spacing:-.01em}
+.ytPromo .ytDesc{font-size:13px;color:var(--muted);margin:0 0 12px}
+.ytPromo .cta{margin:0;padding:10px 16px;font-size:13px;display:inline-block}
 .heroMain,.heroSide{max-width:100%}
 .cols{display:block}
-.cols>section h2:first-child{margin-top:46px}
+.cols>section h2:first-child{margin-top:44px}
 @media(min-width:880px){
-.wrap{max-width:1040px;padding:0 40px 96px}
-.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:start;padding-top:8px}
-.heroSide{padding-top:64px}
+.headerInner,.utilInner,.heroInner,.wrap{max-width:1040px;padding-left:40px;padding-right:40px}
+.wrap{padding-bottom:96px}
+.heroInner{padding:36px 0 8px}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:start}
+.heroSide{padding-top:8px}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 56px}
 .cols .full{grid-column:1 / -1}
-h1{font-size:36px}
-.big{font-size:86px}
+h1{font-size:34px}
+.big{font-size:82px}
 }
 `;
 
-function page({ title, desc, canonical, body, jsonld }) {
+function page({ title, desc, canonical, heroHtml, restHtml, jsonld }) {
   return `<!doctype html>
 <html lang="ko">
 <head>
@@ -238,13 +243,20 @@ ${SITE.naverVerify ? `<meta name="naver-site-verification" content="${SITE.naver
 <script type="application/ld+json">${JSON.stringify(jsonld)}</script>
 </head>
 <body>
-<div class="wrap">
-<header class="top">
-  <a class="brand" href="./index.html"><span class="mark">🔔</span><span class="word">${SITE.brand}</span></a>
+<header class="top"><div class="headerInner">
+  <a class="brand" href="./index.html">${SITE.brand}</a>
   <a class="sub" href="${SITE.kakao}">알림 단톡방</a>
-</header>
+</div></header>
+<div class="utilBar"><div class="utilInner">
+  <span>8만원 이상 무료배송</span>
+  <span>150달러 이상 관세 발생</span>
+  <span>추천코드 ${esc(db.referral)} 첫 구매 적립금</span>
+</div></div>
+<div class="wrap"><div class="heroInner">
+${heroHtml}
+</div>
 ${hasSample ? '<p class="warn">이 페이지는 예시 데이터로 생성되었습니다. data/discount.json 을 실제 값으로 교체한 뒤 배포하십시오.</p>' : ''}
-${body}
+${restHtml}
 <footer>
   <nav><a href="./index.html">홈</a><a href="./daeran.html">대란 기록</a><a href="${SITE.kakao}">알림 단톡방</a></nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
@@ -277,21 +289,28 @@ const dealList = last.deals.length ? `<ul class="hidden-deals">${last.deals.map(
   <div class="when">${kdate(d.start)}부터 ${kdate(d.end)}까지</div></li>`).join('')}</ul>`
   : '<p class="lede">지금 확인된 추가 할인은 없습니다. 새로 발견되면 이 자리에 올립니다.</p>';
 
-// 대란일 때만 큰 숫자 아래 손그림 밑줄을 넣습니다.
-const underlineSvg = isDaeran ? `<svg class="underline" viewBox="0 0 200 16" preserveAspectRatio="none"><path d="M2 9 Q 40 2, 80 8 T 160 7 T 198 10" fill="none" stroke="var(--teal)" stroke-width="5" stroke-linecap="round"/></svg>` : '';
+const ytPromo = `<div class="ytPromo">
+  <div class="ytIcon">▶</div>
+  <div>
+    <p class="ytKicker">유튜브에서도 확인하세요</p>
+    <p class="ytTitle">마프대란알리미</p>
+    <p class="ytDesc">이 사이트는 마프대란알리미 유튜브 채널에서 이어집니다. 대란 예고나 숨은 할인 발견 소식을 영상으로 가장 먼저 보고 싶다면 구독해 두십시오.</p>
+    <a class="cta" href="${SITE.youtube}" target="_blank" rel="noopener">채널 구독하기</a>
+  </div>
+</div>`;
 
 const home = page({
   title: `마이프로틴 실질 할인율 ${pct(last.eff)} | 오늘 대란인가 | ${SITE.brand}`,
   desc: `${kdate(last.date)} 기준 기본 할인 ${last.base}%에 숨은 추가 할인을 더한 실질 할인율은 ${pct(last.eff)}입니다. ${isDaeran ? '지금 대란입니다.' : `대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}`,
   canonical: `${SITE.origin}/`,
   jsonld: { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
-  body: `
+  heroHtml: `
 <div class="hero">
 <div class="heroMain">
-<span class="state ${isDaeran ? 'on' : 'off'}">${isDaeran ? '🔥 지금 대란입니다' : '지금은 대란이 아닙니다'}</span>
+<span class="state ${isDaeran ? 'on' : 'off'}">${isDaeran ? '지금 대란입니다' : '지금은 대란이 아닙니다'}</span>
 <h1>배너에 안 걸린 할인까지<br>합쳐서 계산했습니다</h1>
 <p class="lede">기본 할인코드에 조건부 추가 할인까지 쌓은 실질 할인율입니다. ${kdate(last.date)} 기준입니다.</p>
-<span class="numWrap"><span class="big ${isDaeran ? 'on' : ''}">${pct(last.eff)}</span>${underlineSvg}</span>
+<span class="numWrap"><span class="big ${isDaeran ? 'on' : ''}">${pct(last.eff)}</span></span>
 <p class="sub">${prevAvg !== null ? `전월 평균 ${pct(prevAvg)} 대비 ${delta > 0 ? '+' : ''}${delta}%p` : '이달 수집 시작'}${isDaeran ? '' : `, 대란 기준까지 ${gap}%p`}</p>
 ${bonus > 0 ? `<p class="formula">기본 ${last.base}% 에 숨은 할인 ${last.deals.length}건을 더해 <b>${pct(last.eff)}</b>가 됩니다.</p>` : ''}
 <a class="cta" href="${esc(SITE.affiliate)}" rel="sponsored nofollow">할인코드 확인하고 구매하기</a>
@@ -304,8 +323,9 @@ ${gauge()}
   <div><dt>평균 주기</dt><dd>${cycle ? `약 ${cycle}일` : '집계 중'}</dd></div>
 </dl>
 </div>
-</div>
-
+</div>`,
+  restHtml: `
+${ytPromo}
 <div class="cols">
 <section>
 <h2>지금 쌓을 수 있는 숨은 할인</h2>
@@ -354,7 +374,7 @@ const daeran = page({
   jsonld: { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
     { '@type': 'ListItem', position: 1, name: '홈', item: `${SITE.origin}/` },
     { '@type': 'ListItem', position: 2, name: '대란 기록', item: `${SITE.origin}/daeran.html` }] },
-  body: `
+  heroHtml: `
 <div class="hero">
 <div class="heroMain">
 <h1>마이프로틴<br>대란 기록</h1>
@@ -370,8 +390,9 @@ const daeran = page({
   <div><dt>평균 주기</dt><dd>${cycle ? `약 ${cycle}일` : '집계 중'}</dd></div>
 </dl>
 </div>
-</div>
-
+</div>`,
+  restHtml: `
+${ytPromo}
 <div class="cols">
 <section class="full" style="margin-top:46px">
 ${trend()}
