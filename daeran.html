@@ -82,8 +82,12 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);font-si
 footer nav{margin-bottom:10px}
 footer nav a{margin-right:14px;text-decoration:none}
 .warn{background:#FFF6D6;border:1px solid #E8D48A;border-radius:10px;padding:12px;font-size:13px;margin-bottom:20px}
-.ytPromo{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border-left:3px solid var(--blue);border-radius:0 12px 12px 0;padding:16px}
-.ytPromo .ytIcon{width:34px;height:34px;border-radius:8px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ytPromo{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 12px 12px 0;overflow:hidden}
+.ytPromo .ytThumb{display:block;position:relative;aspect-ratio:16/9;background:#000}
+.ytPromo .ytThumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ytPromo .ytPlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;background:rgba(0,0,0,.15)}
+.ytPromo .ytPlay span{width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding-left:3px}
+.ytPromo .ytBody{padding:16px}
 .ytPromo .ytKicker{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin:0 0 3px}
 .ytPromo .ytTitle{font-size:15px;font-weight:700;margin:0 0 5px;letter-spacing:-.01em}
 .ytPromo .ytDesc{font-size:13px;color:var(--muted);margin:0 0 12px}
@@ -136,15 +140,6 @@ h1{font-size:34px}
 </div>
 <p class="warn">이 페이지는 예시 데이터로 생성되었습니다. data/discount.json 을 실제 값으로 교체한 뒤 배포하십시오.</p>
 
-<div class="ytPromo">
-  <div class="ytIcon">▶</div>
-  <div>
-    <p class="ytKicker">유튜브에서도 확인하세요</p>
-    <p class="ytTitle">마프대란알리미</p>
-    <p class="ytDesc">이 사이트는 마프대란알리미 유튜브 채널에서 이어집니다. 대란 예고나 숨은 할인 발견 소식을 영상으로 가장 먼저 보고 싶다면 구독해 두십시오.</p>
-    <a class="cta" href="https://www.youtube.com/@마프대란알리미" target="_blank" rel="noopener">채널 구독하기</a>
-  </div>
-</div>
 <div class="cols">
 <section class="full" style="margin-top:46px">
 <svg class="trend" viewBox="0 0 640 210" role="img" aria-label="최근 42일 실질 할인율 추이">
@@ -164,6 +159,20 @@ h1{font-size:34px}
 <tbody><tr><td>9월 15일</td><td>1일</td><td class="n">43.8%</td></tr><tr><td>9월 9일 – 9월 11일</td><td>3일</td><td class="n">41%</td></tr><tr><td>8월 15일 – 8월 18일</td><td>4일</td><td class="n">42%</td></tr></tbody>
 </table>
 <p class="lede">할인율은 보통 전날 저녁에 바뀝니다. 저녁 이후 관측값은 다음 날짜의 행사로 기록합니다.</p>
+</section>
+<section class="full">
+<div class="ytPromo">
+  <a class="ytThumb" href="https://www.youtube.com/watch?v=V_lXtiqjd_s" target="_blank" rel="noopener">
+    <img src="https://img.youtube.com/vi/V_lXtiqjd_s/hqdefault.jpg" alt="마프대란알리미 영상 썸네일" loading="lazy">
+    <span class="ytPlay"><span>▶</span></span>
+  </a>
+  <div class="ytBody">
+    <p class="ytKicker">유튜브에서도 확인하세요</p>
+    <p class="ytTitle">마프대란알리미</p>
+    <p class="ytDesc">이 사이트는 마프대란알리미 유튜브 채널에서 이어집니다. 대란 예고나 숨은 할인 발견 소식을 영상으로 가장 먼저 보고 싶다면 채널을 확인해 두십시오.</p>
+    <a class="cta" href="https://www.youtube.com/watch?v=V_lXtiqjd_s" target="_blank" rel="noopener">영상 보러가기</a>
+  </div>
+</div>
 </section>
 </div>
 

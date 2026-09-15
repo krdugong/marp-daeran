@@ -15,6 +15,7 @@ const SITE = {
   kakao: 'https://open.kakao.com/o/gh0XALIi',
   affiliate: 'https://www.awin1.com/cread.php?awinmid=10751&awinaffid=325265&clickref=alimi-homepage&ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3',
   youtube: 'https://www.youtube.com/@마프대란알리미',
+  youtubeVideo: 'https://www.youtube.com/watch?v=V_lXtiqjd_s',
   naverVerify: '',
 };
 // ───────────────────────────────────────────────
@@ -199,8 +200,12 @@ footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);font-si
 footer nav{margin-bottom:10px}
 footer nav a{margin-right:14px;text-decoration:none}
 .warn{background:#FFF6D6;border:1px solid #E8D48A;border-radius:10px;padding:12px;font-size:13px;margin-bottom:20px}
-.ytPromo{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border-left:3px solid var(--blue);border-radius:0 12px 12px 0;padding:16px}
-.ytPromo .ytIcon{width:34px;height:34px;border-radius:8px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.ytPromo{background:var(--surface);border-left:3px solid var(--blue);border-radius:0 12px 12px 0;overflow:hidden}
+.ytPromo .ytThumb{display:block;position:relative;aspect-ratio:16/9;background:#000}
+.ytPromo .ytThumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ytPromo .ytPlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;background:rgba(0,0,0,.15)}
+.ytPromo .ytPlay span{width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding-left:3px}
+.ytPromo .ytBody{padding:16px}
 .ytPromo .ytKicker{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin:0 0 3px}
 .ytPromo .ytTitle{font-size:15px;font-weight:700;margin:0 0 5px;letter-spacing:-.01em}
 .ytPromo .ytDesc{font-size:13px;color:var(--muted);margin:0 0 12px}
@@ -289,13 +294,18 @@ const dealList = last.deals.length ? `<ul class="hidden-deals">${last.deals.map(
   <div class="when">${kdate(d.start)}부터 ${kdate(d.end)}까지</div></li>`).join('')}</ul>`
   : '<p class="lede">지금 확인된 추가 할인은 없습니다. 새로 발견되면 이 자리에 올립니다.</p>';
 
+const ytVideoId = SITE.youtubeVideo.match(/[?&]v=([^&]+)/)?.[1] || '';
+const ytThumb = ytVideoId ? `https://img.youtube.com/vi/${ytVideoId}/hqdefault.jpg` : '';
 const ytPromo = `<div class="ytPromo">
-  <div class="ytIcon">▶</div>
-  <div>
+  <a class="ytThumb" href="${esc(SITE.youtubeVideo)}" target="_blank" rel="noopener">
+    <img src="${ytThumb}" alt="마프대란알리미 영상 썸네일" loading="lazy">
+    <span class="ytPlay"><span>▶</span></span>
+  </a>
+  <div class="ytBody">
     <p class="ytKicker">유튜브에서도 확인하세요</p>
     <p class="ytTitle">마프대란알리미</p>
-    <p class="ytDesc">이 사이트는 마프대란알리미 유튜브 채널에서 이어집니다. 대란 예고나 숨은 할인 발견 소식을 영상으로 가장 먼저 보고 싶다면 구독해 두십시오.</p>
-    <a class="cta" href="${SITE.youtube}" target="_blank" rel="noopener">채널 구독하기</a>
+    <p class="ytDesc">이 사이트는 마프대란알리미 유튜브 채널에서 이어집니다. 대란 예고나 숨은 할인 발견 소식을 영상으로 가장 먼저 보고 싶다면 채널을 확인해 두십시오.</p>
+    <a class="cta" href="${esc(SITE.youtubeVideo)}" target="_blank" rel="noopener">영상 보러가기</a>
   </div>
 </div>`;
 
@@ -325,7 +335,6 @@ ${gauge()}
 </div>
 </div>`,
   restHtml: `
-${ytPromo}
 <div class="cols">
 <section>
 <h2>지금 쌓을 수 있는 숨은 할인</h2>
@@ -363,6 +372,10 @@ ${FAQ.map(([q, a]) => `<details><summary>${q}</summary><p>${a}</p></details>`).j
 <p class="lede">새 조건을 찾아내는 즉시 단톡방에 올립니다. 대란이 시작될 때도 바로 알려드립니다.</p>
 <a class="cta" href="${SITE.kakao}">알림 단톡방 들어가기</a>
 </section>
+
+<section class="full">
+${ytPromo}
+</section>
 </div>
 `,
 });
@@ -392,7 +405,6 @@ const daeran = page({
 </div>
 </div>`,
   restHtml: `
-${ytPromo}
 <div class="cols">
 <section class="full" style="margin-top:46px">
 ${trend()}
@@ -404,6 +416,9 @@ ${trend()}
 <tbody>${recent.map(e => `<tr><td>${kdate(e.start)}${e.start === e.end ? '' : ` – ${kdate(e.end)}`}</td><td>${e.days}일</td><td class="n">${pct(e.max)}</td></tr>`).join('')}</tbody>
 </table>
 <p class="lede">할인율은 보통 전날 저녁에 바뀝니다. 저녁 이후 관측값은 다음 날짜의 행사로 기록합니다.</p>
+</section>
+<section class="full">
+${ytPromo}
 </section>
 </div>
 `,
