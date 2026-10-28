@@ -206,7 +206,8 @@ footer nav a{text-decoration:none;color:var(--muted);font-weight:600}
 .opt:has(input:checked){box-shadow:inset 0 0 0 2px var(--brand);background:var(--brand-100)}
 .res{background:#fff;border-radius:14px;padding:16px;margin:4px 0 6px}
 .res .lbl{font-size:13px;color:var(--muted);font-weight:600}
-.res .final{font-size:38px;font-weight:800;letter-spacing:-.04em;line-height:1.2;color:var(--brand)}
+.res .final{font-size:38px;font-weight:800;letter-spacing:-.04em;line-height:1.2;color:var(--brand);white-space:nowrap}
+.res td.n{white-space:nowrap;padding-left:12px}
 .res .save{font-size:14px;color:var(--accent);font-weight:700;margin:2px 0 10px}
 .res td{padding:7px 0;font-size:13px}
 .res tr.sum td{font-weight:800;font-size:14px;border-bottom:0}
@@ -245,11 +246,12 @@ body.hasSticky{padding-bottom:86px}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 56px;align-items:start}
 .cols .full,.cols section:has(> details),.cols section:has(.calc),.cols section:has(.pt),.cols section:has(.vids){grid-column:1 / -1}
 .vids{grid-template-columns:1fr 1fr}
-.calc{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;align-items:start;padding:24px}
-.calc > *{grid-column:1}
-.calc .res{grid-column:2;grid-row:1 / 4;margin:0}
-.calc .cta{grid-column:2;grid-row:4;margin-top:12px}
-.calc .hint{grid-column:2;grid-row:5}
+/* 계산기: 왼쪽 입력, 오른쪽 결과. 두 덩어리라 서로 높이를 늘리지 않습니다 */
+.calc{display:grid;grid-template-columns:1.1fr .9fr;gap:0 32px;align-items:start;padding:28px}
+.calc .calcIn fieldset:last-child{margin-bottom:0}
+.calc .calcOut{position:sticky;top:84px}
+.calc .res{margin:0}
+.calc .cta{margin-top:12px}
 h1{font-size:42px}
 h2{font-size:24px}
 .big{font-size:96px}

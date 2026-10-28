@@ -152,6 +152,7 @@ const calcData = {
   daeranRate,
 };
 const calcWidget = CALC_CODES.length ? `<div class="calc">
+<div class="calcIn">
 <label class="f" for="cartAmt">장바구니 금액 (할인코드 넣기 전)</label>
 <div class="amt"><input id="cartAmt" inputmode="numeric" autocomplete="off" value="120,000" aria-label="장바구니 금액"><span>원</span></div>
 <div class="chips">${[50000, 80000, 120000, 150000, 200000].map(v => `<button type="button" data-amt="${v}">${v / 10000}만원</button>`).join('')}</div>
@@ -159,6 +160,8 @@ const calcWidget = CALC_CODES.length ? `<div class="calc">
   <label class="opt"><input type="radio" name="calcCode" value="${i}"${c === primary ? ' checked' : ''}><span class="ol">${esc(nameOf(c))} <small>${esc(c.label)}</small></span><span class="or">${c.rate}%</span></label>`).join('')}</div></fieldset>
 ${last.deals.length ? `<fieldset><legend class="f">숨은 할인 조건</legend><div class="opts">${last.deals.map((d, i) => `
   <label class="opt"><input type="checkbox" data-deal="${i}" checked><span class="ol">${esc(d.calcLabel || d.label)}</span><span class="or">${d.type === 'amount' ? `-${(d.amount / 1000).toLocaleString('ko-KR')}천원` : `-${d.rate}%`}</span></label>`).join('')}</div></fieldset>` : ''}
+</div>
+<div class="calcOut">
 <div class="res" aria-live="polite">
   <div class="lbl">예상 최종 결제금액</div>
   <div class="final" id="cFinal">-</div>
@@ -168,6 +171,7 @@ ${last.deals.length ? `<fieldset><legend class="f">숨은 할인 조건</legend>
 </div>
 <a class="cta hot" id="cGo" ${goAttrs((CALC_CODES.includes(primary) ? primary : CALC_CODES[0]).code, nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]))}>${esc(nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]))} 복사하고 이 금액으로 사기</a>
 <p class="hint">${kdate(last.date)} 조건 기준 예상값입니다. 세일 상품은 코드가 빠질 수 있으니 장바구니에서 최종 확인하세요.</p>
+</div>
 </div>
 <script type="application/json" id="calcData">${JSON.stringify(calcData).replace(/</g, '\\u003c')}</script>` : '';
 const calcScript = `<script>
@@ -451,7 +455,8 @@ footer nav a{text-decoration:none;color:var(--muted);font-weight:600}
 .opt:has(input:checked){box-shadow:inset 0 0 0 2px var(--brand);background:var(--brand-100)}
 .res{background:#fff;border-radius:14px;padding:16px;margin:4px 0 6px}
 .res .lbl{font-size:13px;color:var(--muted);font-weight:600}
-.res .final{font-size:38px;font-weight:800;letter-spacing:-.04em;line-height:1.2;color:var(--brand)}
+.res .final{font-size:38px;font-weight:800;letter-spacing:-.04em;line-height:1.2;color:var(--brand);white-space:nowrap}
+.res td.n{white-space:nowrap;padding-left:12px}
 .res .save{font-size:14px;color:var(--accent);font-weight:700;margin:2px 0 10px}
 .res td{padding:7px 0;font-size:13px}
 .res tr.sum td{font-weight:800;font-size:14px;border-bottom:0}
@@ -490,11 +495,12 @@ body.hasSticky{padding-bottom:86px}
 .cols{display:grid;grid-template-columns:1fr 1fr;gap:0 56px;align-items:start}
 .cols .full,.cols section:has(> details),.cols section:has(.calc),.cols section:has(.pt),.cols section:has(.vids){grid-column:1 / -1}
 .vids{grid-template-columns:1fr 1fr}
-.calc{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;align-items:start;padding:24px}
-.calc > *{grid-column:1}
-.calc .res{grid-column:2;grid-row:1 / 4;margin:0}
-.calc .cta{grid-column:2;grid-row:4;margin-top:12px}
-.calc .hint{grid-column:2;grid-row:5}
+/* 계산기: 왼쪽 입력, 오른쪽 결과. 두 덩어리라 서로 높이를 늘리지 않습니다 */
+.calc{display:grid;grid-template-columns:1.1fr .9fr;gap:0 32px;align-items:start;padding:28px}
+.calc .calcIn fieldset:last-child{margin-bottom:0}
+.calc .calcOut{position:sticky;top:84px}
+.calc .res{margin:0}
+.calc .cta{margin-top:12px}
 h1{font-size:42px}
 h2{font-size:24px}
 .big{font-size:96px}
@@ -872,9 +878,9 @@ if (calcWidget) page({
 <h1>마이프로틴 할인 계산기</h1>
 <p class="updated">${dot(last.date)} 조건 기준 · 매일 갱신</p>
 <p class="lede answer">장바구니 금액만 넣으면 ${pName || '할인코드'} ${last.base}%와 쇼핑지원금, 이달의 트렌드 할인까지 적용한 최종 결제금액이 나옵니다. 지원금 기준에 모자라면 얼마나 더 담아야 하는지도 알려드립니다.</p>
+</div>
 ${calcWidget}
 ${otherCodesBox}
-</div>
 </div>`,
   restHtml: `
 <section>
