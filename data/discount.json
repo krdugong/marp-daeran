@@ -1,5 +1,5 @@
 {
-  "_readme": "entries = 매일 할인코드 할인율 기록(base = 히든코드 기준, official = 공식 배너 코드). 자동 수집은 official 에 hiddenCodeBonus 를 더해 base 로 씁니다. deals = 장바구니 조건으로 더 붙는 숨은 할인. codes = 할인코드 목록(primary 가 메인 버튼, until 이 지나면 자동으로 숨김). history = 매일 기록을 시작하기 전의 대란과 유튜브 영상(daeran:false 는 대란은 아니지만 그 달 페이지에 보여줄 영상). products = 가격 비교 표에 쓰는 대표 제품의 표시가(코드가 적용되는 가격)와 정가. priceDate 는 표시가를 확인한 날. 대란 판정은 base 가 threshold 이상인 날입니다.",
+  "_readme": "entries = 매일 할인코드 할인율 기록(base = 히든코드 기준, official = 공식 배너 코드). 자동 수집은 official 에 hiddenCodeBonus 를 더해 base 로 씁니다. deals = 장바구니 조건으로 더 붙는 숨은 할인. codes = 할인코드 목록(primary 가 메인 버튼, until 이 지나면 자동으로 숨김, secret:true 면 화면에는 코드 대신 히든코드로만 보이고 복사할 때만 실제 코드가 들어감). history = 매일 기록을 시작하기 전의 대란과 유튜브 영상(daeran:false 는 대란은 아니지만 그 달 페이지에 보여줄 영상). products = 가격 비교 표에 쓰는 대표 제품의 표시가(코드가 적용되는 가격)와 정가. priceDate 는 표시가를 확인한 날. 대란 판정은 base 가 threshold 이상인 날입니다.",
   "threshold": 39,
   "hiddenCodeBonus": 1,
   "shop": { "freeShipping": 80000, "customsUsd": 150, "usdKrw": 1400 },
@@ -41,7 +41,7 @@
     }
   ],
   "codes": [
-    { "label": "말왕 히든코드", "code": "HORSEKING", "rate": 36, "note": "공식 코드보다 높은 유튜버 코드", "primary": true },
+    { "label": "마프대란알리미 히든코드", "code": "HORSEKING", "rate": 36, "note": "공식 코드보다 높은 전용 코드. 복사하면 자동으로 들어갑니다", "primary": true, "secret": true },
     { "label": "팬카페 코드", "code": "FANCAFE", "rate": 36, "note": "마이프로틴 팬카페 코드" },
     { "label": "공식 행사 코드", "code": "MP35", "rate": 35, "note": "마이프로틴 메인 배너 코드 · 10월 30일 18시 59분 마감", "official": true, "until": "2026-10-30" }
   ],
@@ -53,11 +53,11 @@
         { "id": "qLFrjZa-QgA", "date": "2026-03-03", "title": "마이프로틴 3/4 할인코드 오늘까지 41% 뒷풀이 히든코드" } ] },
     { "start": "2026-03-18", "max": 42, "note": "할인코드 42% + 지원금 7천원 중복",
       "videos": [ { "id": "25xOXcdN0ZM", "date": "2026-03-18", "title": "(4시간 남음) 마이프로틴 할인코드 + 지원금 7천원 42 중복" } ] },
-    { "start": "2026-04-04", "max": 42, "note": "공식 코드 0404는 40%, 히든코드 HORSEKING 42%",
+    { "start": "2026-04-04", "max": 42, "note": "공식 코드 0404는 40%, 히든코드 42%",
       "videos": [ { "id": "dWc89GUzd2g", "date": "2026-04-03", "title": "마이프로틴 4월대란 4/4 할인코드 42% 히든코드 나왔습니다 달리세요" } ] },
     { "start": "2026-04-23", "max": 42, "note": "골든슈퍼프리세일",
       "videos": [ { "id": "tOm6qqWK0u4", "date": "2026-04-23", "title": "마이프로틴 할인코드 42% 갑자기 나왔습니다 골든슈퍼프리세일" } ] },
-    { "start": "2026-05-03", "end": "2026-05-05", "max": 43, "note": "GOLDVVIP 41% 예고 후 HORSEKING 43%, 6천원 + 6천원 중복",
+    { "start": "2026-05-03", "end": "2026-05-05", "max": 43, "note": "GOLDVVIP 41% 예고 후 히든코드 43%, 6천원 + 6천원 중복",
       "videos": [
         { "id": "H_3hCJSd9Wc", "date": "2026-05-03", "title": "마이프로틴 5월대란 커밍순 41% 코드 기습공개?" },
         { "id": "3W5Q9356C1g", "date": "2026-05-04", "title": "마이프로틴 5월 대란. 이런 차이는 처음봅니다. 6% 차이나는 할인코드 달리세요" },
@@ -72,7 +72,7 @@
       "videos": [ { "id": "M5jqNG8lHGg", "date": "2026-07-20", "title": "마이프로틴 7월 할인코드 타임세일 + 7%추가 + 히든코드 공개" } ] },
     { "start": "2026-08-07", "daeran": false, "note": "할인코드 + 쇼핑지원금",
       "videos": [ { "id": "_NyUGqa8Ym4", "date": "2026-08-07", "title": "마이프로틴 8월 할인코드 + 쇼핑지원금 체감 46%? 내일까지!" } ] },
-    { "start": "2026-08-14", "end": "2026-08-16", "max": 41, "note": "815대란. HORSEKING 41% + 이달의 트렌드 5% 중복",
+    { "start": "2026-08-14", "end": "2026-08-16", "max": 41, "note": "815대란. 히든코드 41% + 이달의 트렌드 5% 중복",
       "videos": [
         { "id": "Z6XaapscSnM", "date": "2026-08-12", "title": "마이프로틴 815대란 준비 쇼핑지원금 신청하세요(오늘까지!)" },
         { "id": "GKnBW8tVMYI", "date": "2026-08-13", "title": "마이프로틴 8월 대란 전 히든코드 + 할인코드 패턴 알려드립니다" },

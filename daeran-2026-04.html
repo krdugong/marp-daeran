@@ -249,7 +249,7 @@ body.hasSticky{padding-bottom:0}
 <p class="updated">2026년 4월 · 유튜브 영상 기준</p>
 <p class="lede">2026년 4월 마이프로틴 대란은 2번 있었습니다. 4월 4일(할인코드 42%), 4월 23일(할인코드 42%)입니다. 마프대란알리미 채널 영상 기준입니다.</p>
 
-<a class="cta hot" href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3" target="_blank" rel="sponsored nofollow noopener" data-copy="HORSEKING">HORSEKING 복사하고 36% 할인받기</a>
+<a class="cta hot" href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3" target="_blank" rel="sponsored nofollow noopener" data-copy="HORSEKING" data-label="히든코드">히든코드 복사하고 36% 할인받기</a>
 <p class="hint">누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>
 </div>
 <div class="heroSide">
@@ -269,7 +269,7 @@ body.hasSticky{padding-bottom:0}
 <thead><tr><th>기간</th><th>일수</th><th class="n">최고 할인코드</th></tr></thead>
 <tbody><tr><td>4월 23일<a class="vlink" href="https://www.youtube.com/watch?v=tOm6qqWK0u4" target="_blank" rel="noopener">▶ 영상</a></td><td>1일</td><td class="n">42%</td></tr><tr><td>4월 4일<a class="vlink" href="https://www.youtube.com/watch?v=dWc89GUzd2g" target="_blank" rel="noopener">▶ 영상</a></td><td>1일</td><td class="n">42%</td></tr></tbody>
 </table>
-<ul class="steps"><li><b>4월 4일</b> 공식 코드 0404는 40%, 히든코드 HORSEKING 42%</li><li><b>4월 23일</b> 골든슈퍼프리세일</li></ul>
+<ul class="steps"><li><b>4월 4일</b> 공식 코드 0404는 40%, 히든코드 42%</li><li><b>4월 23일</b> 골든슈퍼프리세일</li></ul>
 </section>
 
 <section class="full">
@@ -307,7 +307,7 @@ body.hasSticky{padding-bottom:0}
   <p>마이프로틴(Myprotein)은 THG plc의 상표이며 본 사이트와 무관합니다.</p>
 </footer>
 </main>
-<a class="sticky" href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3" target="_blank" rel="sponsored nofollow noopener" data-copy="HORSEKING"><b>HORSEKING</b> 복사하고 36% 할인받기 →</a>
+<a class="sticky" href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3" target="_blank" rel="sponsored nofollow noopener" data-copy="HORSEKING" data-label="히든코드"><b>히든코드</b> 복사하고 36% 할인받기 →</a>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>
 (function(){
@@ -317,8 +317,8 @@ body.hasSticky{padding-bottom:0}
   function copy(v){try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(v).catch(function(){old(v)})}else{old(v)}}catch(e){old(v)}}
   document.querySelectorAll('[data-copy]').forEach(function(el){
     el.addEventListener('click',function(){
-      var v=el.getAttribute('data-copy');copy(v);
-      show(v+' 복사됨 · 장바구니 할인코드 칸에 붙여넣으세요');
+      var v=el.getAttribute('data-copy'),lb=el.getAttribute('data-label')||v;copy(v);
+      show(lb+' 복사됨 · 장바구니 할인코드 칸에 붙여넣으세요');
       if(el.tagName==='BUTTON'){var t=el.textContent;el.textContent='복사됨';setTimeout(function(){el.textContent=t},1200)}
     });
   });

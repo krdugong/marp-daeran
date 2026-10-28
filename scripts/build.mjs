@@ -119,7 +119,8 @@ const CODES = (db.codes || []).filter(c => !c.until || c.until >= last.date);
 const official = CODES.find(c => c.official);
 const primary = CODES.find(c => c.primary) || CODES.find(c => !c.official) || CODES[0];
 const extraOf = c => (official && c !== official && c.rate != null && official.rate != null && c.rate > official.rate) ? r1(c.rate - official.rate) : null;
-const goAttrs = code => `href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${esc(code)}"`;
+const nameOf = c => c.secret ? '히든코드' : c.code;
+const goAttrs = (code, label) => `href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${esc(code)}"${label ? ` data-label="${esc(label)}"` : ''}`;
 
 // ── 할인 계산기 ──
 // 계산 순서: 할인코드(%) → 정액 할인(쇼핑지원금 등, 할인코드 적용 후 금액이 min 이상일 때) → 나머지 % 할인(이달의 트렌드 등)
@@ -127,7 +128,7 @@ const SHOP = { freeShipping: 80000, customsUsd: 150, usdKrw: 1400, ...(db.shop |
 const CALC_CODES = CODES.filter(c => c.rate != null);
 const daeranRate = knownMax.length ? Math.round(knownMax.reduce((s, v) => s + v, 0) / knownMax.length) : null;
 const calcData = {
-  codes: CALC_CODES.map(c => ({ code: c.code, rate: c.rate })),
+  codes: CALC_CODES.map(c => ({ code: c.code, name: nameOf(c), rate: c.rate })),
   deals: last.deals.map(d => ({ label: d.label, type: d.type === 'amount' ? 'amount' : 'percent', rate: d.rate, amount: d.amount || 0, min: d.min || 0 })),
   shop: SHOP,
   daeranRate,
@@ -137,7 +138,7 @@ const calcWidget = CALC_CODES.length ? `<div class="calc">
 <div class="amt"><input id="cartAmt" inputmode="numeric" autocomplete="off" value="120,000" aria-label="장바구니 금액"><span>원</span></div>
 <div class="chips">${[50000, 80000, 120000, 150000, 200000].map(v => `<button type="button" data-amt="${v}">${v / 10000}만원</button>`).join('')}</div>
 <fieldset><legend class="f">할인코드</legend><div class="opts">${CALC_CODES.map((c, i) => `
-  <label class="opt"><input type="radio" name="calcCode" value="${i}"${c === primary ? ' checked' : ''}><span class="ol">${esc(c.code)} <small>${esc(c.label)}</small></span><span class="or">${c.rate}%</span></label>`).join('')}</div></fieldset>
+  <label class="opt"><input type="radio" name="calcCode" value="${i}"${c === primary ? ' checked' : ''}><span class="ol">${esc(nameOf(c))} <small>${esc(c.label)}</small></span><span class="or">${c.rate}%</span></label>`).join('')}</div></fieldset>
 ${last.deals.length ? `<fieldset><legend class="f">숨은 할인 조건</legend><div class="opts">${last.deals.map((d, i) => `
   <label class="opt"><input type="checkbox" data-deal="${i}" checked><span class="ol">${esc(d.calcLabel || d.label)}</span><span class="or">${d.type === 'amount' ? `-${(d.amount / 1000).toLocaleString('ko-KR')}천원` : `-${d.rate}%`}</span></label>`).join('')}</div></fieldset>` : ''}
 <div class="res" aria-live="polite">
@@ -147,7 +148,7 @@ ${last.deals.length ? `<fieldset><legend class="f">숨은 할인 조건</legend>
   <table><tbody id="cLines"></tbody></table>
   <ul class="tips" id="cTips"></ul>
 </div>
-<a class="cta hot" id="cGo" ${goAttrs((CALC_CODES.includes(primary) ? primary : CALC_CODES[0]).code)}>${esc((CALC_CODES.includes(primary) ? primary : CALC_CODES[0]).code)} 복사하고 이 금액으로 사기</a>
+<a class="cta hot" id="cGo" ${goAttrs((CALC_CODES.includes(primary) ? primary : CALC_CODES[0]).code, nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]))}>${esc(nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]))} 복사하고 이 금액으로 사기</a>
 <p class="hint">${kdate(last.date)} 조건 기준 예상값입니다. 세일 상품은 코드가 빠질 수 있으니 장바구니에서 최종 확인하세요.</p>
 </div>
 <script type="application/json" id="calcData">${JSON.stringify(calcData).replace(/</g, '\\u003c')}</script>` : '';
@@ -172,7 +173,7 @@ const calcScript = `<script>
   function calc(){
     var cart=num(inp.value),pick=document.querySelector('input[name=calcCode]:checked'),c=D.codes[pick?+pick.value:0];
     var on=D.deals.map(function(d,i){var el=document.querySelector('[data-deal="'+i+'"]');return !!(el&&el.checked)});
-    var go=$('cGo');go.setAttribute('data-copy',c.code);go.textContent=c.code+' 복사하고 이 금액으로 사기';
+    var go=$('cGo');go.setAttribute('data-copy',c.code);go.setAttribute('data-label',c.name);go.textContent=c.name+' 복사하고 이 금액으로 사기';
     var L=$('cLines'),T=$('cTips');L.textContent='';T.textContent='';
     if(!cart){$('cFinal').textContent='-';$('cSave').textContent='장바구니 금액을 넣어 주세요';return}
     var r=run(cart,c.rate,on),saved=cart-r.final;
@@ -203,7 +204,7 @@ const priceRows = list => `<table class="pt">
 <thead><tr><th>제품</th><th class="n">표시가</th><th class="n">평소<br><small>코드 ${last.base}%</small></th><th class="n">대란<br><small>코드 ${dRate}%</small></th><th class="n">차이</th></tr></thead>
 <tbody>${list.map(p => {
   const a = p.price * (1 - last.base / 100), b = p.price * (1 - dRate / 100);
-  return `<tr><td><a href="${esc(affTo(p.url))}" target="_blank" rel="sponsored nofollow noopener"${primary ? ` data-copy="${esc(primary.code)}"` : ''}>${esc(p.name)} <b>${esc(p.size)}</b></a>${p.note ? `<small>${esc(p.note)}</small>` : ''}</td><td class="n muted">${won(p.price)}</td><td class="n">${won(a)}</td><td class="n hot">${won(b)}</td><td class="n">-${won(a - b)}</td></tr>`;
+  return `<tr><td><a href="${esc(affTo(p.url))}" target="_blank" rel="sponsored nofollow noopener"${primary ? ` data-copy="${esc(primary.code)}" data-label="${esc(nameOf(primary))}"` : ''}>${esc(p.name)} <b>${esc(p.size)}</b></a>${p.note ? `<small>${esc(p.note)}</small>` : ''}</td><td class="n muted">${won(p.price)}</td><td class="n">${won(a)}</td><td class="n hot">${won(b)}</td><td class="n">-${won(a - b)}</td></tr>`;
 }).join('')}</tbody>
 </table>`;
 
@@ -468,17 +469,17 @@ const codeList = `<ul class="codes">${CODES.map(c => {
   const ex = extraOf(c);
   return `
   <li${c === primary ? ' class="primary"' : ''}><span class="name">${esc(c.label)}</span>${ex ? `<span class="plus">공식보다 +${ex}%p</span>` : ''}<em>${esc(c.note)}</em>
-  <div class="crow"><code>${esc(c.code)}</code><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span>
-  <button type="button" data-copy="${esc(c.code)}">복사</button><a class="go" ${goAttrs(c.code)}>복사하고 이동</a></div></li>`;
+  <div class="crow"><code>${esc(nameOf(c))}</code><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span>
+  <button type="button" data-copy="${esc(c.code)}" data-label="${esc(nameOf(c))}">복사</button><a class="go" ${goAttrs(c.code, nameOf(c))}>복사하고 이동</a></div></li>`;
 }).join('')}
   ${db.referral ? `<li><span class="name">신규 가입 추천인 코드</span><em>처음 가입할 때 넣으면 첫 구매 적립금. 할인코드와 같이 쓸 수 있습니다.</em>
   <div class="crow"><code>${esc(db.referral)}</code><span class="crate"></span><button type="button" data-copy="${esc(db.referral)}">복사</button></div></li>` : ''}
 </ul>`;
 
-const heroCta = primary ? `<a class="cta hot" ${goAttrs(primary.code)}>${esc(primary.code)} 복사하고 ${primary.rate != null ? `${primary.rate}% ` : ''}할인받기</a>
+const heroCta = primary ? `<a class="cta hot" ${goAttrs(primary.code, nameOf(primary))}>${esc(nameOf(primary))} 복사하고 ${primary.rate != null ? `${primary.rate}% ` : ''}할인받기</a>
 <p class="hint">누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>`
   : `<a class="cta" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener">마이프로틴에서 할인받기</a>`;
-const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code)}><b>${esc(primary.code)}</b> 복사하고 ${primary.rate != null ? `${primary.rate}% ` : ''}할인받기 →</a>` : '';
+const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(primary))}><b>${esc(nameOf(primary))}</b> 복사하고 ${primary.rate != null ? `${primary.rate}% ` : ''}할인받기 →</a>` : '';
 
 const dealItems = ds => `<ul class="hidden-deals">${ds.map(d => `
   <li><div class="row"><span class="t">${esc(d.label)}</span><span class="r">+${d.rate}%</span></div>
@@ -594,8 +595,8 @@ ${sticky}
   function copy(v){try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(v).catch(function(){old(v)})}else{old(v)}}catch(e){old(v)}}
   document.querySelectorAll('[data-copy]').forEach(function(el){
     el.addEventListener('click',function(){
-      var v=el.getAttribute('data-copy');copy(v);
-      show(v+' 복사됨 · 장바구니 할인코드 칸에 붙여넣으세요');
+      var v=el.getAttribute('data-copy'),lb=el.getAttribute('data-label')||v;copy(v);
+      show(lb+' 복사됨 · 장바구니 할인코드 칸에 붙여넣으세요');
       if(el.tagName==='BUTTON'){var t=el.textContent;el.textContent='복사됨';setTimeout(function(){el.textContent=t},1200)}
     });
   });
@@ -609,9 +610,10 @@ ${extraScript}
 }
 
 // ── 문구 ──
-const codeWord = primary ? `히든코드 ${primary.code} ${last.base}%` : `할인코드 ${last.base}%`;
+const pName = primary ? (primary.secret ? '히든코드' : `히든코드 ${primary.code}`) : null;
+const codeWord = pName ? `${pName} ${last.base}%` : `할인코드 ${last.base}%`;
 const officialLine = primary && official && extraOf(primary)
-  ? `오늘 가장 높은 코드는 ${primary.code} ${primary.rate}%로, 마이프로틴 공식 코드 ${official.code}(${official.rate}%)보다 ${extraOf(primary)}%p 높습니다.`
+  ? `오늘 가장 높은 코드는 ${nameOf(primary)} ${primary.rate}%로, 마이프로틴 공식 코드 ${official.code}(${official.rate}%)보다 ${extraOf(primary)}%p 높습니다.`
   : '';
 const knownRange = knownMax.length ? `${Math.min(...knownMax)}~${Math.max(...knownMax)}%` : null;
 
@@ -619,7 +621,7 @@ const HOME_FAQ = [
   ['마프대란이 뭔가요?',
    `마이프로틴 할인코드 할인율이 평소보다 확실히 올라가는 날을 구매자들이 부르는 말입니다. 공식 행사 이름은 아닙니다.${knownRange ? ` 마프대란알리미 채널에서 3월부터 따라가 보니 대란 때 히든코드는 ${knownRange}였습니다.` : ''} 이 사이트는 할인코드 할인율이 ${TH}% 이상인 날을 대란으로 기록합니다.`],
   ['히든코드가 뭔가요?',
-   '마이프로틴 메인 배너에 걸린 공식 코드 말고 유튜버나 팬카페에 따로 주어지는 코드입니다. 대부분 공식 코드보다 1~2%p 높게 나옵니다. 4월 4일 대란 때 공식 코드 0404는 40%였고 HORSEKING은 42%였습니다.'],
+   '마이프로틴 메인 배너에 걸린 공식 코드 말고 유튜버나 팬카페에 따로 주어지는 코드입니다. 대부분 공식 코드보다 1~2%p 높게 나옵니다. 4월 4일 대란 때 공식 코드 0404는 40%였고 히든코드는 42%였습니다. 코드는 복사 버튼을 누르면 자동으로 들어갑니다.'],
   ['숨은 할인이 뭔가요?',
    '할인코드와 별개로 장바구니 조건을 맞추면 더 빠지는 할인입니다. 이달의 트렌드 제품을 같이 사면 최종 금액에서 7%가 더 빠지거나, 앱에서 12만원 이상 결제하면 쇼핑지원금이 붙는 식입니다. 이 사이트는 이런 조건을 할인코드 위에 쌓아 실제로 받는 할인율을 따로 계산합니다.'],
   ['실제 할인율이 39%를 넘는데 왜 대란이 아닌가요?',
@@ -719,7 +721,7 @@ const CODE_FAQ = [
   ['마이프로틴 할인코드는 어디에 입력하나요?',
    '마이프로틴 장바구니 화면의 할인코드 입력란에 코드를 넣고 적용을 누르면 됩니다. 적용되면 장바구니 금액에 할인이 바로 반영되니, 결제하기 전에 금액이 바뀌었는지 확인하십시오.'],
   ['공식 코드와 히든코드 중 뭘 써야 하나요?',
-   `할인율이 높은 쪽을 쓰면 됩니다. 히든코드는 대부분 공식 코드보다 1~2%p 높습니다.${primary && official ? ` 오늘은 ${primary.code} ${primary.rate}%, 공식 코드 ${official.code} ${official.rate}%입니다.` : ''}`],
+   `할인율이 높은 쪽을 쓰면 됩니다. 히든코드는 대부분 공식 코드보다 1~2%p 높습니다.${primary && official ? ` 오늘은 ${nameOf(primary)} ${primary.rate}%, 공식 코드 ${official.code} ${official.rate}%입니다.` : ''}`],
   ['마이프로틴 할인코드 중복 적용 되나요?',
    '할인코드끼리는 중복이 안 됩니다. 한 주문에 코드 하나만 들어가고, 두 번째 코드를 넣으면 앞의 코드가 빠집니다. 대신 이달의 트렌드 7%나 쇼핑지원금처럼 장바구니 조건으로 붙는 숨은 할인은 코드와 중복됩니다. 이 사이트는 둘을 합친 실제 할인율을 따로 계산합니다.'],
   ['마이프로틴 쇼핑지원금은 어떻게 받나요?',
@@ -732,9 +734,9 @@ const CODE_FAQ = [
 
 page({
   file: 'code.html', priority: 0.9, current: 'code.html',
-  title: `마이프로틴 할인코드 ${Y(curYm)}년 ${M(curYm)}월 최신 | ${primary ? `히든코드 ${primary.code} ${primary.rate}%` : '숨은 할인 정리'} · 중복 적용 · 추천인 코드`,
+  title: `마이프로틴 할인코드 ${Y(curYm)}년 ${M(curYm)}월 최신 | ${pName ? `${pName} ${primary.rate}%` : '숨은 할인 정리'} · 중복 적용 · 추천인 코드`,
   keywords: ['마이프로틴 할인코드 중복', '마이프로틴 할인코드 모음', '마이프로틴 추천인 코드', '마이프로틴 추천인 입력', '마이프로틴 추천코드', '마이프로틴 쇼핑지원금', `마이프로틴 할인 ${M(curYm)}월`, `마이프로틴 ${M(curYm)}월 할인코드`],
-  desc: `${M(curYm)}월 마이프로틴 할인코드 정리. ${primary ? `히든코드 ${primary.code} ${primary.rate}%` : ''}${official ? `, 공식 코드 ${official.code} ${official.rate}%` : ''}${db.referral ? `, 추천인 코드 ${db.referral}` : ''}. 숨은 할인까지 합치면 ${pct(last.eff)}. ${dot(last.date)} 업데이트.`,
+  desc: `${M(curYm)}월 마이프로틴 할인코드 정리. ${pName ? `${pName} ${primary.rate}%` : ''}${official ? `, 공식 코드 ${official.code} ${official.rate}%` : ''}${db.referral ? `, 추천인 코드 ${db.referral}` : ''}. 숨은 할인까지 합치면 ${pct(last.eff)}. ${dot(last.date)} 업데이트.`,
   ld: [crumbs([['홈', 'index.html'], ['마이프로틴 할인코드', 'code.html']]), faqLd(CODE_FAQ)],
   heroHtml: `
 <div class="hero">
@@ -773,7 +775,7 @@ ${db.referral ? `<section>
 <ol class="steps">
   <li>아래 버튼을 누르면 추천인 코드가 적용된 가입 페이지가 열립니다. 코드가 자동으로 들어가 있는지 확인하십시오.</li>
   <li>자동으로 안 들어갔다면 가입 화면의 추천인 코드(또는 친구 초대 코드) 칸에 <code>${esc(db.referral)}</code>를 직접 넣습니다.</li>
-  <li>가입을 마친 뒤 장바구니에서 할인코드(${primary ? esc(primary.code) : '히든코드'})를 따로 넣고 결제하면 둘 다 적용됩니다.</li>
+  <li>가입을 마친 뒤 장바구니에서 할인코드(${primary ? esc(nameOf(primary)) : '히든코드'})를 따로 넣고 결제하면 둘 다 적용됩니다.</li>
 </ol>
 <a class="cta" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${esc(db.referral)}">${esc(db.referral)} 복사하고 가입하기</a>
 <p class="hint">이미 가입한 계정에는 추천인 코드가 적용되지 않습니다.</p>
@@ -823,7 +825,7 @@ if (calcWidget) page({
   file: 'calc.html', priority: 0.9, current: 'calc.html',
   keywords: ['마이프로틴 할인 계산기', '마이프로틴 최종 결제금액', '마이프로틴 관세', '마이프로틴 무료배송', '마이프로틴 쇼핑지원금 계산'],
   title: `마이프로틴 할인 계산기 | 할인코드·쇼핑지원금·트렌드 할인 적용 최종 결제금액`,
-  desc: `장바구니 금액만 넣으면 마이프로틴 ${primary ? `히든코드 ${primary.code} ${primary.rate}%` : '할인코드'}와 쇼핑지원금, 이달의 트렌드 할인까지 적용한 최종 결제금액을 계산합니다. 무료배송·관세 기준과 대란 때 가격도 함께 알려드립니다.`,
+  desc: `장바구니 금액만 넣으면 마이프로틴 ${pName ? `${pName} ${primary.rate}%` : '할인코드'}와 쇼핑지원금, 이달의 트렌드 할인까지 적용한 최종 결제금액을 계산합니다. 무료배송·관세 기준과 대란 때 가격도 함께 알려드립니다.`,
   ld: [crumbs([['홈', 'index.html'], ['마이프로틴 할인 계산기', 'calc.html']]), faqLd(CALC_FAQ),
     { '@type': 'WebApplication', name: '마이프로틴 할인 계산기', url: urlOf('calc.html'), applicationCategory: 'ShoppingApplication', operatingSystem: 'All', inLanguage: 'ko-KR', offers: { '@type': 'Offer', price: 0, priceCurrency: 'KRW' } }],
   extraScript: calcScript,
@@ -844,7 +846,7 @@ ${codeList}
 <section>
 <h2>계산 방법</h2>
 <ol class="steps">
-  <li>장바구니 금액에 할인코드(${primary ? `${primary.code} ${primary.rate}%` : '%'})를 적용합니다.</li>
+  <li>장바구니 금액에 할인코드(${primary ? `${nameOf(primary)} ${primary.rate}%` : '%'})를 적용합니다.</li>
   ${amountDeal ? `<li>할인코드 적용 후 금액이 ${amountDeal.min.toLocaleString('ko-KR')}원 이상이면 ${esc(amountDeal.label.replace(/.*?(쇼핑지원금.*)/, '$1'))}을 뺍니다.</li>` : ''}
   ${last.deals.filter(d => d.type !== 'amount').map(d => `<li>${esc(d.label)} 조건이면 남은 금액에서 ${d.rate}%를 더 뺍니다.</li>`).join('')}
   <li>무료배송(${SHOP.freeShipping.toLocaleString('ko-KR')}원)과 관세(${SHOP.customsUsd}달러) 기준을 확인합니다.</li>
@@ -886,7 +888,7 @@ if (PRODUCTS.length) {
 <div class="heroMain">
 <h1>마이프로틴 대란 가격 비교<br>평소 vs 대란</h1>
 <p class="updated">${dot(db.priceDate || last.date)} 표시가 기준 · 코드 할인율은 매일 갱신</p>
-<p class="lede">표시가에 오늘 할인코드 ${last.base}%를 적용한 평소 가격과, 지난 대란 평균 코드 ${dRate}%를 적용한 대란 가격입니다. 제품을 누르면 ${primary ? `${esc(primary.code)}가 복사되고 ` : ''}마이프로틴이 열립니다.</p>
+<p class="lede">표시가에 오늘 할인코드 ${last.base}%를 적용한 평소 가격과, 지난 대란 평균 코드 ${dRate}%를 적용한 대란 가격입니다. 제품을 누르면 ${primary ? `${esc(nameOf(primary))}가 복사되고 ` : ''}마이프로틴이 열립니다.</p>
 ${heroCta}
 </div>
 <div class="heroSide">
