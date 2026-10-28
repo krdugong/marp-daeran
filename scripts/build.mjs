@@ -1514,13 +1514,15 @@ ${[...built].sort((a, b) => b.lastmod.localeCompare(a.lastmod)).map(b => `<item>
 </rss>
 `);
 
+// 데이터·스크립트·README 는 사람이 볼 페이지가 아니고, 실제 히든코드가 들어 있어 검색엔진이 못 읽게 막습니다
+const ROBOTS_BLOCK = ['/admin.html', '/data/', '/scripts/', '/README.md'].map(p => `Disallow: ${p}`).join('\n');
 write('robots.txt', `User-agent: *
 Allow: /
-Disallow: /admin.html
+${ROBOTS_BLOCK}
 
 User-agent: Yeti
 Allow: /
-Disallow: /admin.html
+${ROBOTS_BLOCK}
 
 Sitemap: ${SITE.origin}/sitemap.xml
 `);

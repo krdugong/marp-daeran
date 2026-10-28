@@ -1,9 +1,15 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /data/
+Disallow: /scripts/
+Disallow: /README.md
 
 User-agent: Yeti
 Allow: /
 Disallow: /admin.html
+Disallow: /data/
+Disallow: /scripts/
+Disallow: /README.md
 
 Sitemap: https://proteify.kr/sitemap.xml
