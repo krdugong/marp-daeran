@@ -448,12 +448,24 @@ footer nav a{text-decoration:none;color:var(--muted);font-weight:600}
 body.hasSticky{padding-bottom:86px}
 @media(max-width:400px){.brand{font-size:14px}.topNav{gap:0}.topNav a{font-size:12px;padding:6px 8px}}
 @media(min-width:880px){
-.headerInner,.utilInner{max-width:1040px;padding-left:40px;padding-right:40px}
-.wrap{max-width:720px;padding-left:24px;padding-right:24px;padding-bottom:110px}
-.heroInner{padding:56px 0 16px}
+.headerInner,.utilInner,.wrap{max-width:980px;padding-left:32px;padding-right:32px}
+.wrap{padding-bottom:110px}
+.heroInner{padding:64px 0 24px}
+.hero{text-align:center}
+.hero h1,.hero .lede,.hero .updated,.hero .hint{max-width:760px;margin-left:auto;margin-right:auto}
+.hero .cta{display:inline-block;min-width:380px;margin:10px auto 8px}
+.hero .dealLine,.hero details.more{max-width:760px;margin-left:auto;margin-right:auto;text-align:left}
+.hero .stats{margin:28px 0 8px}
+.hero .calc{text-align:left;margin-top:20px}
 .heroSide{margin-top:20px}
 .vids{grid-template-columns:1fr 1fr}
-h1{font-size:40px}
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;align-items:start;padding:24px}
+.calc > *{grid-column:1}
+.calc .res{grid-column:2;grid-row:1 / 4;margin:0}
+.calc .cta{grid-column:2;grid-row:4;margin-top:12px}
+.calc .hint{grid-column:2;grid-row:5}
+.pager{max-width:760px;margin-left:auto;margin-right:auto}
+h1{font-size:44px}
 h2{font-size:24px}
 .big{font-size:96px}
 .lede{font-size:17px}
