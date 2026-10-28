@@ -120,7 +120,7 @@ const seasonal = ym => {
   if (m === 11) {
     const bf = blackFriday(y);
     list.push({ date: `${y}-11-11`, label: '싱글즈데이(빼빼로데이)', note: '해마다 큰 행사가 걸리는 날입니다. 전날 저녁부터 할인율을 확인하세요.' });
-    list.push({ date: bf, label: '블랙프라이데이', note: '1년 중 할인이 가장 센 주간입니다. 전주부터 예열 행사가 붙는 경우가 많습니다.' });
+    list.push({ date: bf, label: '블랙프라이데이', note: '1년 중 할인이 가장 센 주간입니다. 전주부터 예열 행사가 붙는 경우가 많습니다.', link: 'blackfriday.html' });
     list.push({ date: addDays(bf, 3), label: '사이버먼데이', note: '블랙프라이데이 행사가 보통 이날까지 이어집니다.', minor: true });
   }
   for (const c of db.calendar || []) if (c.date && ymOf(c.date) === ym) list.push(c);
@@ -308,6 +308,8 @@ p{margin:0 0 12px}
 .lede{color:var(--muted);font-size:15px;line-height:1.6}
 .lede b{color:var(--ink)}
 .updated{font-size:13px;color:var(--faint);margin:0 0 14px}
+.crumbs{font-size:12px;color:var(--faint);margin:0 0 18px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.crumbs a{color:inherit;text-decoration:none}.crumbs a:hover{color:var(--ink)}.crumbs i{font-style:normal;opacity:.6}
 .state{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;margin-bottom:12px}
 .state:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 .state.on{background:var(--accent-soft);color:var(--accent)}
@@ -357,7 +359,7 @@ details.more[open] summary{color:var(--ink);border-bottom:1px solid var(--line)}
 .dealLine a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
 .answer{font-size:16px;color:var(--ink);line-height:1.65}
 .answer b{color:var(--brand)}
-h1 .hl{color:var(--brand)}
+h1 .hl{color:var(--brand);white-space:nowrap}
 .sticky.hide{transform:translateY(140%);opacity:0;pointer-events:none}
 button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .hidden-deals{list-style:none;padding:0;margin:0;display:grid;gap:8px}
@@ -534,6 +536,8 @@ const eventTable = list => `<table>
 <tbody>${list.map(e => `<tr><td>${range(e)}${e.videos.length ? `<a class="vlink" href="${ytWatch(e.videos.at(-1).id)}" target="_blank" rel="noopener">▶ 영상</a>` : ''}</td><td>${e.days}일</td><td class="n">${pctOr(e.max)}</td></tr>`).join('')}</tbody>
 </table>`;
 
+// 구글 동영상 검색용. 페이지에 썸네일이 보이는 영상만 넣습니다
+const videoLd = v => ({ '@type': 'VideoObject', name: v.title, description: `${v.title} · 마프대란알리미 유튜브 ${dot(v.date)}`, thumbnailUrl: `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`, uploadDate: v.date, embedUrl: `https://www.youtube.com/embed/${v.id}`, contentUrl: ytWatch(v.id) });
 const videoList = vs => `<ul class="vids">${vs.map(v => `
   <li><a href="${ytWatch(v.id)}" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/${esc(v.id)}/mqdefault.jpg" alt="" loading="lazy" width="320" height="180"><span class="vt">${esc(v.title)}</span><span class="vd">${dot(v.date)}</span></a></li>`).join('')}</ul>`;
 
@@ -570,19 +574,27 @@ const crumbs = list => ({ '@type': 'BreadcrumbList', itemListElement: list.map((
 // ── 페이지 틀 ──
 const hasOg = fs.existsSync(path.join(ROOT, 'og.png'));
 const hasIcon = fs.existsSync(path.join(ROOT, 'favicon.ico'));
+const REF_BENEFIT = db.referralBenefit || '첫 구매 적립금';
+// 블랙프라이데이 페이지: 12월이 되면 다음 해 날짜로 넘어갑니다. 10월 15일부터 11월 말까지는 푸터에도 보여줍니다
+const bfYear = M(curYm) === 12 ? Y(curYm) + 1 : Y(curYm);
+const bfDate = blackFriday(bfYear), cmDate = addDays(bfDate, 3), bfWeekStart = addDays(bfDate, -7);
+const bfSeason = M(curYm) === 11 || (M(curYm) === 10 && +last.date.slice(8, 10) >= 15);
 const built = []; // 사이트맵·RSS용
 
 const BASE_KW = ['마이프로틴', '마프대란', '마이프로틴 할인코드', '마이프로틴 대란', '마이프로틴 히든코드'];
-function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.date, priority = 0.8, current, extraScript = '', keywords = [], noindex = false }) {
+function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.date, priority = 0.8, changefreq = 'weekly', current, extraScript = '', keywords = [], noindex = false, pageType = 'WebPage' }) {
   const url = urlOf(file);
   const kw = [...new Set([...keywords, ...BASE_KW])].join(',');
   // 모든 페이지에 사이트·운영자·페이지 정보를 깔고, 페이지별 FAQ·빵부스러기는 그 뒤에 붙입니다
   const graph = [
     { '@type': 'WebSite', '@id': `${SITE.origin}/#website`, name: SITE.brand, alternateName: ['Proteify', '마프대란', '마프대란알리미', '마이프로틴 대란 알리미'], url: `${SITE.origin}/`, inLanguage: 'ko-KR', publisher: { '@id': `${SITE.origin}/#org` } },
-    { '@type': 'Organization', '@id': `${SITE.origin}/#org`, name: SITE.brand, alternateName: SITE.tagline || undefined, url: `${SITE.origin}/`, logo: hasOg ? `${SITE.origin}/og.png` : undefined, sameAs: [SITE.youtubeChannel].filter(Boolean).map(u => u.replace(/\?.*$/, '')) },
-    { '@type': 'WebPage', '@id': url, url, name: title, description: desc, inLanguage: 'ko-KR', dateModified: lastmod, isPartOf: { '@id': `${SITE.origin}/#website` } },
+    { '@type': 'Organization', '@id': `${SITE.origin}/#org`, name: SITE.brand, alternateName: SITE.tagline || undefined, url: `${SITE.origin}/`, logo: hasIcon ? `${SITE.origin}/icon-512.png` : hasOg ? `${SITE.origin}/og.png` : undefined, sameAs: [SITE.youtubeChannel].filter(Boolean).map(u => u.replace(/\?.*$/, '')) },
+    { '@type': pageType, '@id': url, url, name: title, description: desc, inLanguage: 'ko-KR', dateModified: lastmod, isPartOf: { '@id': `${SITE.origin}/#website` } },
     ...ld,
   ];
+  // 빵부스러기(현재 위치)를 화면에도 작게 보여줍니다. 구조화 데이터와 같은 경로여야 검색엔진이 믿습니다
+  const bc = ld.find(n => n && n['@type'] === 'BreadcrumbList');
+  const crumbsHtml = bc ? `<nav class="crumbs" aria-label="현재 위치">${bc.itemListElement.map((it, i, a) => i < a.length - 1 ? `<a href="${it.item}">${esc(it.name)}</a>` : `<span>${esc(it.name)}</span>`).join('<i>›</i>')}</nav>\n` : '';
   const navLink = (href, label) => `<a href="./${href}"${current === href ? ' aria-current="page"' : ''}>${label}</a>`;
   const html = `<!doctype html>
 <html lang="ko">
@@ -592,8 +604,9 @@ function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.d
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${url}">
-<meta name="robots" content="${noindex ? 'noindex, follow' : 'index, follow'}">
+<meta name="robots" content="${noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'}">
 ${noindex ? `<base href="${SITE.origin}/">\n` : ''}<meta name="keywords" content="${esc(kw)}">
+<meta name="author" content="${esc(SITE.tagline || SITE.brand)}">
 ${SITE.naverVerify ? `<meta name="naver-site-verification" content="${esc(SITE.naverVerify)}">\n` : ''}${SITE.googleVerify ? `<meta name="google-site-verification" content="${esc(SITE.googleVerify)}">\n` : ''}<link rel="alternate" type="application/rss+xml" title="${esc(SITE.brand)}" href="${SITE.origin}/rss.xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${esc(SITE.brand)}">
@@ -628,13 +641,13 @@ ${hasOg ? `<meta property="og:image" content="${SITE.origin}/og.png">
 <main class="wrap">
 ${hasSample ? '<p class="warn">이 페이지는 예시 데이터로 생성되었습니다. data/discount.json 을 실제 값으로 교체한 뒤 배포하십시오.</p>' : ''}
 <div class="heroInner">
-${heroHtml}
+${crumbsHtml}${heroHtml}
 </div>
 <div class="cols">
 ${restHtml}
 </div>
 <footer>
-  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${fs.existsSync(path.join(ROOT, 'data/taste.json')) ? '<a href="./taste.html">맛 추천</a>' : ''}<a href="./daeran.html">대란 기록</a>${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}<a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
+  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${fs.existsSync(path.join(ROOT, 'data/taste.json')) ? '<a href="./taste.html">맛 추천</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 마이프로틴에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표이며 본 사이트와 무관합니다.</p>
@@ -671,7 +684,7 @@ ${SITE.naverAnalytics ? `<script src="https://wcs.naver.net/wcslog.js"></script>
 ` : ''}</body>
 </html>`;
   write(file, html);
-  if (!noindex) built.push({ file, url, title, desc, lastmod, priority });
+  if (!noindex) built.push({ file, url, title, desc, lastmod, priority, changefreq });
 }
 
 // ── 문구 ──
@@ -697,11 +710,11 @@ const HOME_FAQ = [
 
 // ── 메인 ──
 page({
-  file: 'index.html', priority: 1.0, current: '',
+  file: 'index.html', priority: 1.0, changefreq: 'daily', current: '',
   title: `마이프로틴 대란 알리미 (마프대란) | 오늘 할인코드 ${last.base}% · 숨은 할인 포함 ${pct(last.eff)}`,
   keywords: ['마이프로틴 대란 일정', '마이프로틴 대란 날짜', '마이프로틴 할인 기간', '마프대란알리미', `마이프로틴 대란 ${M(curYm)}월`, `마이프로틴 할인 ${M(curYm)}월`],
   desc: `${kdate(last.date)} 기준 마이프로틴 ${codeWord}에 숨은 할인을 더하면 ${pct(last.eff)}입니다. ${isDaeran ? '지금 대란입니다.' : `대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`} 3월부터 기록한 대란 날짜와 영상도 확인하세요.`,
-  ld: [faqLd(HOME_FAQ)],
+  ld: [faqLd(HOME_FAQ), ...(latestVideo && latestVideo.title && latestVideo.date ? [videoLd(latestVideo)] : [])],
   heroHtml: `
 <div class="hero">
 <span class="state ${isDaeran ? 'on' : 'off'}">${isDaeran ? '지금 대란입니다' : '지금은 대란이 아닙니다'}</span>
@@ -730,6 +743,7 @@ ${calcWidget}
 <h2>대란 기록</h2>
 ${recent.length ? eventTable(recent.slice(0, 6)) : '<p class="lede">아직 기록된 대란이 없습니다.</p>'}
 <a class="cta ghost" href="./daeran.html">전체 대란 기록 보기</a>
+${bfSeason ? `<a class="cta ghost" href="./blackfriday.html">블랙프라이데이 ${kdate(bfDate)} 준비하기</a>` : ''}
 </section>
 
 ${PRODUCTS.length ? `<section class="full">
@@ -771,7 +785,7 @@ const CODE_FAQ = [
 ];
 
 page({
-  file: 'code.html', priority: 0.9, current: 'code.html',
+  file: 'code.html', priority: 0.9, changefreq: 'daily', current: 'code.html',
   title: `마이프로틴 할인코드 ${Y(curYm)}년 ${M(curYm)}월 최신 | ${pName ? `${pName} ${primary.rate}%` : '숨은 할인 정리'} · 중복 적용 · 추천인 코드`,
   keywords: ['마이프로틴 할인코드 중복', '마이프로틴 할인코드 모음', '마이프로틴 추천인 코드', '마이프로틴 추천인 입력', '마이프로틴 추천코드', '마이프로틴 쇼핑지원금', `마이프로틴 할인 ${M(curYm)}월`, `마이프로틴 ${M(curYm)}월 할인코드`],
   desc: `${M(curYm)}월 마이프로틴 할인코드 정리. ${pName ? `${pName} ${primary.rate}%` : ''}${official ? `, 공식 코드 ${official.code} ${official.rate}%` : ''}${db.referral ? `, 추천인 코드 ${db.referral}` : ''}. 숨은 할인까지 합치면 ${pct(last.eff)}. ${dot(last.date)} 업데이트.`,
@@ -798,15 +812,10 @@ ${calcWidget ? '<a class="cta ghost" href="./calc.html">내 장바구니 최종 
 </section>
 
 ${db.referral ? `<section>
-<h2>마이프로틴 추천인 코드 입력 방법</h2>
-<p class="lede">처음 가입하는 분만 해당합니다. 추천인 코드 <b>${esc(db.referral)}</b>를 넣으면 첫 구매 적립금을 받고, 할인코드와는 별개라 같이 쓸 수 있습니다.</p>
-<ol class="steps">
-  <li>아래 버튼을 누르면 추천인 코드가 적용된 가입 페이지가 열립니다. 코드가 자동으로 들어가 있는지 확인하십시오.</li>
-  <li>자동으로 안 들어갔다면 가입 화면의 추천인 코드(또는 친구 초대 코드) 칸에 <code>${esc(db.referral)}</code>를 직접 넣습니다.</li>
-  <li>가입을 마친 뒤 장바구니에서 할인코드(${primary ? esc(nameOf(primary)) : '히든코드'})를 따로 넣고 결제하면 둘 다 적용됩니다.</li>
-</ol>
+<h2>마이프로틴 추천인 코드</h2>
+<p class="lede">처음 가입하는 분만 해당합니다. 추천인 코드 <b>${esc(db.referral)}</b>를 넣으면 ${esc(REF_BENEFIT)}을 받고, 할인코드와는 별개라 같이 쓸 수 있습니다. 이미 가입한 계정에는 적용되지 않습니다.</p>
 <a class="cta" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(db.referral)}">${esc(db.referral)} 복사하고 가입하기</a>
-<p class="hint">이미 가입한 계정에는 추천인 코드가 적용되지 않습니다.</p>
+<a class="cta ghost" href="./referral.html">추천인 코드 입력 방법과 혜택 자세히</a>
 </section>` : ''}
 
 <section>
@@ -850,7 +859,7 @@ const CALC_FAQ = [
    `건강기능식품은 보통 ${SHOP.customsUsd}달러를 넘으면 관세와 부가세가 붙습니다. 계산기는 1달러 ${SHOP.usdKrw.toLocaleString('ko-KR')}원으로 어림잡아 넘을 것 같으면 알려드립니다. 넘는다면 나눠서 주문하는 편이 낫습니다.`],
 ];
 if (calcWidget) page({
-  file: 'calc.html', priority: 0.9, current: 'calc.html',
+  file: 'calc.html', priority: 0.9, changefreq: 'daily', current: 'calc.html',
   keywords: ['마이프로틴 할인 계산기', '마이프로틴 최종 결제금액', '마이프로틴 관세', '마이프로틴 무료배송', '마이프로틴 쇼핑지원금 계산'],
   title: `마이프로틴 할인 계산기 | 할인코드·쇼핑지원금·트렌드 할인 적용 최종 결제금액`,
   desc: `장바구니 금액만 넣으면 마이프로틴 ${pName ? `${pName} ${primary.rate}%` : '할인코드'}와 쇼핑지원금, 이달의 트렌드 할인까지 적용한 최종 결제금액을 계산합니다. 무료배송·관세 기준과 대란 때 가격도 함께 알려드립니다.`,
@@ -1075,7 +1084,8 @@ for (const ym of monthPages) {
     desc: isUpcoming
       ? `${y}년 마이프로틴 ${m}월 대란 날짜와 할인코드.${season.length ? ` ${seasonShort} 전후를 노리세요.` : ''} 시작되면 바로 기록합니다. 지금 쓸 수 있는 히든코드 ${last.base}%와 ${M(curYm)}월 대란 기록도 확인하세요.`
       : `${y}년 마이프로틴 ${m}월 대란 날짜와 할인코드 정리. ${st.events.length ? `대란 ${st.events.length}회(${evText}).` : '대란 없음.'}${st.videos.length ? ` 히든코드와 숨은 할인 영상 ${st.videos.length}편 포함.` : ''}`,
-    ld: [crumbs([['홈', 'index.html'], ['대란 기록', 'daeran.html'], [`${y}년 ${m}월 대란`, monthFile(ym)]]), ...(upFaq.length ? [faqLd(upFaq)] : [])],
+    changefreq: isCur || isUpcoming ? 'daily' : 'monthly',
+    ld: [crumbs([['홈', 'index.html'], ['대란 기록', 'daeran.html'], [`${y}년 ${m}월 대란`, monthFile(ym)]]), ...(upFaq.length ? [faqLd(upFaq)] : []), ...st.videos.map(videoLd)],
     heroHtml: `
 <div class="hero">
 <div class="heroMain">
@@ -1131,7 +1141,7 @@ ${st.days.length ? `<section class="full">
 ${season.length ? `<section class="full">
 <h2>${m}월에 체크할 날짜</h2>
 <p class="lede">해마다 행사가 걸리는 날입니다. 대란을 보장하지는 않지만 할인율이 오를 가능성이 큰 날이라 전날 저녁부터 확인하는 편이 좋습니다.</p>
-<ul class="steps">${season.map(s => `<li><b>${kdate(s.date)} ${wd(s.date)}</b> ${esc(s.label)}${s.note ? ` · ${esc(s.note)}` : ''}</li>`).join('')}</ul>
+<ul class="steps">${season.map(s => `<li><b>${kdate(s.date)} ${wd(s.date)}</b> ${s.link ? `<a href="./${s.link}">${esc(s.label)}</a>` : esc(s.label)}${s.note ? ` · ${esc(s.note)}` : ''}</li>`).join('')}</ul>
 </section>` : ''}
 
 ${isUpcoming ? `<section class="full">
@@ -1203,6 +1213,233 @@ ${ytPromo}
 `,
 });
 
+// ── 소개 (운영자·확인 방법·수익 공시. 검색엔진이 사이트를 믿게 하는 페이지) ──
+const firstYm = ymOf(events[0]?.start || rows[0].date);
+const ytUrl = SITE.youtubeChannel ? SITE.youtubeChannel.replace(/\?.*$/, '') : '';
+page({
+  file: 'about.html', priority: 0.5, changefreq: 'monthly', current: 'about.html', pageType: 'AboutPage',
+  title: `마프대란알리미 소개 | ${SITE.brand}는 마이프로틴 할인율을 이렇게 확인합니다`,
+  keywords: ['마프대란알리미', '프로티파이', '마프대란알리미 유튜브', '마이프로틴 대란 알리미 사이트', '마이프로틴 할인 정보 사이트'],
+  desc: `${SITE.brand}는 유튜브 마프대란알리미가 만드는 마이프로틴 할인 기록 사이트입니다. ${Y(firstYm)}년 ${M(firstYm)}월부터 대란 ${events.length}회를 기록했고 할인코드·히든코드·숨은 할인을 매일 확인합니다. 판정 기준과 수익 구조를 공개합니다.`,
+  ld: [crumbs([['홈', 'index.html'], ['소개', 'about.html']]),
+    { '@type': 'Person', '@id': `${SITE.origin}/about.html#person`, name: '마프대란알리미', url: ytUrl || `${SITE.origin}/`, sameAs: ytUrl ? [ytUrl] : [], knowsAbout: ['마이프로틴 할인코드', '마이프로틴 대란', '마이프로틴 맛 추천'], worksFor: { '@id': `${SITE.origin}/#org` } }],
+  heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<h1>${esc(SITE.brand)}는 누가,<br>어떻게 만드나요</h1>
+<p class="lede answer">유튜브 <b>마프대란알리미</b> 채널이 만드는 마이프로틴 할인 기록 사이트입니다. ${Y(firstYm)}년 ${M(firstYm)}월부터 대란을 ${events.length}회 기록했고, 지금은 할인코드와 숨은 할인을 매일 확인해 올립니다. 마이프로틴과는 관계없는 개인 사이트입니다.</p>
+${ytUrl ? `<a class="cta" href="${esc(SITE.youtubeChannel)}" target="_blank" rel="noopener">유튜브 채널 보기</a>` : ''}
+<a class="cta ghost" href="${esc(SITE.kakao)}">알림 단톡방 들어가기</a>
+</div>
+<div class="heroSide">
+<dl class="stats">
+  <div><dt>기록 시작</dt><dd>${Y(firstYm)}.${M(firstYm)}</dd></div>
+  <div><dt>기록한 대란</dt><dd>${events.length}회</dd></div>
+  <div><dt>영상</dt><dd>${allVideos.length}편</dd></div>
+</dl>
+</div>
+</div>`,
+  restHtml: `
+<section>
+<h2>할인율은 이렇게 확인합니다</h2>
+<ol class="steps">
+  <li><b>공식 코드</b> 마이프로틴 메인 배너에 걸린 코드와 할인율을 매일 확인합니다.</li>
+  <li><b>히든코드</b> 유튜버나 팬카페에 따로 주어지는 코드입니다. 공식보다 보통 1~2%p 높고, 이 사이트의 복사 버튼에 들어가는 코드입니다.</li>
+  <li><b>숨은 할인</b> 이달의 트렌드, 앱 쇼핑지원금처럼 장바구니 조건으로 더 빠지는 할인은 직접 장바구니에 담아 확인한 뒤 올립니다.</li>
+</ol>
+<p class="lede">대란은 할인코드 할인율이 <b>${TH}% 이상</b>인 날로 정합니다. 숨은 할인을 합친 실제 할인율은 따로 보여주지만 대란 판정에는 쓰지 않습니다. 평소에도 붙는 조건이 많아 합친 값으로 재면 거의 매일이 대란이 되기 때문입니다.</p>
+</section>
+
+<section>
+<h2>수익과 중립성</h2>
+<p class="lede">이 사이트의 마이프로틴 링크는 제휴 링크라 구매가 생기면 수수료를 받습니다. 구매 금액에는 차이가 없습니다. 할인코드는 수수료와 관계없이 그날 가장 높은 코드를 올리고, 대란이 아니면 아니라고 씁니다.</p>
+<p class="lede">마이프로틴(Myprotein)은 THG plc의 상표이며 이 사이트는 마이프로틴과 아무 관계가 없습니다. 표시된 할인율은 확인 시점의 값이고 실제 결제 금액과 다를 수 있으니 결제 전에 장바구니에서 확인하십시오.</p>
+</section>
+
+<section class="full">
+<h2>틀린 정보를 보셨다면</h2>
+<p class="lede">코드가 안 먹히거나 할인율이 다르면 단톡방이나 최신 영상 댓글로 알려주십시오. 확인되는 대로 고칩니다.</p>
+<a class="cta ghost" href="${esc(SITE.kakao)}">단톡방에 알리기</a>
+</section>
+
+<section class="full">
+<h2>이 사이트의 페이지</h2>
+<ul class="linkList">
+  <li><a href="./"><span class="m">오늘 할인율</span><span class="s">대란 여부와 히든코드</span></a></li>
+  <li><a href="./code.html"><span class="m">마이프로틴 할인코드</span><span class="s">코드 모음과 적용 방법</span></a></li>
+  ${calcWidget ? '<li><a href="./calc.html"><span class="m">할인 계산기</span><span class="s">최종 결제금액</span></a></li>' : ''}
+  ${PRODUCTS.length ? '<li><a href="./price.html"><span class="m">대란 가격 비교</span><span class="s">평소 vs 대란</span></a></li>' : ''}
+  ${TASTE ? '<li><a href="./taste.html"><span class="m">맛 추천</span><span class="s">맛 등급표</span></a></li>' : ''}
+  ${db.referral ? '<li><a href="./referral.html"><span class="m">추천인 코드</span><span class="s">가입 혜택</span></a></li>' : ''}
+  <li><a href="./daeran.html"><span class="m">대란 기록</span><span class="s">${events.length}회 · 월별 정리</span></a></li>
+  <li><a href="./blackfriday.html"><span class="m">블랙프라이데이</span><span class="s">${bfYear}년 ${kdate(bfDate)}</span></a></li>
+</ul>
+</section>
+`,
+});
+
+// ── 추천인 코드 (키워드: 마이프로틴 추천인 코드) ──
+if (db.referral) {
+  const REF_FAQ = [
+    ['마이프로틴 추천인 코드는 어디에 입력하나요?',
+     `회원가입 화면의 추천인 코드(친구 초대 코드) 칸입니다. 이 페이지 버튼으로 열면 ${db.referral}가 들어간 가입 페이지가 열리고, 안 들어가 있으면 직접 붙여넣으면 됩니다.`],
+    ['이미 가입한 계정에도 추천인 코드를 넣을 수 있나요?',
+     '아닙니다. 추천인 코드는 처음 가입할 때만 넣을 수 있고, 가입이 끝난 계정에는 나중에 적용되지 않습니다.'],
+    ['추천인 코드와 할인코드를 같이 쓸 수 있나요?',
+     `됩니다. 추천인 코드는 가입할 때 한 번 넣고, 할인코드는 장바구니에서 따로 넣습니다. 오늘 쓸 할인코드는 ${pName || '할인코드'} ${last.base}%입니다.`],
+    ['추천인 코드를 넣으면 뭘 받나요?',
+     `${REF_BENEFIT}을 받습니다. 추천한 쪽도 혜택을 받는 구조라 이 사이트의 코드를 쓰면 마프대란알리미에게 돌아갑니다. 구매 금액에는 차이가 없습니다.`],
+    ['추천인 코드가 적용이 안 돼요.',
+     '같은 이메일이나 전화번호로 이미 가입한 적이 있으면 신규로 잡히지 않습니다. 가입 화면에서 코드 칸을 못 찾으면 앱과 웹 중 다른 쪽에서 시도해 보고, 그래도 안 되면 단톡방에 물어보십시오.'],
+  ];
+  page({
+    file: 'referral.html', priority: 0.8, changefreq: 'weekly', current: 'referral.html',
+    title: `마이프로틴 추천인 코드 ${db.referral} | 입력 방법 · ${REF_BENEFIT} · 할인코드와 중복`,
+    keywords: ['마이프로틴 추천인 코드', '마이프로틴 추천코드', '마이프로틴 추천인 코드 입력', '마이프로틴 추천인 입력 방법', '마이프로틴 친구 추천', '마이프로틴 가입 혜택', '마이프로틴 신규가입 할인', '마이프로틴 첫 구매 할인'],
+    desc: `마이프로틴 추천인 코드 ${db.referral}. 처음 가입할 때 넣으면 ${REF_BENEFIT}을 받고, 할인코드(${pName || '할인코드'} ${last.base}%)와 같이 적용됩니다. 입력 위치, 가입부터 결제까지 순서, 안 될 때 확인할 것. ${dot(last.date)} 기준.`,
+    ld: [crumbs([['홈', 'index.html'], ['마이프로틴 할인코드', 'code.html'], ['추천인 코드', 'referral.html']]), faqLd(REF_FAQ)],
+    heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<p class="updated">${dot(last.date)} 기준 · 신규 가입 전용</p>
+<h1>마이프로틴 추천인 코드 <span class="hl">${esc(db.referral)}</span></h1>
+<p class="lede answer">처음 가입할 때 추천인 코드 <b>${esc(db.referral)}</b>를 넣으면 ${esc(REF_BENEFIT)}을 받습니다. 할인코드와는 별개라 가입 뒤 장바구니에서 ${pName || '할인코드'} ${last.base}%를 따로 넣으면 둘 다 적용됩니다. 이미 가입한 계정에는 넣을 수 없습니다.</p>
+<a class="cta hot" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(db.referral)}">${esc(db.referral)} 복사하고 가입하기</a>
+<p class="hint">누르면 코드가 복사되고 추천인 코드가 적용된 가입 페이지가 열립니다.</p>
+</div>
+<div class="heroSide">
+<dl class="stats">
+  <div><dt>대상</dt><dd>신규 가입</dd></div>
+  <div><dt>할인코드와</dt><dd>중복 가능</dd></div>
+  <div><dt>오늘 할인코드</dt><dd>${last.base}%</dd></div>
+</dl>
+</div>
+</div>`,
+    restHtml: `
+<section>
+<h2>마이프로틴 추천인 코드 입력 방법</h2>
+<ol class="steps">
+  <li>위 버튼을 누릅니다. 코드가 복사되고 추천인 코드가 적용된 가입 페이지가 열립니다. 코드가 들어가 있는지 확인하십시오.</li>
+  <li>자동으로 안 들어갔다면 가입 화면의 추천인 코드(또는 친구 초대 코드) 칸에 <code>${esc(db.referral)}</code>를 붙여넣습니다.</li>
+  <li>가입을 마친 뒤 제품을 담고, 장바구니 할인코드 칸에 ${pName || '할인코드'}를 넣고 결제합니다. 추천인 혜택과 할인코드가 둘 다 적용됩니다.</li>
+</ol>
+${heroCta}
+</section>
+
+<section>
+<h2>가입부터 결제까지 순서</h2>
+<ul class="steps">
+  <li><b>가입</b> 추천인 코드 ${esc(db.referral)}를 넣습니다. 앱에서 가입하면 쇼핑지원금 같은 앱 전용 이벤트도 같이 챙길 수 있습니다.</li>
+  <li><b>장바구니</b> 8만원 이상이면 무료배송, 150달러를 넘으면 관세가 붙을 수 있습니다.${calcWidget ? ' <a href="./calc.html">계산기</a>로 최종 금액을 먼저 보십시오.' : ''}</li>
+  <li><b>할인코드</b> ${pName || '할인코드'} ${last.base}%를 넣고 금액이 바뀌는지 확인합니다. 코드는 한 주문에 하나만 들어갑니다.</li>
+  <li><b>결제</b> 대란(할인코드 ${TH}% 이상)을 기다릴지는 <a href="./">오늘 할인율</a>에서 확인하십시오.</li>
+</ul>
+</section>
+
+<section class="full">
+<h2>자주 묻는 질문</h2>
+${faqHtml(REF_FAQ)}
+</section>
+
+${kakaoBox}
+`,
+  });
+}
+
+// ── 블랙프라이데이 (키워드: 마이프로틴 블랙프라이데이, 마이프로틴 블프). 11월 페이지와 푸터에서 연결됩니다 ──
+{
+  const bfDays = daysBetween(last.date, bfDate);
+  const bfRows = day.filter(d => d.date >= bfWeekStart && d.date <= cmDate);
+  const bfEvents = events.filter(e => e.start <= cmDate && e.end >= bfWeekStart);
+  const bfMax = bfEvents.map(e => e.max).filter(v => v != null);
+  const bfPeak = bfMax.length ? Math.max(...bfMax) : bfRows.length ? Math.max(...bfRows.map(d => d.base)) : null;
+  const phase = bfDays > 7 ? 'before' : bfDays >= -3 ? 'during' : 'after';
+  const novFile = monthPages.includes(`${bfYear}-11`) ? monthFile(`${bfYear}-11`) : 'daeran.html';
+  const summary = phase === 'before'
+    ? `${bfYear}년 마이프로틴 블랙프라이데이는 ${kdate(bfDate)} ${wd(bfDate)}, 오늘 기준 ${bfDays}일 남았습니다. 보통 전주(${kdate(bfWeekStart)} 전후)부터 예열 행사가 걸리고 사이버먼데이 ${kdate(cmDate)}까지 이어집니다. 지금 쓸 수 있는 히든코드는 ${last.base}%이고, 블프 할인율이 확정되면 이 페이지에 날짜별로 기록합니다.`
+    : phase === 'during'
+      ? `지금 블랙프라이데이 주간입니다. 본행사는 ${kdate(bfDate)}, 사이버먼데이 ${kdate(cmDate)}까지 이어집니다. 오늘 히든코드는 ${last.base}%${isDaeran ? `로 대란 기준 ${TH}%를 넘었습니다. 지금 사면 됩니다.` : `입니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}`
+      : `${bfYear}년 블랙프라이데이(${kdate(bfDate)})는 끝났습니다.${bfPeak != null ? ` 그 주간 최고 할인코드는 ${bfPeak}%였습니다.` : ''} 다음 큰 행사까지는 평소 대란 주기(약 ${cycle ?? '-'}일)를 참고하십시오.`;
+  const BF_FAQ = [
+    [`마이프로틴 블랙프라이데이 ${bfYear}은 언제인가요?`,
+     `${kdate(bfDate)} ${wd(bfDate)}입니다. 블랙프라이데이는 11월 넷째 목요일 다음 날이라 해마다 날짜가 바뀝니다. 마이프로틴은 보통 전주부터 예열 행사를 걸고 사이버먼데이(${kdate(cmDate)})까지 이어갑니다.`],
+    ['마이프로틴 블랙프라이데이 할인율은 얼마나 되나요?',
+     `${knownRange ? `올해 평소 대란 때 히든코드는 ${knownRange}였습니다. ` : ''}블랙프라이데이는 1년 중 할인이 가장 센 때라 이보다 높게 나오는 경우가 많지만, 이 사이트는 확인된 숫자만 기록합니다. 확정되면 이 페이지와 11월 대란 페이지에 올립니다.`],
+    ['블랙프라이데이 전에 사도 되나요?',
+     `지금 히든코드는 ${last.base}%입니다. 평소 대란과 블프의 차이는 몇 %p라 당장 먹을 게 없으면 지금 사도 손해가 크지 않습니다. 2.5kg 이상 대량 구매라면 ${kdate(bfWeekStart)} 전후까지 기다리는 편이 낫습니다.`],
+    ['블랙프라이데이와 마프대란은 뭐가 다른가요?',
+     `마프대란은 할인코드가 ${TH}% 이상으로 올라가는 날을 구매자들이 부르는 말이고, 블랙프라이데이는 마이프로틴의 공식 행사입니다. 블프 주간은 대부분 대란 기준을 넘기 때문에 이 사이트에서는 그 기간도 대란으로 같이 기록합니다.`],
+  ];
+  page({
+    file: 'blackfriday.html', priority: bfSeason ? 0.9 : 0.7, changefreq: bfSeason ? 'daily' : 'monthly', current: 'blackfriday.html',
+    title: `마이프로틴 블랙프라이데이 ${bfYear} | ${kdate(bfDate)} · 예열 일정 · 준비 체크리스트`,
+    keywords: ['마이프로틴 블랙프라이데이', '마이프로틴 블프', `마이프로틴 블랙프라이데이 ${bfYear}`, '마이프로틴 블랙프라이데이 할인코드', '마이프로틴 블프 할인율', '마이프로틴 블프 세일', '마이프로틴 사이버먼데이', '마이프로틴 11월 세일'],
+    desc: `${bfYear}년 마이프로틴 블랙프라이데이는 ${kdate(bfDate)}. 예열은 ${kdate(bfWeekStart)} 전후부터, 사이버먼데이 ${kdate(cmDate)}까지.${knownRange ? ` 올해 대란 히든코드 ${knownRange}.` : ''} 블프 전 준비 체크리스트와 날짜별 할인율 기록.`,
+    ld: [crumbs([['홈', 'index.html'], ['대란 기록', 'daeran.html'], [`블랙프라이데이 ${bfYear}`, 'blackfriday.html']]), faqLd(BF_FAQ)],
+    heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<p class="updated">${dot(last.date)} 기준${bfSeason ? ' · 매일 갱신' : ''}</p>
+<h1>마이프로틴 블랙프라이데이 ${bfYear}<br>${kdate(bfDate)} ${wd(bfDate)}</h1>
+<p class="lede answer">${summary}</p>
+<a class="cta" href="${esc(SITE.kakao)}">블프 시작 알림 받기</a>
+${heroCta}
+</div>
+<div class="heroSide">
+<dl class="stats">
+  <div><dt>${phase === 'after' ? '끝난 날' : '디데이'}</dt><dd>${phase === 'before' ? `D-${bfDays}` : phase === 'during' ? '진행 중' : kdate(cmDate)}</dd></div>
+  <div><dt>지금 히든코드</dt><dd>${last.base}%</dd></div>
+  <div><dt>${bfPeak != null ? '블프 최고' : '평소 대란'}</dt><dd>${bfPeak != null ? pct(bfPeak) : knownRange || '-'}</dd></div>
+</dl>
+</div>
+</div>`,
+    restHtml: `
+<section class="full">
+<h2>블랙프라이데이 주간은 이렇게 흘러갑니다</h2>
+<ul class="steps">
+  <li><b>${kdate(bfWeekStart)} 전후 · 예열</b> 블프 전주부터 할인율이 조금씩 올라가거나 쇼핑지원금 같은 앱 이벤트가 먼저 열립니다. 이때부터 매일 확인합니다.</li>
+  <li><b>${kdate(bfDate)} ${wd(bfDate)} · 블랙프라이데이</b> 본행사입니다. 할인코드가 바뀌면 이 사이트의 복사 버튼에 바로 반영됩니다.</li>
+  <li><b>${kdate(cmDate)} ${wd(cmDate)} · 사이버먼데이</b> 행사가 보통 이날까지 이어집니다.</li>
+</ul>
+<p class="lede">일정은 해마다 조금씩 다릅니다. 확정되는 대로 여기와 <a href="./${novFile}">11월 대란</a> 페이지에 날짜별로 기록합니다.</p>
+</section>
+
+<section>
+<h2>블프 전에 해 둘 것</h2>
+<ol class="steps">
+  <li><b>앱 설치와 가입</b> 쇼핑지원금 같은 앱 전용 이벤트가 블프 전후에 열립니다.${db.referral ? ` 처음이면 <a href="./referral.html">추천인 코드 ${esc(db.referral)}</a>를 넣고 가입하면 ${esc(REF_BENEFIT)}도 받습니다.` : ''}</li>
+  <li><b>장바구니 미리 담기</b> 블프 당일엔 품절이 빠릅니다. ${TASTE ? '<a href="./taste.html">맛 등급표</a>에서 ' : ''}먹어본 맛 위주로 담아 두십시오.</li>
+  <li><b>금액 나누기</b> 150달러(약 ${won(SHOP.customsUsd * SHOP.usdKrw)})를 넘으면 관세가 붙을 수 있습니다.${calcWidget ? ' <a href="./calc.html">계산기</a>로 최종 금액을 보고 필요하면 주문을 나누십시오.' : ''}</li>
+  <li><b>알림 받기</b> 할인율이 바뀌는 즉시 단톡방과 유튜브에 올립니다. 당일 아침보다 전날 저녁에 바뀌는 경우가 많습니다.</li>
+</ol>
+</section>
+
+<section>
+<h2>올해 대란은 어땠나</h2>
+<p class="lede">${events.length ? `${Y(firstYm)}년 ${M(firstYm)}월부터 대란 ${events.length}회, 히든코드 ${knownRange || '영상 참고'}, 평균 ${cycle ?? '-'}일 간격이었습니다. 블프는 이 범위보다 높게 나올 수 있지만 확인된 값만 올립니다.` : '아직 기록된 대란이 없습니다.'}</p>
+${recent.length ? eventTable(recent.slice(0, 4)) : ''}
+<a class="cta ghost" href="./daeran.html">전체 대란 기록 보기</a>
+</section>
+
+<section class="full">
+<h2>블프 주간 날짜별 할인율</h2>
+${bfRows.length ? `<table>
+<thead><tr><th>날짜</th><th class="n">할인코드</th><th class="n">숨은 할인</th><th class="n">실제</th></tr></thead>
+<tbody>${[...bfRows].reverse().map(d => `<tr${d.base >= TH ? ' class="hot"' : ''}><td>${kdate(d.date)}${d.base >= TH ? ' · 대란' : ''}</td><td class="n">${d.base}%</td><td class="n">${d.deals.length ? `${d.deals.length}건` : '-'}</td><td class="n">${pct(d.eff)}</td></tr>`).join('')}</tbody>
+</table>` : `<p class="lede">${kdate(bfWeekStart)}부터 ${kdate(cmDate)}까지 날짜별 할인코드와 실제 할인율을 이 자리에 기록합니다.</p>`}
+</section>
+
+<section class="full">
+<h2>자주 묻는 질문</h2>
+${faqHtml(BF_FAQ)}
+</section>
+
+${ytPromo}
+${kakaoBox}
+`,
+  });
+}
+
 // ── 404 (깃허브 페이지가 없는 주소에 자동으로 보여줍니다. 검색엔진에는 안 올립니다) ──
 page({
   file: '404.html', noindex: true, current: '',
@@ -1243,7 +1480,7 @@ for (const f of fs.readdirSync(ROOT)) {
 
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${built.map(b => `<url><loc>${b.url}</loc><lastmod>${b.lastmod}</lastmod><priority>${b.priority.toFixed(1)}</priority></url>`).join('\n')}
+${built.map(b => `<url><loc>${b.url}</loc><lastmod>${b.lastmod}</lastmod><changefreq>${b.changefreq}</changefreq><priority>${b.priority.toFixed(1)}</priority></url>`).join('\n')}
 </urlset>
 `);
 
