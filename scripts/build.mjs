@@ -322,22 +322,24 @@ th.n,td.n{text-align:right}
 td.n{font-weight:700}
 tr.hot td{color:var(--accent)}
 .vlink{font-size:12px;font-weight:700;color:var(--brand);text-decoration:none;white-space:nowrap;margin-left:6px}
-.codes{list-style:none;padding:0;margin:0;display:grid;gap:8px}
-.codes li{background:var(--surface);border-radius:var(--r);padding:16px}
-.codes li.primary{background:var(--brand);color:#fff}
-.codes li.primary em,.codes li.primary .crate{color:rgba(255,255,255,.75)}
-.codes li.primary .crate{color:var(--mint)}
-.codes .name{font-size:14px;font-weight:700}
-.codes .plus{display:inline-block;font-size:11px;font-weight:700;color:var(--brand);background:var(--mint);border-radius:999px;padding:2px 8px;margin-left:6px;vertical-align:1px}
-.codes em{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:2px}
-.crow{display:flex;align-items:center;gap:8px;margin-top:10px}
-.crow code{font-weight:800;font-size:18px;letter-spacing:.02em;font-family:inherit}
-.crow .crate{flex:1;font-size:15px;font-weight:800;color:var(--brand)}
-.crow button,.crow .go{border:0;background:#fff;border-radius:999px;padding:9px 14px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--ink);text-decoration:none;white-space:nowrap;transition:transform .15s,opacity .2s}
-.crow .go{background:var(--ink);color:#fff}
-.codes li.primary .crow button{background:rgba(255,255,255,.16);color:#fff}
-.codes li.primary .crow .go{background:#fff;color:var(--brand)}
-.crow button:active,.crow .go:active{transform:scale(.96)}
+.codes{list-style:none;padding:0;margin:0}
+.codes li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.codes li:last-child{border-bottom:0}
+.codes .name{flex:1;font-size:15px;font-weight:800;letter-spacing:.01em}
+.codes em{display:block;font-style:normal;font-size:12px;color:var(--muted);font-weight:500;margin-top:1px}
+.codes .crate{font-size:14px;font-weight:800;color:var(--brand);white-space:nowrap}
+.codes button{border:0;background:var(--surface-2);border-radius:999px;padding:8px 13px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--ink);white-space:nowrap;transition:transform .15s,background .2s}
+.codes button:active{transform:scale(.96)}
+details.more{border:0;background:var(--surface);border-radius:var(--r);padding:4px 16px;margin:18px 0 0}
+details.more summary{font-size:14px;color:var(--muted);padding:12px 0}
+details.more[open] summary{color:var(--ink);border-bottom:1px solid var(--line)}
+.dealLine{font-size:14px;color:var(--muted);line-height:1.7;margin:14px 0 0;padding:12px 14px;background:var(--brand-100);border-radius:var(--r-sm)}
+.dealLine b{color:var(--brand)}
+.dealLine a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
+.answer{font-size:16px;color:var(--ink);line-height:1.65}
+.answer b{color:var(--brand)}
+h1 .hl{color:var(--brand)}
+.sticky.hide{transform:translateY(140%);opacity:0;pointer-events:none}
 button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 .hidden-deals{list-style:none;padding:0;margin:0;display:grid;gap:8px}
 .hidden-deals li{background:var(--brand-100);border-radius:var(--r);padding:16px}
@@ -438,7 +440,7 @@ footer nav a{text-decoration:none;color:var(--muted);font-weight:600}
 .tips li:before{content:"";position:absolute;left:2px;top:.6em;width:5px;height:5px;border-radius:50%;background:var(--faint)}
 .tips li.good{color:var(--brand);font-weight:600}.tips li.good:before{background:var(--brand)}
 .tips li.bad{color:var(--accent)}.tips li.bad:before{background:var(--accent)}
-.sticky{position:fixed;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:20;display:flex;justify-content:center;align-items:center;gap:6px;background:var(--brand);color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:15px;border-radius:999px;box-shadow:0 10px 30px rgba(0,57,66,.28);transition:transform .15s}
+.sticky{position:fixed;left:16px;right:16px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:20;display:flex;justify-content:center;align-items:center;gap:6px;background:var(--brand);color:#fff;text-decoration:none;font-weight:700;font-size:15px;padding:15px;border-radius:999px;box-shadow:0 10px 30px rgba(0,57,66,.28);transition:transform .25s,opacity .25s}
 .sticky:active{transform:scale(.985)}
 .sticky b{color:var(--mint)}
 .toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;z-index:30;background:rgba(29,29,31,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;font-size:13px;font-weight:600;padding:10px 16px;border-radius:999px;transition:opacity .2s,transform .2s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
@@ -446,15 +448,12 @@ footer nav a{text-decoration:none;color:var(--muted);font-weight:600}
 body.hasSticky{padding-bottom:86px}
 @media(max-width:400px){.brand{font-size:14px}.topNav{gap:0}.topNav a{font-size:12px;padding:6px 8px}}
 @media(min-width:880px){
-.headerInner,.utilInner,.wrap{max-width:1040px;padding-left:40px;padding-right:40px}
-.wrap{padding-bottom:110px}
+.headerInner,.utilInner{max-width:1040px;padding-left:40px;padding-right:40px}
+.wrap{max-width:720px;padding-left:24px;padding-right:24px;padding-bottom:110px}
 .heroInner{padding:56px 0 16px}
-.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:64px;align-items:start}
-.heroSide{padding-top:8px}
-.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 64px}
-.cols .full{grid-column:1 / -1}
+.heroSide{margin-top:20px}
 .vids{grid-template-columns:1fr 1fr}
-h1{font-size:44px}
+h1{font-size:40px}
 h2{font-size:24px}
 .big{font-size:96px}
 .lede{font-size:17px}
@@ -465,21 +464,23 @@ body.hasSticky{padding-bottom:0}
 `;
 
 // ── 공통 조각 ──
-const codeList = `<ul class="codes">${CODES.map(c => {
-  const ex = extraOf(c);
-  return `
-  <li${c === primary ? ' class="primary"' : ''}><span class="name">${esc(c.label)}</span>${ex ? `<span class="plus">공식보다 +${ex}%p</span>` : ''}<em>${esc(c.note)}</em>
-  <div class="crow"><code>${esc(nameOf(c))}</code><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span>
-  <button type="button" data-copy="${esc(c.code)}" data-label="${esc(nameOf(c))}">복사</button><a class="go" ${goAttrs(c.code, nameOf(c))}>복사하고 이동</a></div></li>`;
-}).join('')}
-  ${db.referral ? `<li><span class="name">신규 가입 추천인 코드</span><em>처음 가입할 때 넣으면 첫 구매 적립금. 할인코드와 같이 쓸 수 있습니다.</em>
-  <div class="crow"><code>${esc(db.referral)}</code><span class="crate"></span><button type="button" data-copy="${esc(db.referral)}">복사</button></div></li>` : ''}
-</ul>`;
+// 메인 버튼은 페이지당 하나. 나머지 코드는 접힌 목록 안에 작은 복사 버튼만 둡니다.
+const codeRow = c => `<li><span class="name">${esc(nameOf(c))}<em>${esc(c.label)}${c.note ? ` · ${esc(c.note)}` : ''}</em></span><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span><button type="button" data-copy="${esc(c.code)}" data-label="${esc(nameOf(c))}">복사</button></li>`;
+const otherCodes = CODES.filter(c => c !== primary);
+const codeList = `<ul class="codes">${otherCodes.map(codeRow).join('')}${db.referral ? `<li><span class="name">${esc(db.referral)}<em>신규 가입 추천인 코드 · 첫 구매 적립금, 할인코드와 같이 씁니다</em></span><span class="crate"></span><button type="button" data-copy="${esc(db.referral)}">복사</button></li>` : ''}</ul>`;
+const otherCount = otherCodes.length + (db.referral ? 1 : 0);
+const otherCodesBox = otherCount ? `<details class="more"><summary>다른 코드 보기 (${otherCount}개)</summary>${codeList}</details>` : '';
 
-const heroCta = primary ? `<a class="cta hot" ${goAttrs(primary.code, nameOf(primary))}>${esc(nameOf(primary))} 복사하고 ${primary.rate != null ? `${primary.rate}% ` : ''}할인받기</a>
+const heroCta = primary ? `<a class="cta hot heroBtn" ${goAttrs(primary.code, nameOf(primary))}>${esc(nameOf(primary))} 복사하고 사러 가기</a>
 <p class="hint">누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>`
-  : `<a class="cta" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener">마이프로틴에서 할인받기</a>`;
-const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(primary))}><b>${esc(nameOf(primary))}</b> 복사하고 ${primary.rate != null ? `${primary.rate}% ` : ''}할인받기 →</a>` : '';
+  : `<a class="cta heroBtn" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener">마이프로틴에서 할인받기</a>`;
+const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(primary))}><b>${esc(nameOf(primary))}</b> 복사하고 사러 가기 →</a>` : '';
+
+// 숨은 할인 한 줄 요약
+const dealShort = d => d.type === 'amount' ? `<b>+${(d.amount / 1000).toLocaleString('ko-KR')}천원</b> ${esc(d.label)}` : `<b>+${d.rate}%</b> ${esc(d.label)}`;
+const dealLine = last.deals.length
+  ? `<p class="dealLine">같이 챙기면 ${last.deals.map(dealShort).join(' · ')} → 다 챙기면 <b>${pct(last.eff)}</b>${calcWidget ? ` <a href="./calc.html">내 금액으로 계산</a>` : ''}</p>`
+  : '';
 
 const dealItems = ds => `<ul class="hidden-deals">${ds.map(d => `
   <li><div class="row"><span class="t">${esc(d.label)}</span><span class="r">+${d.rate}%</span></div>
@@ -593,6 +594,8 @@ ${sticky}
   function show(m){toast.textContent=m;toast.classList.add('on');clearTimeout(tm);tm=setTimeout(function(){toast.classList.remove('on')},2600)}
   function old(v){var a=document.createElement('textarea');a.value=v;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
   function copy(v){try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(v).catch(function(){old(v)})}else{old(v)}}catch(e){old(v)}}
+  var st=document.querySelector('.sticky'),hb=document.querySelector('.heroBtn');
+  if(st&&hb&&'IntersectionObserver' in window){new IntersectionObserver(function(es){st.classList.toggle('hide',es[0].isIntersecting)},{threshold:.4}).observe(hb)}
   document.querySelectorAll('[data-copy]').forEach(function(el){
     el.addEventListener('click',function(){
       var v=el.getAttribute('data-copy'),lb=el.getAttribute('data-label')||v;copy(v);
@@ -642,50 +645,26 @@ page({
   ],
   heroHtml: `
 <div class="hero">
-<div class="heroMain">
-<h1>마이프로틴 대란 알리미</h1>
-<p class="lede">마이프로틴 할인코드와 배너에 안 걸린 숨은 할인을 매일 확인합니다. ${kdate(last.date)} 기준입니다.</p>
 <span class="state ${isDaeran ? 'on' : 'off'}">${isDaeran ? '지금 대란입니다' : '지금은 대란이 아닙니다'}</span>
-<p class="bigLabel">숨은 할인까지 모두 챙기면 받는 최대 할인</p>
-<span class="numWrap"><span class="big">${pct(last.eff)}</span></span>
-<p class="formula">${codeWord}${last.deals.length ? ` + 숨은 할인 ${last.deals.length}건` : ''} = <b>${pct(last.eff)}</b></p>
-<p class="subline">${isDaeran ? `할인코드 ${last.base}%로 대란 기준 ${TH}%를 넘었습니다.` : `할인코드 기준 대란(${TH}%)까지 ${gap}%p 남았습니다.`}</p>
+<h1>오늘 마이프로틴 ${pName || '할인코드'} <span class="hl">${last.base}%</span></h1>
+<p class="lede answer">${kdate(last.date)} 기준 ${isDaeran
+    ? `할인코드 ${last.base}%로 대란 기준 ${TH}%를 넘었습니다. 지금 사면 됩니다.`
+    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았고${nextGuess ? `, 다음 대란 참고일은 ${kdate(nextGuess)}입니다` : ''}.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
 ${heroCta}
-</div>
-<div class="heroSide">
-${gauge()}
+${dealLine}
 <dl class="stats">
   <div><dt>마지막 대란</dt><dd>${lastEvent ? kdate(lastEvent.end) : '기록 없음'}</dd></div>
   <div><dt>평균 주기</dt><dd>${cycle ? `약 ${cycle}일` : '집계 중'}</dd></div>
   <div><dt>다음 대란 참고</dt><dd>${isDaeran ? '진행 중' : nextGuess ? kdate(nextGuess) : '-'}</dd></div>
 </dl>
-</div>
+${otherCodesBox}
 </div>`,
   extraScript: calcWidget ? calcScript : '',
   restHtml: `
-<section>
-<h2>지금 쓸 수 있는 마이프로틴 할인코드</h2>
-${officialLine ? `<p class="lede">${officialLine}</p>` : ''}
-${codeList}
-<a class="cta ghost" href="./code.html">할인코드 적용 방법 보기</a>
-</section>
-
-<section>
-${calcWidget ? `<h2>내 장바구니 최종 결제금액</h2>
-<p class="lede">장바구니 금액만 넣으면 히든코드와 숨은 할인까지 적용한 금액을 바로 계산합니다.</p>
-${calcWidget}` : ''}
-</section>
-
-<section class="full">
-<h2>코드 위에 더 붙는 숨은 할인</h2>
-<p class="lede">배너에 크게 걸리지 않아 모르고 지나치기 쉬운 조건들입니다.</p>
-${dealList}
-</section>
-
-${day.length > 1 ? `<section class="full">
-<h2>최근 할인율 추이</h2>
-${trendNote}
-${trend(day.slice(-90))}
+${calcWidget ? `<section>
+<h2>내 장바구니는 얼마에 살까</h2>
+<p class="lede">금액만 넣으면 히든코드와 숨은 할인까지 적용한 결제금액이 나옵니다.</p>
+${calcWidget}
 </section>` : ''}
 
 <section>
@@ -740,30 +719,20 @@ page({
   ld: [crumbs([['홈', 'index.html'], ['마이프로틴 할인코드', 'code.html']]), faqLd(CODE_FAQ)],
   heroHtml: `
 <div class="hero">
-<div class="heroMain">
-<h1>마이프로틴 할인코드<br>${M(curYm)}월 최신 정리</h1>
 <p class="updated">${dot(last.date)} 업데이트 · 매일 확인</p>
-<p class="lede">${officialLine || `오늘 할인코드는 ${last.base}%입니다.`} 장바구니 조건으로 붙는 숨은 할인까지 합치면 <b>${pct(last.eff)}</b>입니다.</p>
+<h1>마이프로틴 할인코드 ${M(curYm)}월</h1>
+<p class="lede answer">오늘 쓸 코드는 ${pName || '할인코드'} <b>${last.base}%</b>입니다.${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${extraOf(primary)}%p 높습니다.` : ''} 한 주문에 코드는 하나만 들어갑니다.</p>
 ${heroCta}
-</div>
-<div class="heroSide">
-${codeList}
-</div>
+${dealLine}
+${otherCodesBox}
 </div>`,
   restHtml: `
 <section>
-<h2>코드 위에 더 붙는 숨은 할인</h2>
-<p class="lede">할인코드와 별개로 장바구니 조건만 맞추면 추가로 붙습니다.</p>
-${dealList}
-</section>
-
-<section>
 <h2>마이프로틴 할인코드 적용 방법</h2>
 <ol class="steps">
-  <li>위 목록에서 <b>복사하고 이동</b>을 누릅니다. 코드가 복사되고 마이프로틴이 열립니다.</li>
-  <li>살 제품을 장바구니에 담습니다. 숨은 할인 조건이 있으면 이때 같이 맞춥니다.</li>
-  <li>장바구니의 할인코드 입력란에 붙여넣고 적용을 누릅니다.</li>
-  <li>금액이 바뀌었는지 확인하고 결제합니다. 처음 가입한다면 추천인 코드도 같이 넣으십시오.</li>
+  <li>위 버튼을 누릅니다. 코드가 복사되고 마이프로틴이 열립니다.</li>
+  <li>살 제품을 장바구니에 담습니다. 이달의 트렌드 제품을 하나 넣으면 7%가 더 빠집니다.</li>
+  <li>장바구니의 할인코드 칸에 붙여넣고 적용을 누른 뒤, 금액이 바뀌었는지 확인하고 결제합니다.</li>
 </ol>
 <p class="lede">8만원 이상이면 무료배송이고, 150달러를 넘으면 관세가 붙을 수 있으니 장바구니 금액을 그 아래로 맞추는 편이 좋습니다.</p>
 ${calcWidget ? '<a class="cta ghost" href="./calc.html">내 장바구니 최종 결제금액 계산하기</a>' : ''}
@@ -834,12 +803,9 @@ if (calcWidget) page({
 <div class="heroMain">
 <h1>마이프로틴 할인 계산기</h1>
 <p class="updated">${dot(last.date)} 조건 기준 · 매일 갱신</p>
-<p class="lede">장바구니 금액만 넣으면 히든코드, 쇼핑지원금, 이달의 트렌드 할인까지 적용한 최종 결제금액을 계산합니다. 지원금 기준에 모자라면 얼마나 더 담아야 하는지도 알려드립니다.</p>
+<p class="lede answer">장바구니 금액만 넣으면 ${pName || '할인코드'} ${last.base}%와 쇼핑지원금, 이달의 트렌드 할인까지 적용한 최종 결제금액이 나옵니다. 지원금 기준에 모자라면 얼마나 더 담아야 하는지도 알려드립니다.</p>
 ${calcWidget}
-</div>
-<div class="heroSide">
-<h2 style="margin-top:0">오늘 적용되는 할인</h2>
-${codeList}
+${otherCodesBox}
 </div>
 </div>`,
   restHtml: `
