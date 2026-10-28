@@ -448,24 +448,33 @@ footer nav a{text-decoration:none;color:var(--muted);font-weight:600}
 body.hasSticky{padding-bottom:86px}
 @media(max-width:400px){.brand{font-size:14px}.topNav{gap:0}.topNav a{font-size:12px;padding:6px 8px}}
 @media(min-width:880px){
-.headerInner,.utilInner,.wrap{max-width:980px;padding-left:32px;padding-right:32px}
+.headerInner,.utilInner,.wrap{max-width:1040px;padding-left:32px;padding-right:32px}
 .wrap{padding-bottom:110px}
-.heroInner{padding:64px 0 24px}
-.hero{text-align:center}
-.hero h1,.hero .lede,.hero .updated,.hero .hint{max-width:760px;margin-left:auto;margin-right:auto}
-.hero .cta{display:inline-block;min-width:380px;margin:10px auto 8px}
-.hero .dealLine,.hero details.more{max-width:760px;margin-left:auto;margin-right:auto;text-align:left}
-.hero .stats{margin:28px 0 8px}
-.hero .calc{text-align:left;margin-top:20px}
-.heroSide{margin-top:20px}
+.heroInner{padding:56px 0 16px}
+/* 첫 화면: 왼쪽 답+버튼, 오른쪽 요약 카드 */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:16px 56px;align-items:start}
+.hero > *{grid-column:1}
+.hero .stats{grid-column:2;grid-row:1 / 6;grid-template-columns:1fr;gap:10px;margin:6px 0 0}
+.hero .stats div{padding:18px 20px}
+.hero .stats dd{font-size:24px}
+.hero details.more{grid-column:2;margin:0;align-self:start}
+.hero .calc{grid-column:1 / -1;margin-top:12px}
+.hero .calc ~ details.more{grid-column:1 / -1}
+.hero .heroMain{grid-column:1}
+.hero .heroSide{grid-column:2;grid-row:1;margin:0}
+.hero .heroSide .stats{display:grid;grid-template-columns:1fr}
+.hero .cta{margin-top:12px}
+.hero .dealLine{margin-top:10px}
+/* 아래 섹션: 2열, 긴 것은 전체 폭 */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 56px;align-items:start}
+.cols .full,.cols section:has(> details),.cols section:has(.calc),.cols section:has(.pt),.cols section:has(.vids){grid-column:1 / -1}
 .vids{grid-template-columns:1fr 1fr}
 .calc{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;align-items:start;padding:24px}
 .calc > *{grid-column:1}
 .calc .res{grid-column:2;grid-row:1 / 4;margin:0}
 .calc .cta{grid-column:2;grid-row:4;margin-top:12px}
 .calc .hint{grid-column:2;grid-row:5}
-.pager{max-width:760px;margin-left:auto;margin-right:auto}
-h1{font-size:44px}
+h1{font-size:42px}
 h2{font-size:24px}
 .big{font-size:96px}
 .lede{font-size:17px}
