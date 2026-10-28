@@ -1074,7 +1074,10 @@ for (const ym of monthPages) {
   } else {
     summary = `${y}년 ${m}월에는 ${isCur ? '아직 ' : ''}할인코드 ${TH}% 이상 대란이 ${isCur ? '없습니다. 대란이 시작되면 바로 기록합니다.' : '없었습니다.'}`;
   }
-  const best = st.evMax ?? st.dayMax;
+  // 할인율을 모르는 대란이 있는 달은, 매일 기록 값이 대란 기준보다 낮으면 최고값으로 쓰지 않습니다 (대란 1회인데 최고 36%처럼 보이는 것 방지)
+  const bestKnown = [st.evMax, st.dayMax].filter(v => v != null);
+  let best = bestKnown.length ? Math.max(...bestKnown) : null;
+  if (st.events.some(e => e.max == null) && (best == null || best < TH)) best = null;
 
   page({
     file: monthFile(ym), priority: isCur || isUpcoming ? 0.9 : 0.6, current: monthFile(ym),

@@ -355,6 +355,12 @@
       "base": 36,
       "official": 35,
       "source": "manual"
+    },
+    {
+      "date": "2026-10-29",
+      "base": 36,
+      "official": 35,
+      "source": "auto"
     }
   ]
 }
