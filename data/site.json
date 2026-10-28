@@ -1,0 +1,12 @@
+{
+  "_readme": "사이트 설정은 이 파일 하나만 고치면 됩니다. domain 을 채우면 모든 주소(canonical, 사이트맵, RSS, robots, CNAME)가 그 도메인으로 바뀝니다. 비워 두면 githubPagesUrl 을 씁니다. 도메인은 https:// 없이 example.com 형태로 적으십시오.",
+  "domain": "",
+  "githubPagesUrl": "https://krdugong.github.io/marp-daeran",
+  "brand": "마프대란 알리미",
+  "kakao": "https://open.kakao.com/o/gh0XALIi",
+  "affiliate": "https://www.awin1.com/cread.php?awinmid=10751&awinaffid=325265&clickref=alimi-homepage&ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3",
+  "youtubeChannel": "https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1",
+  "youtubeVideo": "https://www.youtube.com/watch?v=V_lXtiqjd_s",
+  "naverVerify": "",
+  "googleVerify": ""
+}
