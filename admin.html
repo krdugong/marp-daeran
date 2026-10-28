@@ -7,7 +7,7 @@
 <title>데이터 편집기 · 마프대란 알리미</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
 <style>
-:root{--bg:#FFFFFF;--card:#FFFFFF;--ink:#12161C;--muted:#5B6470;--line:#E3E7EB;--flame:#C0392B;--blue:#1D4ED8;--flame-soft:#FBEAE7;--amber:#D98E04;--amber-soft:#FBEBC7}
+:root{--bg:#F6F5F2;--card:#FFFFFF;--ink:#003942;--muted:#5B6470;--line:#E3E7EB;--flame:#DD592B;--blue:#003942;--flame-soft:#FBEAE7;--amber:#D98E04;--amber-soft:#FBEBC7}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Pretendard,system-ui,sans-serif;line-height:1.6;font-feature-settings:"tnum"}
 .wrap{max-width:640px;margin:0 auto;padding:28px 20px 80px}
@@ -151,7 +151,7 @@ function render(){
   var ds=dealsOn(d);
   if(!isNaN(base)){
     var eff=stackRate(base,ds);
-    var on=eff>=db.threshold;
+    var on=base>=db.threshold;
     $('pvNum').textContent=pct(eff);
     $('pvNum').className='n'+(on?' on':'');
     $('pvMsg').textContent=(on?'대란 기준을 넘습니다. ':'대란 기준까지 '+r1(db.threshold-eff)+'%p 남았습니다. ')

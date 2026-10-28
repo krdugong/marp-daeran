@@ -1,5 +1,5 @@
 {
-  "_readme": "사이트 설정은 이 파일 하나만 고치면 됩니다. domain 을 채우면 모든 주소(canonical, 사이트맵, RSS, robots, CNAME)가 그 도메인으로 바뀝니다. 비워 두면 githubPagesUrl 을 씁니다. 도메인은 https:// 없이 example.com 형태로 적으십시오.",
+  "_readme": "사이트 설정은 이 파일 하나만 고치면 됩니다. domain 을 채우면 모든 주소(canonical, 사이트맵, RSS, robots, CNAME)가 그 도메인으로 바뀝니다. 비워 두면 githubPagesUrl 을 씁니다. 도메인은 https:// 없이 example.com 형태로 적으십시오. naverAnalytics 는 네이버 애널리틱스 사이트 ID(예: 1234abcd5678ef), ga4 는 구글 애널리틱스 측정 ID(G-XXXXXXX)이며 비워 두면 추적 코드를 넣지 않습니다.",
   "domain": "proteify.kr",
   "githubPagesUrl": "https://krdugong.github.io/marp-daeran",
   "brand": "프로티파이",
@@ -9,5 +9,7 @@
   "youtubeChannel": "https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1",
   "youtubeVideo": "https://www.youtube.com/watch?v=V_lXtiqjd_s",
   "naverVerify": "c6363724523ac774bc56cc2ab2d2aeb55440200e",
-  "googleVerify": ""
+  "googleVerify": "",
+  "naverAnalytics": "",
+  "ga4": ""
 }

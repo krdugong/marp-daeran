@@ -5,7 +5,8 @@
 //   code.html                마이프로틴 할인코드 (키워드: 마이프로틴 할인코드)
 //   daeran.html              전체 대란 기록 + 월별 목록
 //   daeran-YYYY-MM.html      월별 대란 페이지 (키워드: 마이프로틴 N월 대란)
-//   sitemap.xml, rss.xml, robots.txt, CNAME
+//   404.html                 없는 주소에 보여주는 안내 (검색엔진 제외)
+//   sitemap.xml, rss.xml, robots.txt, CNAME, manifest.webmanifest
 //
 // 대란 판정은 할인코드 할인율(base)로 합니다. 숨은 할인을 합친 실질 할인율은
 // "실제로 받는 할인"으로 보여주기만 합니다. 숨은 할인은 평소에도 붙는 경우가 많아
@@ -110,6 +111,21 @@ const monthStats = ym => {
   };
 };
 const months = [...new Set([...day.map(d => ymOf(d.date)), ...events.flatMap(e => [ymOf(e.start), ymOf(e.end)]), ...allVideos.map(v => ymOf(v.date))])].sort();
+
+// 해마다 행사가 걸리는 날 (월별 페이지의 "체크할 날짜"). 11월은 코드에 넣어 두고, 그 밖의 날은 discount.json 의 calendar 에 { "date": "2026-12-26", "label": "...", "note": "..." } 로 넣으면 됩니다.
+const wd = s => '일월화수목금토'[new Date(s + 'T00:00:00Z').getUTCDay()] + '요일';
+const blackFriday = y => { const firstThu = 1 + ((4 - new Date(Date.UTC(y, 10, 1)).getUTCDay() + 7) % 7); return `${y}-11-${String(firstThu + 22).padStart(2, '0')}`; };
+const seasonal = ym => {
+  const y = Y(ym), m = M(ym), list = [];
+  if (m === 11) {
+    const bf = blackFriday(y);
+    list.push({ date: `${y}-11-11`, label: '싱글즈데이(빼빼로데이)', note: '해마다 큰 행사가 걸리는 날입니다. 전날 저녁부터 할인율을 확인하세요.' });
+    list.push({ date: bf, label: '블랙프라이데이', note: '1년 중 할인이 가장 센 주간입니다. 전주부터 예열 행사가 붙는 경우가 많습니다.' });
+    list.push({ date: addDays(bf, 3), label: '사이버먼데이', note: '블랙프라이데이 행사가 보통 이날까지 이어집니다.', minor: true });
+  }
+  for (const c of db.calendar || []) if (c.date && ymOf(c.date) === ym) list.push(c);
+  return list.sort((a, b) => a.date.localeCompare(b.date));
+};
 // 월말 10일 동안은 다음 달 페이지를 미리 만들어 둡니다 ("마이프로틴 N월 대란" 검색은 그 달이 오기 전부터 생깁니다)
 const upcomingYm = (+last.date.slice(8, 10) > daysIn(curYm) - 10) ? shiftYm(curYm, 1) : null;
 const monthPages = upcomingYm && !months.includes(upcomingYm) ? [...months, upcomingYm] : months;
@@ -120,7 +136,9 @@ const official = CODES.find(c => c.official);
 const primary = CODES.find(c => c.primary) || CODES.find(c => !c.official) || CODES[0];
 const extraOf = c => (official && c !== official && c.rate != null && official.rate != null && c.rate > official.rate) ? r1(c.rate - official.rate) : null;
 const nameOf = c => c.secret ? '히든코드' : c.code;
-const goAttrs = (code, label) => `href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${esc(code)}"${label ? ` data-label="${esc(label)}"` : ''}`;
+// 복사용 코드는 페이지 소스에 평문으로 안 남게 base64 로 넣고, 누를 때 풀어서 복사합니다 (히든코드가 검색 캐시나 소스 보기에 글자로 안 잡히게)
+const b64 = s => Buffer.from(String(s)).toString('base64');
+const goAttrs = (code, label) => `href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(code)}"${label ? ` data-label="${esc(label)}"` : ''}`;
 
 // ── 할인 계산기 ──
 // 계산 순서: 할인코드(%) → 정액 할인(쇼핑지원금 등, 할인코드 적용 후 금액이 min 이상일 때) → 나머지 % 할인(이달의 트렌드 등)
@@ -128,7 +146,7 @@ const SHOP = { freeShipping: 80000, customsUsd: 150, usdKrw: 1400, ...(db.shop |
 const CALC_CODES = CODES.filter(c => c.rate != null);
 const daeranRate = knownMax.length ? Math.round(knownMax.reduce((s, v) => s + v, 0) / knownMax.length) : null;
 const calcData = {
-  codes: CALC_CODES.map(c => ({ code: c.code, name: nameOf(c), rate: c.rate })),
+  codes: CALC_CODES.map(c => ({ code: b64(c.code), name: nameOf(c), rate: c.rate })),
   deals: last.deals.map(d => ({ label: d.label, type: d.type === 'amount' ? 'amount' : 'percent', rate: d.rate, amount: d.amount || 0, min: d.min || 0 })),
   shop: SHOP,
   daeranRate,
@@ -204,7 +222,7 @@ const priceRows = list => `<table class="pt">
 <thead><tr><th>제품</th><th class="n">표시가</th><th class="n">평소<br><small>코드 ${last.base}%</small></th><th class="n">대란<br><small>코드 ${dRate}%</small></th><th class="n">차이</th></tr></thead>
 <tbody>${list.map(p => {
   const a = p.price * (1 - last.base / 100), b = p.price * (1 - dRate / 100);
-  return `<tr><td><a href="${esc(affTo(p.url))}" target="_blank" rel="sponsored nofollow noopener"${primary ? ` data-copy="${esc(primary.code)}" data-label="${esc(nameOf(primary))}"` : ''}>${esc(p.name)} <b>${esc(p.size)}</b></a>${p.note ? `<small>${esc(p.note)}</small>` : ''}</td><td class="n muted">${won(p.price)}</td><td class="n">${won(a)}</td><td class="n hot">${won(b)}</td><td class="n">-${won(a - b)}</td></tr>`;
+  return `<tr><td><a href="${esc(affTo(p.url))}" target="_blank" rel="sponsored nofollow noopener"${primary ? ` data-copy="${b64(primary.code)}" data-label="${esc(nameOf(primary))}"` : ''}>${esc(p.name)} <b>${esc(p.size)}</b></a>${p.note ? `<small>${esc(p.note)}</small>` : ''}</td><td class="n muted">${won(p.price)}</td><td class="n">${won(a)}</td><td class="n hot">${won(b)}</td><td class="n">-${won(a - b)}</td></tr>`;
 }).join('')}</tbody>
 </table>`;
 
@@ -487,9 +505,9 @@ body.hasSticky{padding-bottom:0}
 
 // ── 공통 조각 ──
 // 메인 버튼은 페이지당 하나. 나머지 코드는 접힌 목록 안에 작은 복사 버튼만 둡니다.
-const codeRow = c => `<li><span class="name">${esc(nameOf(c))}<em>${esc(c.label)}${c.note ? ` · ${esc(c.note)}` : ''}</em></span><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span><button type="button" data-copy="${esc(c.code)}" data-label="${esc(nameOf(c))}">복사</button></li>`;
+const codeRow = c => `<li><span class="name">${esc(nameOf(c))}<em>${esc(c.label)}${c.note ? ` · ${esc(c.note)}` : ''}</em></span><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span><button type="button" data-copy="${b64(c.code)}" data-label="${esc(nameOf(c))}">복사</button></li>`;
 const otherCodes = CODES.filter(c => c !== primary);
-const codeList = `<ul class="codes">${otherCodes.map(codeRow).join('')}${db.referral ? `<li><span class="name">${esc(db.referral)}<em>신규 가입 추천인 코드 · 첫 구매 적립금, 할인코드와 같이 씁니다</em></span><span class="crate"></span><button type="button" data-copy="${esc(db.referral)}">복사</button></li>` : ''}</ul>`;
+const codeList = `<ul class="codes">${otherCodes.map(codeRow).join('')}${db.referral ? `<li><span class="name">${esc(db.referral)}<em>신규 가입 추천인 코드 · 첫 구매 적립금, 할인코드와 같이 씁니다</em></span><span class="crate"></span><button type="button" data-copy="${b64(db.referral)}">복사</button></li>` : ''}</ul>`;
 const otherCount = otherCodes.length + (db.referral ? 1 : 0);
 const otherCodesBox = otherCount ? `<details class="more"><summary>다른 코드 보기 (${otherCount}개)</summary>${codeList}</details>` : '';
 
@@ -551,12 +569,20 @@ const crumbs = list => ({ '@type': 'BreadcrumbList', itemListElement: list.map((
 
 // ── 페이지 틀 ──
 const hasOg = fs.existsSync(path.join(ROOT, 'og.png'));
+const hasIcon = fs.existsSync(path.join(ROOT, 'favicon.ico'));
 const built = []; // 사이트맵·RSS용
 
 const BASE_KW = ['마이프로틴', '마프대란', '마이프로틴 할인코드', '마이프로틴 대란', '마이프로틴 히든코드'];
-function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.date, priority = 0.8, current, extraScript = '', keywords = [] }) {
+function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.date, priority = 0.8, current, extraScript = '', keywords = [], noindex = false }) {
   const url = urlOf(file);
   const kw = [...new Set([...keywords, ...BASE_KW])].join(',');
+  // 모든 페이지에 사이트·운영자·페이지 정보를 깔고, 페이지별 FAQ·빵부스러기는 그 뒤에 붙입니다
+  const graph = [
+    { '@type': 'WebSite', '@id': `${SITE.origin}/#website`, name: SITE.brand, alternateName: ['Proteify', '마프대란', '마프대란알리미', '마이프로틴 대란 알리미'], url: `${SITE.origin}/`, inLanguage: 'ko-KR', publisher: { '@id': `${SITE.origin}/#org` } },
+    { '@type': 'Organization', '@id': `${SITE.origin}/#org`, name: SITE.brand, alternateName: SITE.tagline || undefined, url: `${SITE.origin}/`, logo: hasOg ? `${SITE.origin}/og.png` : undefined, sameAs: [SITE.youtubeChannel].filter(Boolean).map(u => u.replace(/\?.*$/, '')) },
+    { '@type': 'WebPage', '@id': url, url, name: title, description: desc, inLanguage: 'ko-KR', dateModified: lastmod, isPartOf: { '@id': `${SITE.origin}/#website` } },
+    ...ld,
+  ];
   const navLink = (href, label) => `<a href="./${href}"${current === href ? ' aria-current="page"' : ''}>${label}</a>`;
   const html = `<!doctype html>
 <html lang="ko">
@@ -566,8 +592,8 @@ function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.d
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${url}">
-<meta name="robots" content="index, follow">
-<meta name="keywords" content="${esc(kw)}">
+<meta name="robots" content="${noindex ? 'noindex, follow' : 'index, follow'}">
+${noindex ? `<base href="${SITE.origin}/">\n` : ''}<meta name="keywords" content="${esc(kw)}">
 ${SITE.naverVerify ? `<meta name="naver-site-verification" content="${esc(SITE.naverVerify)}">\n` : ''}${SITE.googleVerify ? `<meta name="google-site-verification" content="${esc(SITE.googleVerify)}">\n` : ''}<link rel="alternate" type="application/rss+xml" title="${esc(SITE.brand)}" href="${SITE.origin}/rss.xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="${esc(SITE.brand)}">
@@ -579,11 +605,17 @@ ${hasOg ? `<meta property="og:image" content="${SITE.origin}/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-` : ''}<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+` : ''}${hasIcon ? `<link rel="icon" href="${SITE.origin}/favicon.ico" sizes="32x32">
+<link rel="icon" href="${SITE.origin}/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="${SITE.origin}/apple-touch-icon.png">
+<link rel="manifest" href="${SITE.origin}/manifest.webmanifest">
+` : ''}<meta name="theme-color" content="#003942">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
 <style>${css}</style>
-<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': ld }).replace(/</g, '\\u003c')}</script>
+<script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c')}</script>
 </head>
-<body${sticky ? ' class="hasSticky"' : ''}>
+<body${sticky ? ' class="hasSticky"' : ''} data-asof="${last.date}">
 <header class="top"><div class="headerInner">
   <a class="brand" href="./">${esc(SITE.brand)}${SITE.tagline ? `<small>${esc(SITE.tagline)}</small>` : ''}</a>
   <nav class="topNav">${navLink('code.html', '할인코드')}${calcWidget ? navLink('calc.html', '계산기') : ''}${navLink(monthFile(curYm), `${M(curYm)}월 대란`)}</nav>
@@ -616,11 +648,15 @@ ${sticky}
   function show(m){toast.textContent=m;toast.classList.add('on');clearTimeout(tm);tm=setTimeout(function(){toast.classList.remove('on')},2600)}
   function old(v){var a=document.createElement('textarea');a.value=v;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
   function copy(v){try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(v).catch(function(){old(v)})}else{old(v)}}catch(e){old(v)}}
+  function dec(s){try{return atob(s)}catch(e){return s}}
+  var asof=document.body.getAttribute('data-asof');
+  if(asof){var dd=Math.floor((Date.now()-new Date(asof+'T00:00:00+09:00').getTime())/864e5);
+    if(dd>=3){var w=document.createElement('p');w.className='warn';w.textContent='마지막 확인이 '+asof.replace(/-/g,'.')+'이라 '+dd+'일 지났습니다. 최신 할인율은 단톡방이나 유튜브에서 확인하세요.';var mn=document.querySelector('main');mn.insertBefore(w,mn.firstChild)}}
   var st=document.querySelector('.sticky'),hb=document.querySelector('.heroBtn');
   if(st&&hb&&'IntersectionObserver' in window){new IntersectionObserver(function(es){st.classList.toggle('hide',es[0].isIntersecting)},{threshold:.4}).observe(hb)}
   document.querySelectorAll('[data-copy]').forEach(function(el){
     el.addEventListener('click',function(){
-      var v=el.getAttribute('data-copy'),lb=el.getAttribute('data-label')||v;copy(v);
+      var v=dec(el.getAttribute('data-copy')),lb=el.getAttribute('data-label')||v;copy(v);
       show(lb+' 복사됨 · 장바구니 할인코드 칸에 붙여넣으세요');
       if(el.tagName==='BUTTON'){var t=el.textContent;el.textContent='복사됨';setTimeout(function(){el.textContent=t},1200)}
     });
@@ -628,10 +664,14 @@ ${sticky}
 })();
 </script>
 ${extraScript}
-</body>
+${SITE.naverAnalytics ? `<script src="https://wcs.naver.net/wcslog.js"></script>
+<script>window.wcs_add=window.wcs_add||{};window.wcs_add.wa="${esc(SITE.naverAnalytics)}";if(window.wcs){wcs_do();}</script>
+` : ''}${SITE.ga4 ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${esc(SITE.ga4)}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${esc(SITE.ga4)}');</script>
+` : ''}</body>
 </html>`;
   write(file, html);
-  built.push({ file, url, title, desc, lastmod, priority });
+  if (!noindex) built.push({ file, url, title, desc, lastmod, priority });
 }
 
 // ── 문구 ──
@@ -661,10 +701,7 @@ page({
   title: `마이프로틴 대란 알리미 (마프대란) | 오늘 할인코드 ${last.base}% · 숨은 할인 포함 ${pct(last.eff)}`,
   keywords: ['마이프로틴 대란 일정', '마이프로틴 대란 날짜', '마이프로틴 할인 기간', '마프대란알리미', `마이프로틴 대란 ${M(curYm)}월`, `마이프로틴 할인 ${M(curYm)}월`],
   desc: `${kdate(last.date)} 기준 마이프로틴 ${codeWord}에 숨은 할인을 더하면 ${pct(last.eff)}입니다. ${isDaeran ? '지금 대란입니다.' : `대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`} 3월부터 기록한 대란 날짜와 영상도 확인하세요.`,
-  ld: [
-    { '@type': 'WebSite', name: SITE.brand, alternateName: ['Proteify', '마프대란', '마프대란알리미', '마이프로틴 대란 알리미'], url: `${SITE.origin}/`, inLanguage: 'ko-KR' },
-    faqLd(HOME_FAQ),
-  ],
+  ld: [faqLd(HOME_FAQ)],
   heroHtml: `
 <div class="hero">
 <span class="state ${isDaeran ? 'on' : 'off'}">${isDaeran ? '지금 대란입니다' : '지금은 대란이 아닙니다'}</span>
@@ -768,7 +805,7 @@ ${db.referral ? `<section>
   <li>자동으로 안 들어갔다면 가입 화면의 추천인 코드(또는 친구 초대 코드) 칸에 <code>${esc(db.referral)}</code>를 직접 넣습니다.</li>
   <li>가입을 마친 뒤 장바구니에서 할인코드(${primary ? esc(nameOf(primary)) : '히든코드'})를 따로 넣고 결제하면 둘 다 적용됩니다.</li>
 </ol>
-<a class="cta" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${esc(db.referral)}">${esc(db.referral)} 복사하고 가입하기</a>
+<a class="cta" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(db.referral)}">${esc(db.referral)} 복사하고 가입하기</a>
 <p class="hint">이미 가입한 계정에는 추천인 코드가 적용되지 않습니다.</p>
 </section>` : ''}
 
@@ -1006,10 +1043,23 @@ for (const ym of monthPages) {
   const lastYear = monthStats(shiftYm(ym, -12));
   const monthDeals = DEALS.filter(d => d.start <= `${ym}-31` && d.end >= `${ym}-01`);
   const evText = st.events.map(e => `${range(e)}${e.max != null ? `(할인코드 ${e.max}%)` : ''}`).join(', ');
+  const season = seasonal(ym);
+  const seasonShort = season.filter(s => !s.minor).map(s => `${kdate(s.date)} ${s.label.replace(/\(.*?\)/, '')}`).join(', ');
+  // 다음 대란 참고일이 이달 안이거나 이달 시작 일주일 전이면 이 달 페이지에도 보여줍니다
+  const guessHere = nextGuess && nextGuess <= `${ym}-31` && nextGuess >= addDays(`${ym}-01`, -7);
+  const yearEvents = events.filter(e => Y(ymOf(e.start)) === y && e.start < `${ym}-01`);
+  const upFaq = isUpcoming ? [
+    [`마이프로틴 ${m}월 대란은 언제인가요?`,
+     `아직 시작 전입니다.${cycle ? ` 올해 대란은 평균 ${cycle}일 간격으로 돌아왔고` : ''}${guessHere ? ` 단순 계산한 다음 참고일은 ${kdate(nextGuess)}입니다.` : cycle ? ' 아직 다음 참고일은 안 잡혔습니다.' : ''}${season.length ? ` ${m}월에는 ${seasonShort} 행사가 있어 그 전후로 할인율이 오르는 경우가 많습니다.` : ''} 시작되면 이 페이지와 단톡방에 바로 올립니다.`],
+    [`${m}월 대란 전에 지금 사도 되나요?`,
+     `지금 히든코드는 ${last.base}%입니다. 대란 때와 차이는 몇 %p라 당장 필요하면 지금 사도 손해가 크지 않습니다. 2.5kg 이상 대량 구매라면 ${season.length ? `${kdate(season[0].date)} 전후` : '다음 대란'}까지 기다리는 편이 낫습니다.`],
+    [`${m}월 대란 할인율은 얼마나 되나요?`,
+     `${knownRange ? `지금까지 대란 때 히든코드는 ${knownRange}였습니다.` : '아직 기록이 없습니다.'}${m === 11 ? ' 블랙프라이데이는 1년 중 할인이 가장 센 때라 이보다 높게 나올 수 있습니다.' : ''} 확정되면 이 페이지에 날짜별로 기록합니다.`],
+  ] : [];
 
   let summary;
   if (isUpcoming) {
-    summary = `${y}년 ${m}월은 아직 시작 전입니다. ${m}월 대란이 시작되면 이 페이지에 날짜와 할인율을 바로 기록합니다.${nextGuess && ymOf(nextGuess) === ym ? ` 평균 주기(약 ${cycle}일)로 단순 계산한 참고일은 ${kdate(nextGuess)}입니다.` : ''}`;
+    summary = `${y}년 ${m}월은 아직 시작 전입니다.${season.length ? ` ${m}월에는 ${seasonShort} 행사가 있어 대란 가능성이 큰 달입니다.` : ''}${guessHere ? ` 평균 주기(약 ${cycle}일)로 단순 계산한 참고일은 ${kdate(nextGuess)}입니다.` : ''} 대란이 시작되면 이 페이지에 날짜와 할인율을 바로 기록합니다.`;
   } else if (st.events.length) {
     summary = `${y}년 ${m}월 마이프로틴 대란은 ${st.events.length}번 있었습니다. ${evText}입니다.${fromVideos ? ' 마프대란알리미 채널 영상 기준입니다.' : ''}${isCur ? ' 이달은 아직 진행 중이라 매일 갱신됩니다.' : ''}`;
   } else {
@@ -1023,9 +1073,9 @@ for (const ym of monthPages) {
     lastmod: st.lastDate ?? (st.videos.at(-1)?.date ?? st.events.at(-1)?.end ?? last.date),
     title: `마이프로틴 ${m}월 대란 날짜·할인코드 총정리 (${y}) | ${SITE.brand}`,
     desc: isUpcoming
-      ? `마이프로틴 ${m}월 대란 날짜와 할인코드를 ${y}년 ${m}월 시작과 함께 기록합니다. 지금 쓸 수 있는 히든코드와 ${M(curYm)}월 대란 기록도 확인하세요.`
+      ? `${y}년 마이프로틴 ${m}월 대란 날짜와 할인코드.${season.length ? ` ${seasonShort} 전후를 노리세요.` : ''} 시작되면 바로 기록합니다. 지금 쓸 수 있는 히든코드 ${last.base}%와 ${M(curYm)}월 대란 기록도 확인하세요.`
       : `${y}년 마이프로틴 ${m}월 대란 날짜와 할인코드 정리. ${st.events.length ? `대란 ${st.events.length}회(${evText}).` : '대란 없음.'}${st.videos.length ? ` 히든코드와 숨은 할인 영상 ${st.videos.length}편 포함.` : ''}`,
-    ld: [crumbs([['홈', 'index.html'], ['대란 기록', 'daeran.html'], [`${y}년 ${m}월 대란`, monthFile(ym)]])],
+    ld: [crumbs([['홈', 'index.html'], ['대란 기록', 'daeran.html'], [`${y}년 ${m}월 대란`, monthFile(ym)]]), ...(upFaq.length ? [faqLd(upFaq)] : [])],
     heroHtml: `
 <div class="hero">
 <div class="heroMain">
@@ -1036,10 +1086,13 @@ ${isUpcoming ? `<a class="cta" href="${esc(SITE.kakao)}">${m}월 대란 시작 �
 ${heroCta}
 </div>
 <div class="heroSide">
-<dl class="stats">
-  <div><dt>대란</dt><dd>${isUpcoming ? '-' : `${st.events.length}회`}</dd></div>
+<dl class="stats">${isUpcoming ? `
+  <div><dt>지금 히든코드</dt><dd>${last.base}%</dd></div>
+  <div><dt>다음 대란 참고</dt><dd>${guessHere ? kdate(nextGuess) : '-'}</dd></div>
+  <div><dt>첫 체크일</dt><dd>${season[0] ? kdate(season[0].date) : '-'}</dd></div>` : `
+  <div><dt>대란</dt><dd>${st.events.length}회</dd></div>
   <div><dt>최고 할인코드</dt><dd>${best != null ? pct(best) : st.events.length ? '영상 참고' : '-'}</dd></div>
-  <div><dt>영상</dt><dd>${st.videos.length ? `${st.videos.length}편` : '-'}</dd></div>
+  <div><dt>영상</dt><dd>${st.videos.length ? `${st.videos.length}편` : '-'}</dd></div>`}
 </dl>
 </div>
 </div>`,
@@ -1073,6 +1126,23 @@ ${st.days.length ? `<section class="full">
 <thead><tr><th>날짜</th><th class="n">할인코드</th><th class="n">숨은 할인</th><th class="n">실제</th></tr></thead>
 <tbody>${[...st.days].reverse().map(d => `<tr${d.base >= TH ? ' class="hot"' : ''}><td>${kdate(d.date)}${d.base >= TH ? ' · 대란' : ''}</td><td class="n">${d.base}%</td><td class="n">${d.deals.length ? `${d.deals.length}건` : '-'}</td><td class="n">${pct(d.eff)}</td></tr>`).join('')}</tbody>
 </table>
+</section>` : ''}
+
+${season.length ? `<section class="full">
+<h2>${m}월에 체크할 날짜</h2>
+<p class="lede">해마다 행사가 걸리는 날입니다. 대란을 보장하지는 않지만 할인율이 오를 가능성이 큰 날이라 전날 저녁부터 확인하는 편이 좋습니다.</p>
+<ul class="steps">${season.map(s => `<li><b>${kdate(s.date)} ${wd(s.date)}</b> ${esc(s.label)}${s.note ? ` · ${esc(s.note)}` : ''}</li>`).join('')}</ul>
+</section>` : ''}
+
+${isUpcoming ? `<section class="full">
+<h2>지금까지의 대란 흐름</h2>
+<p class="lede">${yearEvents.length ? `${y}년 들어 ${m - 1}월까지 대란은 ${yearEvents.length}회 있었고${cycle ? ` 평균 ${cycle}일마다 돌아왔습니다` : '습니다'}. 최근 대란은 ${lastEvent ? `${range(lastEvent)}${lastEvent.max != null ? `(할인코드 ${lastEvent.max}%)` : ''}` : '없음'}입니다.` : '아직 올해 대란 기록이 없습니다.'} ${m}월 대란이 시작되면 같은 기준으로 이 페이지에 기록합니다.</p>
+<nav class="pager">${prev ? `<a href="./${monthFile(prev)}">${M(prev)}월 대란 기록</a>` : '<span></span>'}<a href="./daeran.html">전체 대란 기록</a></nav>
+</section>
+
+<section class="full">
+<h2>자주 묻는 질문</h2>
+${faqHtml(upFaq)}
 </section>` : ''}
 
 ${lastYear.events.length || lastYear.days.length ? `<section class="full">
@@ -1132,6 +1202,38 @@ ${recent.length ? eventTable(recent) : '<p class="lede">아직 기록된 대란�
 ${ytPromo}
 `,
 });
+
+// ── 404 (깃허브 페이지가 없는 주소에 자동으로 보여줍니다. 검색엔진에는 안 올립니다) ──
+page({
+  file: '404.html', noindex: true, current: '',
+  title: `페이지를 찾을 수 없습니다 | ${SITE.brand}`,
+  desc: '주소가 바뀌었거나 없는 페이지입니다. 오늘 할인코드와 대란 기록은 아래에서 바로 볼 수 있습니다.',
+  heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<h1>페이지를 찾을 수 없습니다</h1>
+<p class="lede">주소가 바뀌었거나 지워진 페이지입니다. 찾던 내용은 다음 페이지 중 하나에 있을 겁니다.</p>
+${heroCta}
+</div>
+<div class="heroSide">
+<ul class="linkList">
+  <li><a href="./"><span class="m">오늘 할인율</span><span class="s">히든코드 ${last.base}%</span></a></li>
+  <li><a href="./code.html"><span class="m">마이프로틴 할인코드</span><span class="s">${M(curYm)}월 코드 모음</span></a></li>
+  ${calcWidget ? '<li><a href="./calc.html"><span class="m">할인 계산기</span><span class="s">최종 결제금액</span></a></li>' : ''}
+  <li><a href="./${monthFile(curYm)}"><span class="m">${M(curYm)}월 대란</span><span class="s">${monthSummary(monthStats(curYm))}</span></a></li>
+  <li><a href="./daeran.html"><span class="m">대란 기록</span><span class="s">${events.length}회 · 평균 ${cycle ?? '-'}일</span></a></li>
+</ul>
+</div>
+</div>`,
+  restHtml: kakaoBox,
+});
+
+// 홈 화면에 추가할 때 쓰는 앱 정보
+if (hasIcon) write('manifest.webmanifest', JSON.stringify({
+  name: SITE.tagline ? `${SITE.brand} · ${SITE.tagline}` : SITE.brand, short_name: SITE.brand, start_url: `${SITE.origin}/`, display: 'standalone',
+  background_color: '#F6F5F2', theme_color: '#003942',
+  icons: [{ src: `${SITE.origin}/icon-192.png`, sizes: '192x192', type: 'image/png' }, { src: `${SITE.origin}/icon-512.png`, sizes: '512x512', type: 'image/png' }],
+}, null, 2) + '\n');
 
 // ── 사이트맵 · RSS · robots · CNAME ──
 // 데이터에서 사라진 달의 옛 월별 페이지는 지웁니다
