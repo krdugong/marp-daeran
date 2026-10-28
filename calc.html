@@ -5,17 +5,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>마이프로틴 할인 계산기 | 할인코드·쇼핑지원금·트렌드 할인 적용 최종 결제금액</title>
 <meta name="description" content="장바구니 금액만 넣으면 마이프로틴 히든코드 36%와 쇼핑지원금, 이달의 트렌드 할인까지 적용한 최종 결제금액을 계산합니다. 무료배송·관세 기준과 대란 때 가격도 함께 알려드립니다.">
-<link rel="canonical" href="https://krdugong.github.io/marp-daeran/calc.html">
+<link rel="canonical" href="https://proteify.kr/calc.html">
 <meta name="robots" content="index, follow">
 <meta name="keywords" content="마이프로틴 할인 계산기,마이프로틴 최종 결제금액,마이프로틴 관세,마이프로틴 무료배송,마이프로틴 쇼핑지원금 계산,마이프로틴,마프대란,마이프로틴 할인코드,마이프로틴 대란,마이프로틴 히든코드">
-<link rel="alternate" type="application/rss+xml" title="마프대란 알리미" href="https://krdugong.github.io/marp-daeran/rss.xml">
+<link rel="alternate" type="application/rss+xml" title="프로티파이" href="https://proteify.kr/rss.xml">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="마프대란 알리미">
+<meta property="og:site_name" content="프로티파이">
 <meta property="og:title" content="마이프로틴 할인 계산기 | 할인코드·쇼핑지원금·트렌드 할인 적용 최종 결제금액">
 <meta property="og:description" content="장바구니 금액만 넣으면 마이프로틴 히든코드 36%와 쇼핑지원금, 이달의 트렌드 할인까지 적용한 최종 결제금액을 계산합니다. 무료배송·관세 기준과 대란 때 가격도 함께 알려드립니다.">
-<meta property="og:url" content="https://krdugong.github.io/marp-daeran/calc.html">
+<meta property="og:url" content="https://proteify.kr/calc.html">
 <meta property="og:locale" content="ko_KR">
-<meta property="og:image" content="https://krdugong.github.io/marp-daeran/og.png">
+<meta property="og:image" content="https://proteify.kr/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -39,7 +39,8 @@ a{color:inherit}
 .wrap{padding-bottom:80px}
 header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.78);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
 .headerInner{height:52px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{text-decoration:none;font-weight:800;letter-spacing:-.02em;font-size:15px;white-space:nowrap;color:var(--brand)}
+.brand{text-decoration:none;font-weight:800;letter-spacing:-.02em;font-size:15px;white-space:nowrap;color:var(--brand);display:flex;align-items:baseline;gap:7px}
+.brand small{font-size:12px;font-weight:600;color:var(--muted)}
 .topNav{display:flex;gap:4px}
 .topNav a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:999px;transition:background .2s,color .2s}
 .topNav a:hover{background:var(--surface);color:var(--ink)}
@@ -247,11 +248,11 @@ body.hasSticky{padding-bottom:0}
 .toast{bottom:28px}
 }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://krdugong.github.io/marp-daeran/"},{"@type":"ListItem","position":2,"name":"마이프로틴 할인 계산기","item":"https://krdugong.github.io/marp-daeran/calc.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"계산은 어떤 순서로 하나요?","acceptedAnswer":{"@type":"Answer","text":"장바구니 금액에 할인코드를 먼저 적용하고, 쇼핑지원금 같은 정액 할인을 뺀 다음, 이달의 트렌드처럼 최종 결제 금액에 붙는 % 할인을 마지막에 적용합니다."}},{"@type":"Question","name":"쇼핑지원금 12만원 기준은 할인 전 금액인가요?","acceptedAnswer":{"@type":"Answer","text":"이 계산기는 할인코드를 적용한 뒤 금액이 120,000원 이상일 때 지원금을 붙입니다. 마이프로틴 안내가 결제 금액 기준이라 그렇게 잡았습니다. 기준이 모자라면 장바구니를 얼마나 더 담아야 하는지도 알려드립니다."}},{"@type":"Question","name":"계산 결과와 실제 결제금액이 다를 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"이미 세일 중인 상품이나 일부 번들은 할인코드가 빠질 수 있고, 마이프로틴이 조건을 바꾸면 결과가 달라집니다. 이 계산기는 예상값이니 결제 전에 장바구니에서 최종 금액을 확인하십시오."}},{"@type":"Question","name":"관세는 얼마부터 붙나요?","acceptedAnswer":{"@type":"Answer","text":"건강기능식품은 보통 150달러를 넘으면 관세와 부가세가 붙습니다. 계산기는 1달러 1,400원으로 어림잡아 넘을 것 같으면 알려드립니다. 넘는다면 나눠서 주문하는 편이 낫습니다."}}]},{"@type":"WebApplication","name":"마이프로틴 할인 계산기","url":"https://krdugong.github.io/marp-daeran/calc.html","applicationCategory":"ShoppingApplication","operatingSystem":"All","inLanguage":"ko-KR","offers":{"@type":"Offer","price":0,"priceCurrency":"KRW"}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://proteify.kr/"},{"@type":"ListItem","position":2,"name":"마이프로틴 할인 계산기","item":"https://proteify.kr/calc.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"계산은 어떤 순서로 하나요?","acceptedAnswer":{"@type":"Answer","text":"장바구니 금액에 할인코드를 먼저 적용하고, 쇼핑지원금 같은 정액 할인을 뺀 다음, 이달의 트렌드처럼 최종 결제 금액에 붙는 % 할인을 마지막에 적용합니다."}},{"@type":"Question","name":"쇼핑지원금 12만원 기준은 할인 전 금액인가요?","acceptedAnswer":{"@type":"Answer","text":"이 계산기는 할인코드를 적용한 뒤 금액이 120,000원 이상일 때 지원금을 붙입니다. 마이프로틴 안내가 결제 금액 기준이라 그렇게 잡았습니다. 기준이 모자라면 장바구니를 얼마나 더 담아야 하는지도 알려드립니다."}},{"@type":"Question","name":"계산 결과와 실제 결제금액이 다를 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"이미 세일 중인 상품이나 일부 번들은 할인코드가 빠질 수 있고, 마이프로틴이 조건을 바꾸면 결과가 달라집니다. 이 계산기는 예상값이니 결제 전에 장바구니에서 최종 금액을 확인하십시오."}},{"@type":"Question","name":"관세는 얼마부터 붙나요?","acceptedAnswer":{"@type":"Answer","text":"건강기능식품은 보통 150달러를 넘으면 관세와 부가세가 붙습니다. 계산기는 1달러 1,400원으로 어림잡아 넘을 것 같으면 알려드립니다. 넘는다면 나눠서 주문하는 편이 낫습니다."}}]},{"@type":"WebApplication","name":"마이프로틴 할인 계산기","url":"https://proteify.kr/calc.html","applicationCategory":"ShoppingApplication","operatingSystem":"All","inLanguage":"ko-KR","offers":{"@type":"Offer","price":0,"priceCurrency":"KRW"}}]}</script>
 </head>
 <body class="hasSticky">
 <header class="top"><div class="headerInner">
-  <a class="brand" href="./">마프대란 알리미</a>
+  <a class="brand" href="./">프로티파이<small>마프대란 알리미</small></a>
   <nav class="topNav"><a href="./code.html">할인코드</a><a href="./calc.html" aria-current="page">계산기</a><a href="./daeran-2026-10.html">10월 대란</a></nav>
 </div></header>
 <div class="utilBar"><div class="utilInner">

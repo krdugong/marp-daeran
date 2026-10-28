@@ -6,4 +6,4 @@ User-agent: Yeti
 Allow: /
 Disallow: /admin.html
 
-Sitemap: https://krdugong.github.io/marp-daeran/sitemap.xml
+Sitemap: https://proteify.kr/sitemap.xml

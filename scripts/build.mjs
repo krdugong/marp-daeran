@@ -275,7 +275,8 @@ a{color:inherit}
 .wrap{padding-bottom:80px}
 header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.78);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
 .headerInner{height:52px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{text-decoration:none;font-weight:800;letter-spacing:-.02em;font-size:15px;white-space:nowrap;color:var(--brand)}
+.brand{text-decoration:none;font-weight:800;letter-spacing:-.02em;font-size:15px;white-space:nowrap;color:var(--brand);display:flex;align-items:baseline;gap:7px}
+.brand small{font-size:12px;font-weight:600;color:var(--muted)}
 .topNav{display:flex;gap:4px}
 .topNav a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:999px;transition:background .2s,color .2s}
 .topNav a:hover{background:var(--surface);color:var(--ink)}
@@ -584,7 +585,7 @@ ${hasOg ? `<meta property="og:image" content="${SITE.origin}/og.png">
 </head>
 <body${sticky ? ' class="hasSticky"' : ''}>
 <header class="top"><div class="headerInner">
-  <a class="brand" href="./">${esc(SITE.brand)}</a>
+  <a class="brand" href="./">${esc(SITE.brand)}${SITE.tagline ? `<small>${esc(SITE.tagline)}</small>` : ''}</a>
   <nav class="topNav">${navLink('code.html', '할인코드')}${calcWidget ? navLink('calc.html', '계산기') : ''}${navLink(monthFile(curYm), `${M(curYm)}월 대란`)}</nav>
 </div></header>
 <div class="utilBar"><div class="utilInner">
@@ -661,7 +662,7 @@ page({
   keywords: ['마이프로틴 대란 일정', '마이프로틴 대란 날짜', '마이프로틴 할인 기간', '마프대란알리미', `마이프로틴 대란 ${M(curYm)}월`, `마이프로틴 할인 ${M(curYm)}월`],
   desc: `${kdate(last.date)} 기준 마이프로틴 ${codeWord}에 숨은 할인을 더하면 ${pct(last.eff)}입니다. ${isDaeran ? '지금 대란입니다.' : `대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`} 3월부터 기록한 대란 날짜와 영상도 확인하세요.`,
   ld: [
-    { '@type': 'WebSite', name: SITE.brand, alternateName: ['마프대란', '마프대란알리미', '마이프로틴 대란 알리미'], url: `${SITE.origin}/`, inLanguage: 'ko-KR' },
+    { '@type': 'WebSite', name: SITE.brand, alternateName: ['Proteify', '마프대란', '마프대란알리미', '마이프로틴 대란 알리미'], url: `${SITE.origin}/`, inLanguage: 'ko-KR' },
     faqLd(HOME_FAQ),
   ],
   heroHtml: `
