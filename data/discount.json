@@ -1,5 +1,5 @@
 {
-  "_readme": "entries = 매일 할인코드 할인율 기록(base = 히든코드 기준, official = 공식 배너 코드). 자동 수집은 official 에 hiddenCodeBonus 를 더해 base 로 씁니다. deals = 장바구니 조건으로 더 붙는 숨은 할인. codes = 할인코드 목록(primary 가 메인 버튼, until 이 지나면 자동으로 숨김, secret:true 면 화면에는 코드 대신 히든코드로만 보이고 복사할 때만 실제 코드가 들어감). history = 매일 기록을 시작하기 전의 대란과 유튜브 영상(daeran:false 는 대란은 아니지만 그 달 페이지에 보여줄 영상). products = 가격 비교 표에 쓰는 대표 제품의 표시가(코드가 적용되는 가격)와 정가. priceDate 는 표시가를 확인한 날. 대란 판정은 base 가 threshold 이상인 날입니다.",
+  "_readme": "entries = 매일 할인코드 할인율 기록(base = 히든코드 기준, official = 공식 배너 코드). 자동 수집은 official 에 hiddenCodeBonus 를 더해 base 로 씁니다. deals = 장바구니 조건으로 더 붙는 숨은 할인. codes = 할인코드 목록(primary 가 메인 버튼, until 이 지나면 자동으로 숨김, secret:true 면 화면에는 코드 대신 히든코드로만 보이고 복사할 때만 실제 코드가 들어감). history = 매일 기록을 시작하기 전의 대란과 유튜브 영상(daeran:false 는 대란은 아니지만 그 달 페이지에 보여줄 영상). products = 가격 비교 표에 쓰는 대표 제품의 표시가(코드가 적용되는 가격)와 정가. priceDate 는 표시가를 확인한 날. 대란 판정은 base 가 threshold 이상인 날입니다. entries 의 officialCode 는 자동 수집이 배너에서 읽은 공식 코드 이름입니다. codes 의 rate 는 페이지를 만들 때 그날 기록에 맞춰 같이 움직입니다(fixed:true 인 코드는 그대로).",
   "threshold": 39,
   "hiddenCodeBonus": 1,
   "shop": {

@@ -131,9 +131,26 @@ const upcomingYm = (+last.date.slice(8, 10) > daysIn(curYm) - 10) ? shiftYm(curY
 const monthPages = upcomingYm && !months.includes(upcomingYm) ? [...months, upcomingYm] : months;
 
 // ── 할인코드 ──
-const CODES = (db.codes || []).filter(c => !c.until || c.until >= last.date);
+// until 은 그날 한국시간 저녁 7시(collect.mjs 의 rolloverHour)에 끝난 것으로 봅니다. 수집이 멈춰도 마감된 코드는 내려갑니다.
+const ROLLOVER_HOUR = 19;
+const nowDay = (() => { const n = new Date(Date.now() + 9 * 3600e3); if (n.getUTCHours() >= ROLLOVER_HOUR) n.setUTCDate(n.getUTCDate() + 1); return n.toISOString().slice(0, 10); })();
+const codeDay = nowDay > last.date ? nowDay : last.date;
+const CODES = (db.codes || []).filter(c => !c.until || c.until >= codeDay).map(c => ({ ...c }));
+// 자동 수집이 배너에서 공식 코드 이름까지 읽었으면 공식 코드를 그 이름과 할인율로 채웁니다 (목록의 공식 코드와 이름이 다르면 배너 쪽을 씀)
+const lastRow = rows.at(-1);
+if (lastRow.source === 'auto' && lastRow.officialCode && lastRow.official != null) {
+  const at = CODES.findIndex(c => c.official);
+  const listed = at >= 0 && CODES[at].code === lastRow.officialCode ? CODES[at] : {};
+  const banner = { label: '공식 행사 코드', note: '마이프로틴 메인 배너 코드', ...listed, code: lastRow.officialCode, rate: lastRow.official, official: true };
+  if (at >= 0) CODES[at] = banner; else CODES.push(banner);
+}
 const official = CODES.find(c => c.official);
 const primary = CODES.find(c => c.primary) || CODES.find(c => !c.official) || CODES[0];
+// 메인 코드 할인율은 그날 기록(base)과 같게 맞춥니다. 다른 코드도 메인 코드와의 차이를 유지한 채 같이 움직입니다 ("fixed": true 인 코드는 그대로)
+if (primary && !primary.official && primary.rate != null && primary.rate !== last.base) {
+  const shift = last.base - primary.rate;
+  for (const c of CODES) if (c.rate != null && !c.official && !c.fixed) c.rate = r1(c.rate + shift);
+}
 const extraOf = c => (official && c !== official && c.rate != null && official.rate != null && c.rate > official.rate) ? r1(c.rate - official.rate) : null;
 const nameOf = c => c.secret ? '히든코드' : c.code;
 // 복사용 코드는 페이지 소스에 평문으로 안 남게 base64 로 넣고, 누를 때 풀어서 복사합니다 (히든코드가 검색 캐시나 소스 보기에 글자로 안 잡히게)
