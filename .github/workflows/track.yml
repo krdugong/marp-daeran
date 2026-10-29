@@ -1,0 +1,74 @@
+name: 할인율 수집과 페이지 생성
+
+on:
+  schedule:
+    # UTC 기준. 한국시간 06시, 12시, 18시, 22시에 실행됩니다.
+    # 깃허브 사정으로 몇십 분 늦게 시작할 때가 있습니다.
+    - cron: '0 21,3,9,13 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['data/**', 'scripts/**']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: track
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: 할인율 수집 시도
+        id: collect
+        continue-on-error: true
+        run: node scripts/collect.mjs
+
+      - name: 페이지 생성
+        run: node scripts/build.mjs
+
+      - name: 변경사항 커밋
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # 같은 때에 다른 커밋이 먼저 올라가 push 가 막히면, 최신 상태에서 다시 수집·생성해 올립니다
+          for i in 1 2 3; do
+            git add -A
+            if git diff --staged --quiet; then echo "바뀐 내용 없음"; exit 0; fi
+            git commit -q -m "할인율 갱신 $(TZ=Asia/Seoul date +%Y-%m-%d)"
+            if git push -q; then echo "올렸습니다"; exit 0; fi
+            echo "push 실패, 최신 상태로 다시 만듭니다 ($i)"
+            git fetch -q origin main
+            git reset -q --hard origin/main
+            node scripts/collect.mjs || true
+            node scripts/build.mjs
+          done
+          exit 1
+
+      # 자동 수집이 이틀 넘게 실패하면 하루 한 번(한국시간 12시 실행) 이 단계를 실패로 표시합니다.
+      # 깃허브가 저장소 주인에게 실패 메일을 보내 주므로, 메일이 오면 admin.html 로 직접 넣거나
+      # scripts/collect.mjs 의 patterns 를 확인하십시오.
+      - name: 데이터 신선도 확인
+        run: |
+          node -e '
+            const db = require("./data/discount.json");
+            const last = db.entries.map(e => e.date).sort().at(-1);
+            const now = new Date(Date.now() + 9 * 3600e3);
+            const today = now.toISOString().slice(0, 10);
+            const days = Math.round((new Date(today) - new Date(last)) / 864e5);
+            console.log("마지막 기록", last, "·", days + "일 전");
+            const noonRun = process.env.EVENT === "schedule" && now.getUTCHours() >= 12 && now.getUTCHours() < 16;
+            if (days >= 2 && noonRun) {
+              console.log("::error::할인율 자동 수집이 " + days + "일째 안 되고 있습니다. admin.html 로 직접 넣거나 collect.mjs 의 patterns 를 확인하십시오.");
+              process.exit(1);
+            }'
+        env:
+          EVENT: ${{ github.event_name }}
