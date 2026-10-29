@@ -388,10 +388,7 @@ details.more[open] summary{color:var(--ink);border-bottom:1px solid var(--line)}
 .dealLine a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
 .answer{font-size:16px;color:var(--ink);line-height:1.7}
 .answer b{color:var(--brand)}
-.nextGuess{font-size:15px;color:var(--ink-2);margin:-4px 0 16px;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
-.nextGuess b{color:var(--brand)}
-.aiTag{display:inline-block;font-size:11px;font-weight:600;line-height:1.5;color:var(--muted);border:1px solid rgba(0,0,0,.14);border-radius:999px;padding:0 7px;white-space:nowrap;letter-spacing:0;font-variant-numeric:normal}
-.stats .aiTag{display:table;margin-top:6px}
+.aiTag{display:block;margin-top:4px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
 h1 .hl{color:var(--brand);white-space:nowrap}
 .sticky.hide{transform:translateY(140%);opacity:0;pointer-events:none}
 button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
@@ -761,8 +758,7 @@ page({
 <h1>오늘 마이프로틴 ${pName || '할인코드'} <span class="hl">${last.base}%</span></h1>
 <p class="lede answer">${kdate(last.date)} 기준 ${isDaeran
     ? `할인코드 ${last.base}%로 대란 기준 ${TH}%를 넘었습니다. 지금 사면 됩니다.`
-    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았고${nextGuess ? `, 다음 예상 대란일은 ${kdate(nextGuess)}입니다` : ''}.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>${!isDaeran && nextGuess ? `
-<p class="nextGuess"><span>다음 예상 대란 <b>${kdate(nextGuess)}</b></span>${AI_TAG}</p>` : ''}
+    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았고${nextGuess ? `, 다음 예상 대란일은 ${kdate(nextGuess)}입니다` : ''}.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
 ${heroCta}
 ${dealLine}
 <dl class="stats">
