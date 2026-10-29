@@ -388,6 +388,10 @@ details.more[open] summary{color:var(--ink);border-bottom:1px solid var(--line)}
 .dealLine a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
 .answer{font-size:16px;color:var(--ink);line-height:1.7}
 .answer b{color:var(--brand)}
+.nextGuess{font-size:15px;color:var(--ink-2);margin:-4px 0 16px;display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
+.nextGuess b{color:var(--brand)}
+.aiTag{display:inline-block;font-size:11px;font-weight:600;line-height:1.5;color:var(--muted);border:1px solid rgba(0,0,0,.14);border-radius:999px;padding:0 7px;white-space:nowrap;letter-spacing:0;font-variant-numeric:normal}
+.stats .aiTag{display:table;margin-top:6px}
 h1 .hl{color:var(--brand);white-space:nowrap}
 .sticky.hide{transform:translateY(140%);opacity:0;pointer-events:none}
 button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
@@ -552,6 +556,7 @@ const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(prima
 
 // 숨은 할인 한 줄 요약
 // 금액 할인은 라벨 끝의 같은 금액('… 5천원')을 빼서 두 번 나오지 않게 합니다
+const AI_TAG = '<small class="aiTag">AI로 생성됨</small>';
 const dealShort = d => d.type === 'amount'
   ? `<b>+${(d.amount / 1000).toLocaleString('ko-KR')}천원</b><span>${esc(d.label.replace(new RegExp(`\\s*${d.amount / 1000}천\\s*원$`), ''))}</span>`
   : `<b>+${d.rate}%</b><span>${esc(d.label)}</span>`;
@@ -756,13 +761,14 @@ page({
 <h1>오늘 마이프로틴 ${pName || '할인코드'} <span class="hl">${last.base}%</span></h1>
 <p class="lede answer">${kdate(last.date)} 기준 ${isDaeran
     ? `할인코드 ${last.base}%로 대란 기준 ${TH}%를 넘었습니다. 지금 사면 됩니다.`
-    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았고${nextGuess ? `, 다음 대란 참고일은 ${kdate(nextGuess)}입니다` : ''}.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
+    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았고${nextGuess ? `, 다음 예상 대란일은 ${kdate(nextGuess)}입니다` : ''}.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>${!isDaeran && nextGuess ? `
+<p class="nextGuess"><span>다음 예상 대란 <b>${kdate(nextGuess)}</b></span>${AI_TAG}</p>` : ''}
 ${heroCta}
 ${dealLine}
 <dl class="stats">
   <div><dt>마지막 대란</dt><dd>${lastEvent ? kdate(lastEvent.end) : '기록 없음'}</dd></div>
   <div><dt>평균 주기</dt><dd>${cycle ? `약 ${cycle}일` : '집계 중'}</dd></div>
-  <div><dt>다음 대란 참고</dt><dd>${isDaeran ? '진행 중' : nextGuess ? kdate(nextGuess) : '-'}</dd></div>
+  <div><dt>다음 예상 대란</dt><dd>${isDaeran ? '진행 중' : nextGuess ? `${kdate(nextGuess)}${AI_TAG}` : '-'}</dd></div>
 </dl>
 ${otherCodesBox}
 </div>`,
@@ -866,7 +872,7 @@ ${(() => { const v = allVideos.find(x => /쇼핑지원금 신청/.test(x.title))
 
 <section>
 <h2>지금이 살 때일까</h2>
-<p class="lede">${isDaeran ? `지금은 대란입니다. 할인코드 ${last.base}%로 대란 기준 ${TH}%를 넘었습니다.` : `지금은 대란이 아닙니다. 할인코드 기준 대란(${TH}%)까지 ${gap}%p 남았습니다.`}${nextGuess ? ` 평균 주기로 단순 계산한 다음 대란 참고일은 ${kdate(nextGuess)}입니다.` : ''}</p>
+<p class="lede">${isDaeran ? `지금은 대란입니다. 할인코드 ${last.base}%로 대란 기준 ${TH}%를 넘었습니다.` : `지금은 대란이 아닙니다. 할인코드 기준 대란(${TH}%)까지 ${gap}%p 남았습니다.`}${nextGuess ? ` 평균 주기로 단순 계산한 다음 예상 대란일은 ${kdate(nextGuess)}입니다.` : ''}</p>
 <a class="cta ghost" href="./">오늘 할인율 자세히 보기</a>
 <a class="cta ghost" href="./${monthFile(curYm)}">${M(curYm)}월 대란 정리 보기</a>
 </section>
@@ -942,7 +948,7 @@ if (PRODUCTS.length) {
     ['표시가와 정가는 뭐가 다른가요?',
      '정가는 줄이 그어진 가격이고, 표시가는 지금 화면에 보이는 가격입니다. 할인코드는 표시가에 적용되므로 이 표도 표시가 기준으로 계산했습니다.'],
     ['대란까지 기다리는 게 나을까요?',
-     isDaeran ? '지금이 대란이라 기다릴 필요가 없습니다.' : `차이가 몇천 원에서 1~2만 원 수준입니다. 지금 당장 필요하면 히든코드로 사고, 2.5kg 이상 대량 구매면 다음 대란(참고일 ${nextGuess ? kdate(nextGuess) : '미정'})을 기다리는 편이 낫습니다.`],
+     isDaeran ? '지금이 대란이라 기다릴 필요가 없습니다.' : `차이가 몇천 원에서 1~2만 원 수준입니다. 지금 당장 필요하면 히든코드로 사고, 2.5kg 이상 대량 구매면 다음 대란(예상일 ${nextGuess ? kdate(nextGuess) : '미정'})을 기다리는 편이 낫습니다.`],
     ['가격 비교 사이트와 금액이 왜 다른가요?',
      '이 표는 맛별로 다른 표시가 중 가장 흔한 값을 골라 코드만 적용한 금액입니다. 세일 중인 맛이나 한정판은 표시가가 달라서 실제 결제 금액이 다를 수 있습니다. 정확한 금액은 계산기에 장바구니 금액을 넣어 확인하십시오.'],
   ];
@@ -1094,7 +1100,7 @@ for (const ym of monthPages) {
   const yearEvents = events.filter(e => Y(ymOf(e.start)) === y && e.start < `${ym}-01`);
   const upFaq = isUpcoming ? [
     [`마이프로틴 ${m}월 대란은 언제인가요?`,
-     `아직 시작 전입니다.${cycle ? ` 올해 대란은 평균 ${cycle}일 간격으로 돌아왔고` : ''}${guessHere ? ` 단순 계산한 다음 참고일은 ${kdate(nextGuess)}입니다.` : cycle ? ' 아직 다음 참고일은 안 잡혔습니다.' : ''}${season.length ? ` ${m}월에는 ${seasonShort} 행사가 있어 그 전후로 할인율이 오르는 경우가 많습니다.` : ''} 시작되면 이 페이지와 단톡방에 바로 올립니다.`],
+     `아직 시작 전입니다.${cycle ? ` 올해 대란은 평균 ${cycle}일 간격으로 돌아왔고` : ''}${guessHere ? ` 단순 계산한 다음 예상 대란일은 ${kdate(nextGuess)}입니다.` : cycle ? ' 아직 다음 예상 대란일은 안 잡혔습니다.' : ''}${season.length ? ` ${m}월에는 ${seasonShort} 행사가 있어 그 전후로 할인율이 오르는 경우가 많습니다.` : ''} 시작되면 이 페이지와 단톡방에 바로 올립니다.`],
     [`${m}월 대란 전에 지금 사도 되나요?`,
      `지금 히든코드는 ${last.base}%입니다. 대란 때와 차이는 몇 %p라 당장 필요하면 지금 사도 손해가 크지 않습니다. 2.5kg 이상 대량 구매라면 ${season.length ? `${kdate(season[0].date)} 전후` : '다음 대란'}까지 기다리는 편이 낫습니다.`],
     [`${m}월 대란 할인율은 얼마나 되나요?`,
@@ -1103,7 +1109,7 @@ for (const ym of monthPages) {
 
   let summary;
   if (isUpcoming) {
-    summary = `${y}년 ${m}월은 아직 시작 전입니다.${season.length ? ` ${m}월에는 ${seasonShort} 행사가 있어 대란 가능성이 큰 달입니다.` : ''}${guessHere ? ` 평균 주기(약 ${cycle}일)로 단순 계산한 참고일은 ${kdate(nextGuess)}입니다.` : ''} 대란이 시작되면 이 페이지에 날짜와 할인율을 바로 기록합니다.`;
+    summary = `${y}년 ${m}월은 아직 시작 전입니다.${season.length ? ` ${m}월에는 ${seasonShort} 행사가 있어 대란 가능성이 큰 달입니다.` : ''}${guessHere ? ` 평균 주기(약 ${cycle}일)로 단순 계산한 예상 대란일은 ${kdate(nextGuess)}입니다.` : ''} 대란이 시작되면 이 페이지에 날짜와 할인율을 바로 기록합니다.`;
   } else if (st.events.length) {
     summary = `${y}년 ${m}월 마이프로틴 대란은 ${st.events.length}번 있었습니다. ${evText}입니다.${fromVideos ? ' 마프대란알리미 채널 영상 기준입니다.' : ''}${isCur ? ' 이달은 아직 진행 중이라 매일 갱신됩니다.' : ''}`;
   } else {
@@ -1136,7 +1142,7 @@ ${heroCta}
 <div class="heroSide">
 <dl class="stats">${isUpcoming ? `
   <div><dt>지금 히든코드</dt><dd>${last.base}%</dd></div>
-  <div><dt>다음 대란 참고</dt><dd>${guessHere ? kdate(nextGuess) : '-'}</dd></div>
+  <div><dt>다음 예상 대란</dt><dd>${guessHere ? `${kdate(nextGuess)}${AI_TAG}` : '-'}</dd></div>
   <div><dt>첫 체크일</dt><dd>${season[0] ? kdate(season[0].date) : '-'}</dd></div>` : `
   <div><dt>대란</dt><dd>${st.events.length}회</dd></div>
   <div><dt>최고 할인코드</dt><dd>${best != null ? pct(best) : st.events.length ? '영상 참고' : '-'}</dd></div>
