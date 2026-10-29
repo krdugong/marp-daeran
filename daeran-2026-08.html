@@ -231,9 +231,53 @@ footer nav a{text-decoration:none;color:var(--muted);font-weight:600}
 .sticky b{color:var(--mint)}
 .toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom));transform:translate(-50%,12px);opacity:0;z-index:30;background:rgba(29,29,31,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:#fff;font-size:13px;font-weight:600;padding:10px 16px;border-radius:999px;transition:opacity .2s,transform .2s;pointer-events:none;max-width:calc(100% - 32px);text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}
-body.hasSticky{padding-bottom:86px}
+body.hasSticky{padding-bottom:86px}body.hasSticky{padding-bottom:86px}
+.pick{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.pick li{border-radius:var(--r);padding:16px 18px;background:var(--surface);display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-items:center}
+.pick .pt{grid-row:span 3;align-self:start;font-size:13px;font-weight:800;color:#fff;border-radius:10px;padding:8px 0;width:48px;text-align:center}
+.pick b{font-size:18px;letter-spacing:-.02em}
+.pick .pw{font-size:15px;font-weight:600;color:var(--ink)}
+.pick .pf{font-size:14px;color:var(--muted)}
+.pick-impact .pt,.f-impact .fs:before,.b-impact i{background:var(--brand)}
+.pick-iso .pt,.f-iso .fs:before,.b-iso i{background:var(--accent)}
+.pick-clear .pt,.f-clear .fs:before,.b-clear i{background:#2E9C6A}
+.flow{list-style:none;padding:0;margin:4px 0 0;display:grid;gap:8px;counter-reset:f}
+.flow li{position:relative;background:var(--surface);border-radius:var(--r-sm);padding:14px 16px 14px 16px;display:grid;gap:2px}
+.flow li + li:before{content:"↓";position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:14px;color:var(--muted);line-height:1}
+.flow .fs{font-weight:800;font-size:16px;display:flex;align-items:center;gap:8px}
+.flow .fs:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--faint);flex:none}
+.flow .fd{font-size:14px;color:var(--ink-2);padding-left:18px}
+.cmpWrap{margin:0}
+table.cmp{font-size:13px;table-layout:fixed}
+table.cmp th,table.cmp td{vertical-align:top;padding:11px 3px;line-height:1.45}
+table.cmp thead th{font-size:13px;padding:10px 2px;font-weight:800;color:#fff;text-align:center;border-radius:10px 10px 0 0;border-bottom:0}
+table.cmp thead th:first-child{background:none;width:58px}
+table.cmp th.c-impact{background:var(--brand)}table.cmp th.c-iso{background:var(--accent)}table.cmp th.c-clear{background:#2E9C6A}
+table.cmp tbody th{font-size:12px;color:var(--muted);font-weight:700;padding-left:0}
+table.cmp td{text-align:center;color:var(--ink)}
+table.cmp td small{display:block;font-size:12px;color:var(--muted)}
+table.cmp td.n{text-align:center}
+.meter{display:flex;justify-content:center;gap:3px;margin-bottom:4px}
+.meter i{width:14px;height:6px;border-radius:3px;background:var(--surface-2)}
+.meter i.on{background:var(--ink)}
+.bars{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:14px}
+
+.bars li{display:grid;grid-template-columns:104px 1fr auto;gap:10px;align-items:center}
+.bars .bl{font-weight:700;font-size:14px;line-height:1.3}
+.bars .bl small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+.bars .bt{height:14px;background:var(--surface);border-radius:7px;overflow:hidden}
+.bars .bt i{display:block;height:100%;border-radius:7px}
+.bars .bv{font-weight:800;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 @media(max-width:400px){.brand{font-size:14px}.topNav{gap:0}.topNav a{font-size:12px;padding:6px 8px}}
 @media(min-width:880px){
+.pick{grid-template-columns:repeat(3,1fr)}
+.pick li{grid-template-columns:1fr;align-content:start}
+.pick .pt{grid-row:auto;margin-bottom:8px}
+.flow{grid-template-columns:repeat(4,1fr);gap:24px}
+.flow li + li:before{content:"→";top:50%;left:-17px;transform:translateY(-50%)}
+.flow .fd{padding-left:0}
+.bars li{grid-template-columns:170px 1fr auto}
+table.cmp{font-size:15px}table.cmp thead th{font-size:15px;padding:12px 6px}table.cmp th,table.cmp td{padding:14px 8px}table.cmp thead th:first-child{width:110px}table.cmp tbody th{font-size:14px}
 .headerInner,.utilInner,.wrap{max-width:1040px;padding-left:32px;padding-right:32px}
 .wrap{padding-bottom:110px}
 .heroInner{padding:56px 0 16px}
@@ -356,7 +400,7 @@ body.hasSticky{padding-bottom:0}
 
 </div>
 <footer>
-  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a><a href="./calc.html">할인 계산기</a><a href="./price.html">대란 가격 비교</a><a href="./taste.html">맛 추천</a><a href="./referral.html">추천인 코드</a><a href="./daeran.html">대란 기록</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./daeran-2026-10.html">10월 대란</a><a href="./daeran-2026-09.html">9월 대란</a><a href="./blackfriday.html">블랙프라이데이</a><a href="./about.html">소개</a><a href="https://open.kakao.com/o/gh0XALIi">알림 단톡방</a><a href="https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1">유튜브</a></nav>
+  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a><a href="./calc.html">할인 계산기</a><a href="./price.html">대란 가격 비교</a><a href="./taste.html">맛 추천</a><a href="./wpc-wpi.html">임팩트웨이 vs 아이솔레이트</a><a href="./referral.html">추천인 코드</a><a href="./daeran.html">대란 기록</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./daeran-2026-10.html">10월 대란</a><a href="./daeran-2026-09.html">9월 대란</a><a href="./blackfriday.html">블랙프라이데이</a><a href="./about.html">소개</a><a href="https://open.kakao.com/o/gh0XALIi">알림 단톡방</a><a href="https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1">유튜브</a></nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 마이프로틴에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표이며 본 사이트와 무관합니다.</p>
