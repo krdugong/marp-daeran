@@ -241,12 +241,9 @@ body.hasSticky{padding-bottom:86px}body.hasSticky{padding-bottom:86px}
 .pick-impact .pt,.f-impact .fs:before,.b-impact i{background:var(--brand)}
 .pick-iso .pt,.f-iso .fs:before,.b-iso i{background:var(--accent)}
 .pick-clear .pt,.f-clear .fs:before,.b-clear i{background:#2E9C6A}
-.flow{list-style:none;padding:0;margin:4px 0 0;display:grid;gap:8px;counter-reset:f}
-.flow li{position:relative;background:var(--surface);border-radius:var(--r-sm);padding:14px 16px 14px 16px;display:grid;gap:2px}
-.flow li + li:before{content:"↓";position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:14px;color:var(--muted);line-height:1}
-.flow .fs{font-weight:800;font-size:16px;display:flex;align-items:center;gap:8px}
-.flow .fs:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--faint);flex:none}
-.flow .fd{font-size:14px;color:var(--ink-2);padding-left:18px}
+.wheyPic{margin:4px auto 0;max-width:560px}
+.wheyPic svg{width:100%;height:auto;display:block}
+.wheyPic figcaption{font-size:13px;color:var(--muted);text-align:center;margin-top:6px}
 .cmpWrap{margin:0}
 table.cmp{font-size:13px;table-layout:fixed}
 table.cmp th,table.cmp td{vertical-align:top;padding:11px 3px;line-height:1.45}
@@ -260,23 +257,11 @@ table.cmp td.n{text-align:center}
 .meter{display:flex;justify-content:center;gap:3px;margin-bottom:4px}
 .meter i{width:14px;height:6px;border-radius:3px;background:var(--surface-2)}
 .meter i.on{background:var(--ink)}
-.bars{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:14px}
-
-.bars li{display:grid;grid-template-columns:104px 1fr auto;gap:10px;align-items:center}
-.bars .bl{font-weight:700;font-size:14px;line-height:1.3}
-.bars .bl small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
-.bars .bt{height:14px;background:var(--surface);border-radius:7px;overflow:hidden}
-.bars .bt i{display:block;height:100%;border-radius:7px}
-.bars .bv{font-weight:800;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 @media(max-width:400px){.brand{font-size:14px}.topNav{gap:0}.topNav a{font-size:12px;padding:6px 8px}}
 @media(min-width:880px){
 .pick{grid-template-columns:repeat(3,1fr)}
 .pick li{grid-template-columns:1fr;align-content:start}
 .pick .pt{grid-row:auto;margin-bottom:8px}
-.flow{grid-template-columns:repeat(4,1fr);gap:24px}
-.flow li + li:before{content:"→";top:50%;left:-17px;transform:translateY(-50%)}
-.flow .fd{padding-left:0}
-.bars li{grid-template-columns:170px 1fr auto}
 table.cmp{font-size:15px}table.cmp thead th{font-size:15px;padding:12px 6px}table.cmp th,table.cmp td{padding:14px 8px}table.cmp thead th:first-child{width:110px}table.cmp tbody th{font-size:14px}
 .headerInner,.utilInner,.wrap{max-width:1040px;padding-left:32px;padding-right:32px}
 .wrap{padding-bottom:110px}
@@ -337,7 +322,7 @@ body.hasSticky{padding-bottom:0}
 <div class="hero">
 <span class="state off">지금은 대란이 아닙니다</span>
 <h1>오늘 마이프로틴 히든코드 <span class="hl">36%</span></h1>
-<p class="lede answer">10월 30일 기준 대란이 아닙니다. 대란 기준 39%까지 3%p 남았습니다. 공식 코드 MP35(35%)보다 히든코드가 1%p 높습니다.</p>
+<p class="lede answer">10월 30일 기준 대란이 아닙니다. 대란 기준 39%까지 3%p 남았습니다. 마이프로틴 공식 사이트에 11/11 슈퍼세일 예고(11월 11일)가 올라와 있습니다. 공식 코드 MP35(35%)보다 히든코드가 1%p 높습니다.</p>
 <a class="cta hot heroBtn" href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">히든코드 복사하고 사러 가기</a>
 <p class="hint">누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>
 <div class="dealLine"><p class="dh">같이 챙기면 더 싸집니다</p><ul><li><b>+7%</b><span>이달의 트렌드 제품 1개 담기</span></li><li><b>+5천원</b><span>앱 12만원 이상 결제 시 쇼핑지원금</span></li></ul><div class="dt"><span>다 챙기면 <b>42.9%</b></span><a href="./calc.html">내 금액으로 계산 →</a></div></div>
@@ -346,6 +331,7 @@ body.hasSticky{padding-bottom:0}
   <div><dt>마지막 대란</dt><dd>10월 9일</dd></div>
   <div><dt>평균 주기</dt><dd>약 22일</dd></div>
   <div><dt>다음 예상 대란</dt><dd>10월 31일<small class="aiTag">AI로 생성됨</small></dd></div>
+  <div><dt>예고된 행사</dt><dd>11월 11일<small class="aiTag">11/11 슈퍼세일 · 마이프로틴 예고</small></dd></div>
 </dl>
 <details class="more"><summary>다른 코드 보기 (3개)</summary><ul class="codes"><li><span class="name">FANCAFE<em>팬카페 코드 · 마이프로틴 팬카페 코드</em></span><span class="crate">36%</span><button type="button" data-copy="RkFOQ0FGRQ==" data-label="FANCAFE">복사</button></li><li><span class="name">MP35<em>공식 행사 코드 · 마이프로틴 메인 배너 코드 · 10월 30일 18시 59분 마감</em></span><span class="crate">35%</span><button type="button" data-copy="TVAzNQ==" data-label="MP35">복사</button></li><li><span class="name">NED6-R3<em>신규 가입 추천인 코드 · 첫 구매 적립금, 할인코드와 같이 씁니다</em></span><span class="crate"></span><button type="button" data-copy="TkVENi1SMw==">복사</button></li></ul></details>
 </div>

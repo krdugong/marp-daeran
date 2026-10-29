@@ -95,6 +95,8 @@ const bonus = r1(last.eff - last.base);
 const knownMax = events.map(e => e.max).filter(v => v != null);
 const peak = knownMax.length ? Math.max(...knownMax) : null;
 
+// 마이프로틴이 예고한 다가오는 행사 (data/discount.json 의 announced)
+const announced = (db.announced || []).filter(a => a.date && a.date >= last.date).sort((a, b) => a.date.localeCompare(b.date))[0] || null;
 let nextGuess = null;
 if (lastEvent && cycle && !isDaeran) { nextGuess = addDays(lastEvent.start, cycle); while (nextGuess <= last.date) nextGuess = addDays(nextGuess, cycle); }
 
@@ -124,6 +126,12 @@ const seasonal = ym => {
     list.push({ date: addDays(bf, 3), label: '사이버먼데이', note: '블랙프라이데이 행사가 보통 이날까지 이어집니다.', minor: true });
   }
   for (const c of db.calendar || []) if (c.date && ymOf(c.date) === ym) list.push(c);
+  // 마이프로틴이 예고한 행사는 같은 날 항목을 덮어쓰고, 없으면 추가합니다
+  for (const a of db.announced || []) {
+    if (!a.date || ymOf(a.date) !== ym) continue;
+    const hit = list.find(x => x.date === a.date), it = { ...a, label: `${a.label} (마이프로틴 예고)` };
+    if (hit) Object.assign(hit, it); else list.push(it);
+  }
   return list.sort((a, b) => a.date.localeCompare(b.date));
 };
 // 월말 10일 동안은 다음 달 페이지를 미리 만들어 둡니다 ("마이프로틴 N월 대란" 검색은 그 달이 오기 전부터 생깁니다)
@@ -507,12 +515,9 @@ body.hasSticky{padding-bottom:86px}body.hasSticky{padding-bottom:86px}
 .pick-impact .pt,.f-impact .fs:before,.b-impact i{background:var(--brand)}
 .pick-iso .pt,.f-iso .fs:before,.b-iso i{background:var(--accent)}
 .pick-clear .pt,.f-clear .fs:before,.b-clear i{background:#2E9C6A}
-.flow{list-style:none;padding:0;margin:4px 0 0;display:grid;gap:8px;counter-reset:f}
-.flow li{position:relative;background:var(--surface);border-radius:var(--r-sm);padding:14px 16px 14px 16px;display:grid;gap:2px}
-.flow li + li:before{content:"↓";position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:14px;color:var(--muted);line-height:1}
-.flow .fs{font-weight:800;font-size:16px;display:flex;align-items:center;gap:8px}
-.flow .fs:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--faint);flex:none}
-.flow .fd{font-size:14px;color:var(--ink-2);padding-left:18px}
+.wheyPic{margin:4px auto 0;max-width:560px}
+.wheyPic svg{width:100%;height:auto;display:block}
+.wheyPic figcaption{font-size:13px;color:var(--muted);text-align:center;margin-top:6px}
 .cmpWrap{margin:0}
 table.cmp{font-size:13px;table-layout:fixed}
 table.cmp th,table.cmp td{vertical-align:top;padding:11px 3px;line-height:1.45}
@@ -526,23 +531,11 @@ table.cmp td.n{text-align:center}
 .meter{display:flex;justify-content:center;gap:3px;margin-bottom:4px}
 .meter i{width:14px;height:6px;border-radius:3px;background:var(--surface-2)}
 .meter i.on{background:var(--ink)}
-.bars{list-style:none;padding:0;margin:0 0 12px;display:grid;gap:14px}
-
-.bars li{display:grid;grid-template-columns:104px 1fr auto;gap:10px;align-items:center}
-.bars .bl{font-weight:700;font-size:14px;line-height:1.3}
-.bars .bl small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
-.bars .bt{height:14px;background:var(--surface);border-radius:7px;overflow:hidden}
-.bars .bt i{display:block;height:100%;border-radius:7px}
-.bars .bv{font-weight:800;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 @media(max-width:400px){.brand{font-size:14px}.topNav{gap:0}.topNav a{font-size:12px;padding:6px 8px}}
 @media(min-width:880px){
 .pick{grid-template-columns:repeat(3,1fr)}
 .pick li{grid-template-columns:1fr;align-content:start}
 .pick .pt{grid-row:auto;margin-bottom:8px}
-.flow{grid-template-columns:repeat(4,1fr);gap:24px}
-.flow li + li:before{content:"→";top:50%;left:-17px;transform:translateY(-50%)}
-.flow .fd{padding-left:0}
-.bars li{grid-template-columns:170px 1fr auto}
 table.cmp{font-size:15px}table.cmp thead th{font-size:15px;padding:12px 6px}table.cmp th,table.cmp td{padding:14px 8px}table.cmp thead th:first-child{width:110px}table.cmp tbody th{font-size:14px}
 .headerInner,.utilInner,.wrap{max-width:1040px;padding-left:32px;padding-right:32px}
 .wrap{padding-bottom:110px}
@@ -809,14 +802,15 @@ page({
 <h1>오늘 마이프로틴 ${pName || '할인코드'} <span class="hl">${last.base}%</span></h1>
 <p class="lede answer">${kdate(last.date)} 기준 ${isDaeran
     ? `할인코드 ${last.base}%로 대란 기준 ${TH}%를 넘었습니다. 지금 사면 됩니다.`
-    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
+    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.${announced ? ` 마이프로틴 공식 사이트에 ${announced.label} 예고(${kdate(announced.date)})가 올라와 있습니다.` : ""}`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
 ${heroCta}
 ${dealLine}
 <div class="sideStack">
 <dl class="stats">
   <div><dt>마지막 대란</dt><dd>${lastEvent ? kdate(lastEvent.end) : '기록 없음'}</dd></div>
   <div><dt>평균 주기</dt><dd>${cycle ? `약 ${cycle}일` : '집계 중'}</dd></div>
-  <div><dt>다음 예상 대란</dt><dd>${isDaeran ? '진행 중' : nextGuess ? `${kdate(nextGuess)}${AI_TAG}` : '-'}</dd></div>
+  <div><dt>다음 예상 대란</dt><dd>${isDaeran ? '진행 중' : nextGuess ? `${kdate(nextGuess)}${AI_TAG}` : '-'}</dd></div>${announced ? `
+  <div><dt>예고된 행사</dt><dd>${kdate(announced.date)}<small class="aiTag">${esc(announced.label)} · 마이프로틴 예고</small></dd></div>` : ''}
 </dl>
 ${otherCodesBox}
 </div>
@@ -1140,21 +1134,43 @@ ${kakaoBox}
 
 // ── 임팩트웨이 vs 아이솔레이트 비교 페이지 (키워드: 마이프로틴 아이솔레이트, WPC WPI 차이) ──
 {
-  const kgOf = sz => { const m = String(sz).match(/([\d.]+)\s*(kg|g)\b/i); return m ? (m[2].toLowerCase() === 'kg' ? +m[1] : +m[1] / 1000) : null; };
-  // 제품마다 1kg당 가장 싼 용량 (오늘 할인코드 적용)
-  const bestPerKg = name => PRODUCTS.filter(p => p.name === name && kgOf(p.size))
-    .map(p => ({ ...p, perKg: p.price * (1 - last.base / 100) / kgOf(p.size) }))
-    .sort((a, b) => a.perKg - b.perKg)[0];
   const flavorsOf = key => (TASTE?.catalog || []).find(c => c.product.includes(key))?.flavors.length;
   const W = [
     { key: 'impact', short: '임팩트웨이', name: '임팩트웨이 프로틴', type: 'WPC', typeKo: '농축 유청', protein: '보통', lactose: '조금 있음', feel: '우유처럼 진하고 부드러움', mix: '물이나 우유', who: '처음 사는 사람, 가성비', flavor: flavorsOf('임팩트'), dot: 2 },
     { key: 'iso', short: '아이솔레이트', name: '임팩트웨이 아이솔레이트', type: 'WPI', typeKo: '분리 유청', protein: '높음', lactose: '아주 적음', feel: '더 묽고 담백함', mix: '물이나 우유', who: '우유 먹으면 배가 불편한 사람', flavor: flavorsOf('아이솔레이트'), dot: 3 },
     { key: 'clear', short: '클리어웨이', name: '클리어웨이 프로틴', type: 'WPI', typeKo: '맑은 음료형', protein: '높음', lactose: '아주 적음', feel: '주스처럼 맑고 가벼움', mix: '찬물 (우유 X)', who: '텁텁한 게 싫은 사람, 여름', flavor: flavorsOf('클리어'), dot: 3 },
-  ].map(w => ({ ...w, best: bestPerKg(w.name) }));
-  const priced = W.filter(w => w.best);
-  const maxKg = Math.max(...priced.map(w => w.best.perKg));
+  ];
   const meter = n => '<span class="meter" aria-label="' + n + '단계 중 3">' + [1, 2, 3].map(i => '<i' + (i <= n ? ' class="on"' : '') + '></i>').join('') + '</span>';
-  const imp = W[0].best, iso = W[1].best;
+  // 컵 세 개에 단백질·유당·지방 알갱이를 그려, 거를수록 단백질만 남는 걸 보여 줍니다 (알갱이 수는 이해용)
+  const DOT = { p: '#003942', l: '#E8B931', f: '#E8858A' };
+  const cup = (cx, liquid, n, name, sub, subColor, clear) => {
+    const top = 46, bot = 176, hwT = 40, hwB = 30, ly = 62;
+    const hw = y => hwT - (hwT - hwB) * (y - top) / (bot - top);
+    const pts = [];
+    [80, 96, 112, 128, 144, 160].forEach((y, r) => [-2, -1, 0, 1, 2].forEach((c, k) => {
+      const i = r * 5 + k, f = (hw(y) - 10) / 24;
+      pts.push([cx + c * 12 * f + ((i * 37) % 7 - 3) * 0.8, y + ((i * 53) % 5 - 2)]);
+    }));
+    const order = pts.map((_, i) => (i * 11) % 30);
+    const kinds = [...Array(n.p).fill('p'), ...Array(n.l).fill('l'), ...Array(n.f).fill('f')];
+    const dots = kinds.map((k, i) => { const [x, y] = pts[order[i]]; return '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="4.6" fill="' + DOT[k] + '"/>'; }).join('');
+    const body = (y0, h0) => 'M' + (cx - h0) + ',' + y0 + ' L' + (cx + h0) + ',' + y0 + ' L' + (cx + hwB) + ',' + (bot - 8) + ' Q' + (cx + hwB) + ',' + bot + ' ' + (cx + hwB - 8) + ',' + bot + ' L' + (cx - hwB + 8) + ',' + bot + ' Q' + (cx - hwB) + ',' + bot + ' ' + (cx - hwB) + ',' + (bot - 8) + ' Z';
+    return '<path d="' + body(ly, hw(ly)) + '" fill="' + liquid + '"/>' +
+      (clear ? '<path d="M' + (cx - 20) + ',72 L' + (cx - 26) + ',164" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/>' : '') +
+      dots +
+      '<path d="' + body(top, hwT) + '" fill="none" stroke="#1D1D1F" stroke-opacity=".55" stroke-width="2.2" stroke-linejoin="round"/>' +
+      '<text x="' + cx + '" y="204" text-anchor="middle" font-size="15" font-weight="800" fill="#1D1D1F">' + name + '</text>' +
+      '<text x="' + cx + '" y="223" text-anchor="middle" font-size="12.5" font-weight="700" fill="' + subColor + '">' + sub + '</text>';
+  };
+  const step = (x, label) => '<g><text x="' + x + '" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#6E6E73">' + label + '</text><path d="M' + (x - 11) + ',112 L' + (x + 9) + ',112 M' + (x + 3) + ',106 L' + (x + 10) + ',112 L' + (x + 3) + ',118" stroke="#6E6E73" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>';
+  const legend = [['p', '단백질'], ['l', '유당(우유 당)'], ['f', '지방']].map(([k, t], i) => { const x = [62, 150, 262][i]; return '<circle cx="' + x + '" cy="252" r="5" fill="' + DOT[k] + '"/><text x="' + (x + 10) + '" y="256.5" font-size="12.5" fill="#424245">' + t + '</text>'; }).join('');
+  const wheySvg = '<figure class="wheyPic"><svg viewBox="0 0 360 268" role="img" aria-label="컵 세 개 그림. 임팩트웨이는 단백질 사이에 유당과 지방 알갱이가 섞여 있고, 한 번 더 거른 아이솔레이트는 거의 단백질만 남았고, 클리어웨이는 같은 단백질을 맑은 음료로 만든 것입니다.">' +
+    cup(60, '#F1E6D3', { p: 15, l: 6, f: 4 }, '임팩트웨이', 'WPC · 농축', '#003942') +
+    step(120, '더 거름') +
+    cup(180, '#F7F2EA', { p: 21, l: 1, f: 1 }, '아이솔레이트', 'WPI · 분리', '#DD592B') +
+    step(240, '맑게') +
+    cup(300, '#DDF3E7', { p: 21, l: 1, f: 0 }, '클리어웨이', 'WPI · 음료형', '#2E9C6A', true) +
+    legend + '</svg><figcaption>알갱이 수는 이해를 돕기 위한 그림입니다. 실제 함량은 맛마다 다릅니다.</figcaption></figure>';
   const WPI_FAQ = [
     ['임팩트웨이와 아이솔레이트(WPI)는 뭐가 다른가요?',
      '둘 다 우유에서 나온 유청 단백질입니다. 임팩트웨이는 유청을 농축한 WPC이고, 아이솔레이트는 한 번 더 걸러 유당과 지방을 빼고 단백질 비율을 높인 WPI입니다. 그래서 아이솔레이트가 더 묽고 담백하고, 값은 더 비쌉니다.'],
@@ -1164,20 +1180,18 @@ ${kakaoBox}
      '유당이 적은 아이솔레이트나 클리어웨이가 편한 경우가 많습니다. 완전한 무유당 제품은 아니니 증상이 심하면 250g 맛보기로 먼저 확인하십시오. 아이솔레이트도 우유에 타면 우유의 유당이 들어가니 물에 타는 편이 낫습니다.'],
     ['클리어웨이는 뭐가 다른가요?',
      '아이솔레이트를 주스처럼 맑게 만든 제품입니다. 찬물에 타 먹고 과일 맛이 많습니다. 우유 맛 단백질이 질렸거나 운동 중에 가볍게 마시고 싶을 때 좋습니다.'],
-    ['가격은 얼마나 차이 나나요?',
-     imp && iso ? '오늘 ' + (pName || '할인코드') + ' ' + last.base + '%를 넣으면 1kg당 임팩트웨이는 약 ' + won(imp.perKg) + '(' + imp.size + ' 기준), 아이솔레이트는 약 ' + won(iso.perKg) + '(' + iso.size + ' 기준)입니다. 아이솔레이트가 1kg당 ' + won(iso.perKg - imp.perKg) + ' 정도 비쌉니다.' : '아이솔레이트가 임팩트웨이보다 비쌉니다. 정확한 가격은 대란 가격 비교 페이지에서 확인하십시오.'],
   ];
   page({
     file: 'wpc-wpi.html', priority: 0.8, current: 'wpc-wpi.html', lastmod: db.priceDate || last.date,
     title: '임팩트웨이 vs 아이솔레이트 차이 | 마이프로틴 WPC·WPI·클리어웨이 비교표',
-    desc: '마이프로틴 임팩트웨이(WPC)와 아이솔레이트(WPI), 클리어웨이를 그림과 표로 비교했습니다. 단백질·유당·맛·타는 법·1kg당 가격까지 한눈에 보고 나에게 맞는 제품을 고르세요.',
+    desc: '마이프로틴 임팩트웨이(WPC)와 아이솔레이트(WPI), 클리어웨이를 그림과 표로 비교했습니다. 단백질·유당·맛·타는 법을 한눈에 보고 나에게 맞는 제품을 고르세요.',
     keywords: ['마이프로틴 아이솔레이트', '임팩트웨이 아이솔레이트', '임팩트웨이 아이솔레이트 차이', '마이프로틴 wpi wpc 차이', 'wpc wpi 차이', '마이프로틴 임팩트웨이', '클리어웨이 프로틴', '마이프로틴 단백질 종류'],
     ld: [crumbs([['홈', 'index.html'], ['임팩트웨이 vs 아이솔레이트', 'wpc-wpi.html']]), faqLd(WPI_FAQ)],
     heroHtml: `
 <div class="hero">
 <div class="heroMain">
 <h1>임팩트웨이 vs 아이솔레이트<br>한눈에 비교</h1>
-<p class="updated">${dot(db.priceDate || last.date)} 가격 기준</p>
+<p class="updated">${dot(db.priceDate || last.date)} 기준 · 마이프로틴 한국 사이트 제품</p>
 <p class="lede">처음이면 <b>임팩트웨이</b>, 우유 먹고 배가 불편하면 <b>아이솔레이트</b>, 텁텁한 게 싫으면 <b>클리어웨이</b>입니다. 셋 다 마이프로틴 유청 단백질이고, 얼마나 걸렀느냐가 다릅니다.</p>
 ${heroCta}
 </div>
@@ -1189,14 +1203,9 @@ ${heroCta}
 </section>
 
 <section class="full">
-<h2>무엇이 다른가: 얼마나 걸렀는지</h2>
-<p class="lede">우유에서 치즈를 만들고 남은 물이 유청입니다. 이걸 농축하면 WPC, 한 번 더 걸러 유당과 지방을 빼면 WPI가 됩니다.</p>
-<ol class="flow">
-  <li><span class="fs">유청</span><span class="fd">우유에서 나온 단백질 물</span></li>
-  <li class="f-impact"><span class="fs">임팩트웨이 · WPC</span><span class="fd">농축. 유당·지방이 조금 남아 맛이 진함</span></li>
-  <li class="f-iso"><span class="fs">아이솔레이트 · WPI</span><span class="fd">한 번 더 거름. 단백질 비율 90% 이상</span></li>
-  <li class="f-clear"><span class="fs">클리어웨이</span><span class="fd">WPI를 주스처럼 맑게</span></li>
-</ol>
+<h2>그림으로 보면: 거를수록 단백질만 남습니다</h2>
+<p class="lede">우유에서 치즈를 만들고 남은 물이 유청입니다. 이걸 농축하면 <b>임팩트웨이(WPC)</b>, 한 번 더 걸러 유당과 지방을 빼면 <b>아이솔레이트(WPI)</b>, 그걸 주스처럼 맑게 만들면 <b>클리어웨이</b>입니다.</p>
+${wheySvg}
 </section>
 
 <section class="full">
@@ -1210,13 +1219,12 @@ ${heroCta}
 <tr><th>맛·질감</th>${W.map(w => '<td>' + esc(w.feel) + '</td>').join('')}</tr>
 <tr><th>타는 법</th>${W.map(w => '<td>' + esc(w.mix) + '</td>').join('')}</tr>
 ${W.some(w => w.flavor) ? '<tr><th>맛 종류</th>' + W.map(w => '<td>' + (w.flavor ? w.flavor + '가지' : '-') + '</td>').join('') + '</tr>' : ''}
-<tr><th>1kg당 가격</th>${W.map(w => '<td class="n">' + (w.best ? won(w.best.perKg) : '-') + '</td>').join('')}</tr>
 <tr><th>이런 분께</th>${W.map(w => '<td>' + esc(w.who) + '</td>').join('')}</tr>
 </tbody></table></div>
 <p class="hint">단백질 비율은 일반적인 WPC·WPI 기준입니다. 정확한 함량은 맛마다 달라 제품 영양 정보를 확인하십시오.</p>
 </section>
 
-${priced.length ? '<section class="full"><h2>1kg당 가격 비교</h2><p class="lede">오늘 ' + esc(pName || '할인코드') + ' ' + last.base + '%를 넣었을 때 1kg당 가격입니다. 제품마다 1kg당 가장 싼 용량으로 계산했습니다.</p><ul class="bars">' + priced.map(w => '<li class="b-' + w.key + '"><span class="bl">' + esc(w.short) + '<small>' + esc(w.best.size) + ' 기준</small></span><span class="bt"><i style="width:' + Math.round(w.best.perKg / maxKg * 100) + '%"></i></span><span class="bv">' + won(w.best.perKg) + '</span></li>').join('') + '</ul><a class="cta ghost" href="./price.html">용량별 평소·대란 가격 전체 보기</a></section>' : ''}
+<a class="cta ghost" href="./price.html">용량별 평소·대란 가격 보기</a>
 
 <section>
 <h2>자주 묻는 질문</h2>
