@@ -355,10 +355,11 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
 .cta:active{transform:scale(.985)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
-.stats div{background:var(--surface);border-radius:var(--r-sm);padding:14px 12px}
-.stats dt{font-size:13px;color:var(--muted);margin-bottom:4px}
-.stats dd{margin:0;font-size:18px;font-weight:800;letter-spacing:-.03em}
+.stats{margin:20px 0;background:var(--surface);border-radius:var(--r);padding:2px 18px}
+.stats div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.stats div:last-child{border-bottom:0}
+.stats dt{font-size:14px;color:var(--muted)}
+.stats dd{margin:0;font-size:17px;font-weight:800;letter-spacing:-.02em;text-align:right}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{text-align:left;padding:12px 4px;border-bottom:1px solid var(--line)}
 tbody tr:last-child td{border-bottom:0}
@@ -381,14 +382,13 @@ details.more[open] summary{color:var(--ink);border-bottom:1px solid var(--line)}
 .dealLine{font-size:15px;color:var(--ink-2);line-height:1.5;margin:14px 0 0;padding:14px 16px;background:var(--brand-100);border-radius:var(--r-sm)}
 .dealLine .dh{font-size:13px;font-weight:700;color:var(--muted);margin:0 0 8px}
 .dealLine ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
-.dealLine li{display:flex;gap:10px;align-items:baseline}
-.dealLine li b{flex:none;min-width:52px}
+.dealLine li{display:grid;grid-template-columns:4.2em 1fr;gap:8px;align-items:baseline}
 .dealLine .dt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
 .dealLine b{color:var(--brand)}
 .dealLine a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
 .answer{font-size:16px;color:var(--ink);line-height:1.7}
 .answer b{color:var(--brand)}
-.aiTag{display:block;margin-top:4px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
+.aiTag{display:block;margin-top:2px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
 h1 .hl{color:var(--brand);white-space:nowrap}
 .sticky.hide{transform:translateY(140%);opacity:0;pointer-events:none}
 button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
@@ -506,15 +506,18 @@ body.hasSticky{padding-bottom:86px}
 /* 첫 화면: 왼쪽 답+버튼, 오른쪽 요약 카드 */
 .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:16px 56px;align-items:start}
 .hero > *{grid-column:1}
-.hero .stats{grid-column:2;grid-row:1 / 6;grid-template-columns:1fr;gap:10px;margin:6px 0 0}
-.hero .stats div{padding:18px 20px}
-.hero .stats dd{font-size:24px}
+.hero .state{justify-self:start}
+.hero .sideStack{grid-column:2;grid-row:1 / span 6;align-self:start;margin-top:6px}
+.hero .sideStack .stats{margin:0 0 12px;padding:4px 22px}
+.hero .sideStack .stats div{padding:16px 0}
+.hero .sideStack .stats dd{font-size:20px}
+.hero .sideStack details.more{margin:0}
 .hero details.more{grid-column:2;margin:0;align-self:start}
 .hero .calc{grid-column:1 / -1;margin-top:12px}
 .hero .calc ~ details.more{grid-column:1 / -1}
 .hero .heroMain{grid-column:1}
 .hero .heroSide{grid-column:2;grid-row:1;margin:0}
-.hero .heroSide .stats{display:grid;grid-template-columns:1fr}
+.hero .heroSide .stats{margin:0}
 .hero .cta{margin-top:12px}
 .hero .dealLine{margin-top:10px}
 /* 아래 섹션: 2열, 긴 것은 전체 폭 */
@@ -748,7 +751,7 @@ const HOME_FAQ = [
 // ── 메인 ──
 page({
   file: 'index.html', priority: 1.0, changefreq: 'daily', current: '',
-  title: `마이프로틴 대란 알리미 (마프대란) | 오늘 할인코드 ${last.base}% · 숨은 할인 포함 ${pct(last.eff)}`,
+  title: `마이프로틴 대란 알리미 (마프대란 일정) | 오늘 할인코드 ${last.base}% · 숨은 할인 포함 ${pct(last.eff)}`,
   keywords: ['마이프로틴 대란 일정', '마이프로틴 대란 날짜', '마이프로틴 할인 기간', '마프대란알리미', `마이프로틴 대란 ${M(curYm)}월`, `마이프로틴 할인 ${M(curYm)}월`],
   desc: `${kdate(last.date)} 기준 마이프로틴 ${codeWord}에 숨은 할인을 더하면 ${pct(last.eff)}입니다. ${isDaeran ? '지금 대란입니다.' : `대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`} 3월부터 기록한 대란 날짜와 영상도 확인하세요.`,
   ld: [faqLd(HOME_FAQ), ...(latestVideo && latestVideo.title && latestVideo.date ? [videoLd(latestVideo)] : [])],
@@ -758,15 +761,17 @@ page({
 <h1>오늘 마이프로틴 ${pName || '할인코드'} <span class="hl">${last.base}%</span></h1>
 <p class="lede answer">${kdate(last.date)} 기준 ${isDaeran
     ? `할인코드 ${last.base}%로 대란 기준 ${TH}%를 넘었습니다. 지금 사면 됩니다.`
-    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았고${nextGuess ? `, 다음 예상 대란일은 ${kdate(nextGuess)}입니다` : ''}.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
+    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
 ${heroCta}
 ${dealLine}
+<div class="sideStack">
 <dl class="stats">
   <div><dt>마지막 대란</dt><dd>${lastEvent ? kdate(lastEvent.end) : '기록 없음'}</dd></div>
   <div><dt>평균 주기</dt><dd>${cycle ? `약 ${cycle}일` : '집계 중'}</dd></div>
   <div><dt>다음 예상 대란</dt><dd>${isDaeran ? '진행 중' : nextGuess ? `${kdate(nextGuess)}${AI_TAG}` : '-'}</dd></div>
 </dl>
 ${otherCodesBox}
+</div>
 </div>`,
   extraScript: calcWidget ? calcScript : '',
   restHtml: `
@@ -823,7 +828,7 @@ const CODE_FAQ = [
 
 page({
   file: 'code.html', priority: 0.9, changefreq: 'daily', current: 'code.html',
-  title: `마이프로틴 할인코드 ${Y(curYm)}년 ${M(curYm)}월 최신 | ${pName ? `${pName} ${primary.rate}%` : '숨은 할인 정리'} · 중복 적용 · 추천인 코드`,
+  title: `마이프로틴 할인코드 ${Y(curYm)}년 ${M(curYm)}월 최신 | ${pName ? `${pName} ${primary.rate}%` : '숨은 할인 정리'} · 중복 적용 · 추천코드`,
   keywords: ['마이프로틴 할인코드 중복', '마이프로틴 할인코드 모음', '마이프로틴 추천인 코드', '마이프로틴 추천인 입력', '마이프로틴 추천코드', '마이프로틴 쇼핑지원금', `마이프로틴 할인 ${M(curYm)}월`, `마이프로틴 ${M(curYm)}월 할인코드`],
   desc: `${M(curYm)}월 마이프로틴 할인코드 정리. ${pName ? `${pName} ${primary.rate}%` : ''}${official ? `, 공식 코드 ${official.code} ${official.rate}%` : ''}${db.referral ? `, 추천인 코드 ${db.referral}` : ''}. 숨은 할인까지 합치면 ${pct(last.eff)}. ${dot(last.date)} 업데이트.`,
   ld: [crumbs([['홈', 'index.html'], ['마이프로틴 할인코드', 'code.html']]), faqLd(CODE_FAQ)],
@@ -950,7 +955,7 @@ if (PRODUCTS.length) {
   ];
   page({
     file: 'price.html', priority: 0.8, current: 'price.html',
-    title: `마이프로틴 대란 가격 비교 | 평소 vs 대란 얼마나 싸질까 (${M(curYm)}월 표시가 기준)`,
+    title: `마이프로틴 대란 가격 비교 | 임팩트웨이 평소 vs 대란 얼마나 싸질까 (${M(curYm)}월 표시가 기준)`,
     desc: `임팩트웨이 1kg·2.5kg·5kg, 아이솔레이트, 크레아틴의 평소 가격(코드 ${last.base}%)과 대란 가격(코드 ${dRate}%) 비교표. ${ex.name} ${ex.size}는 대란 때 ${won(exA - exB)} 더 쌉니다. ${dot(db.priceDate || last.date)} 표시가 기준.`,
     keywords: ['마이프로틴 대란 가격', '마이프로틴 대란 가격 차이', '마이프로틴 대란 가격 비교', '마이프로틴 임팩트웨이 가격', '마이프로틴 5kg', '마이프로틴 2.5kg', '마이프로틴 아이솔레이트 가격', '마이프로틴 크레아틴 가격'],
     ld: [crumbs([['홈', 'index.html'], ['대란 가격 비교', 'price.html']]), faqLd(PRICE_FAQ)],
@@ -1010,8 +1015,8 @@ if (TASTE) {
   const TASTE_FAQ = [
     ['마이프로틴 맛 추천, 처음이면 뭘 사야 하나요?',
      top && top.flavors.length ? `${top.tier} 등급 중에서 고르면 실패가 없습니다. ${top.flavors.slice(0, 3).map(f => f.name).join(', ')} 순으로 많이 권합니다. 처음이면 250g 맛보기로 두세 가지를 사 보는 편이 안전합니다.` : '처음이면 250g 맛보기로 두세 가지를 사 보는 편이 안전합니다. 등급표는 영상에서 공개한 순서대로 채우고 있습니다.'],
-    ['임팩트 웨이와 아이솔레이트는 같은 맛이면 맛이 같나요?',
-     '다릅니다. 아이솔레이트는 유당과 지방이 적어 더 묽고 담백하게 느껴집니다. 같은 초콜릿 맛이라도 임팩트 웨이가 더 진합니다. 텁텁한 게 싫으면 클리어 웨이를 보십시오. 주스처럼 마십니다.'],
+    ['임팩트웨이와 아이솔레이트는 같은 맛이면 맛이 같나요?',
+     '다릅니다. 아이솔레이트는 유당과 지방이 적어 더 묽고 담백하게 느껴집니다. 같은 초콜릿 맛이라도 임팩트웨이가 더 진합니다. 텁텁한 게 싫으면 클리어웨이를 보십시오. 주스처럼 마십니다.'],
     ['맛 등급은 어떻게 정했나요?',
      '마프대란알리미 채널에서 6천만 원 넘게 사 먹으며 정리한 등급표입니다. 개인 취향이 들어가 있으니 참고용입니다. 영상 댓글의 다른 분들 경험도 같이 보십시오.'],
     ['맛 때문에 실패하지 않으려면?',
@@ -1020,7 +1025,7 @@ if (TASTE) {
   page({
     file: 'taste.html', priority: 0.8, current: 'taste.html', lastmod: TASTE.updated || last.date,
     title: `마이프로틴 맛 추천 ${Y(curYm)} | 6천만원 먹고 만든 맛 순위·등급표 (임팩트웨이·클리어웨이)`,
-    desc: `마이프로틴 맛 추천과 맛 순위를 등급표로 정리했습니다. 실패 없는 S등급부터 피해야 할 맛까지, 임팩트 웨이·아이솔레이트·클리어 웨이 맛 종류와 후기. 6천만 원 넘게 사 먹은 마프대란알리미 기준.`,
+    desc: `마이프로틴 맛 추천과 맛 순위를 등급표로 정리했습니다. 실패 없는 S등급부터 피해야 할 맛까지, 임팩트웨이·아이솔레이트·클리어웨이 맛 종류와 후기. 6천만 원 넘게 사 먹은 마프대란알리미 기준.`,
     keywords: ['마이프로틴 맛 추천', '마이프로틴 맛 순위', '마이프로틴 맛 종류', '마이프로틴 맛 후기', '마이프로틴 맛 비교', '마이프로틴 추천 맛', '임팩트웨이 맛 추천', '클리어웨이 맛 추천', '마이프로틴 wpi 맛 추천', '마이프로틴 맛 추천 디시'],
     ld: [crumbs([['홈', 'index.html'], ['마이프로틴 맛 추천', 'taste.html']]), faqLd(TASTE_FAQ),
       ...(TASTE.video ? [{ '@type': 'VideoObject', name: '마이프로틴 맛 추천 : 6천만원 쓰고 만들어본 마프 맛 등급표', thumbnailUrl: `https://i.ytimg.com/vi/${TASTE.video}/hqdefault.jpg`, uploadDate: '2026-03-22', embedUrl: `https://www.youtube.com/embed/${TASTE.video}`, contentUrl: ytWatch(TASTE.video) }] : [])],
@@ -1120,7 +1125,7 @@ for (const ym of monthPages) {
     file: monthFile(ym), priority: isCur || isUpcoming ? 0.9 : 0.6, current: monthFile(ym),
     keywords: [`마이프로틴 ${m}월 대란`, `마이프로틴 대란 ${m}월`, `마이프로틴 할인 ${m}월`, `마이프로틴 ${m}월 할인코드`, '마이프로틴 대란 일정', '마이프로틴 대란 날짜'],
     lastmod: st.lastDate ?? (st.videos.at(-1)?.date ?? st.events.at(-1)?.end ?? last.date),
-    title: `마이프로틴 ${m}월 대란 날짜·할인코드 총정리 (${y}) | ${SITE.brand}`,
+    title: `마이프로틴 ${m}월 대란 일정·할인코드 총정리 (${y}) | ${SITE.brand}`,
     desc: isUpcoming
       ? `${y}년 마이프로틴 ${m}월 대란 날짜와 할인코드.${season.length ? ` ${seasonShort} 전후를 노리세요.` : ''} 시작되면 바로 기록합니다. 지금 쓸 수 있는 히든코드 ${last.base}%와 ${M(curYm)}월 대란 기록도 확인하세요.`
       : `${y}년 마이프로틴 ${m}월 대란 날짜와 할인코드 정리. ${st.events.length ? `대란 ${st.events.length}회(${evText}).` : '대란 없음.'}${st.videos.length ? ` 히든코드와 숨은 할인 영상 ${st.videos.length}편 포함.` : ''}`,
@@ -1129,7 +1134,7 @@ for (const ym of monthPages) {
     heroHtml: `
 <div class="hero">
 <div class="heroMain">
-<h1>마이프로틴 ${m}월 대란<br>날짜·할인코드 총정리</h1>
+<h1>마이프로틴 ${m}월 대란<br>일정·할인코드 총정리</h1>
 <p class="updated">${y}년 ${m}월 · ${isUpcoming ? '시작 전' : fromVideos ? '유튜브 영상 기준' : `${dot(st.lastDate)} 기준${isCur ? ' · 매일 갱신' : ''}`}</p>
 <p class="lede">${summary}</p>
 ${isUpcoming ? `<a class="cta" href="${esc(SITE.kakao)}">${m}월 대란 시작 알림 받기</a>` : ''}
@@ -1215,13 +1220,13 @@ ${kakaoBox}
 page({
   file: 'daeran.html', priority: 0.8, current: 'daeran.html',
   keywords: ['마이프로틴 대란 날짜', '마이프로틴 대란 일정', '마이프로틴 대란 주기', '마이프로틴 대란 방법', '역대 마프대란'],
-  title: `마이프로틴 대란 날짜 기록 | 평균 주기 ${cycle ?? '-'}일 · 히든코드 최고 ${peak != null ? pct(peak) : '-'} | ${SITE.brand}`,
+  title: `마이프로틴 대란 일정·날짜 기록 | 평균 주기 ${cycle ?? '-'}일 · 히든코드 최고 ${peak != null ? pct(peak) : '-'} | ${SITE.brand}`,
   desc: `${Y(ymOf(events[0]?.start || last.date))}년 ${M(ymOf(events[0]?.start || last.date))}월부터 기록한 마이프로틴 대란 날짜와 히든코드 할인율입니다. 대란 ${events.length}회, 평균 주기 ${cycle ?? '-'}일. 월별 대란 정리와 영상 포함.`,
   ld: [crumbs([['홈', 'index.html'], ['대란 기록', 'daeran.html']])],
   heroHtml: `
 <div class="hero">
 <div class="heroMain">
-<h1>마이프로틴<br>대란 기록</h1>
+<h1>마이프로틴<br>대란 일정·기록</h1>
 <p class="lede">할인코드 할인율이 ${TH}% 이상이었던 날입니다. ${dot(rows[0].date)} 이전은 마프대란알리미 채널 영상 기준이고, 그 뒤로는 매일 확인한 값입니다.${daysSince !== null && !isDaeran ? ` 마지막 대란은 ${daysSince}일 전입니다.` : ''}</p>
 ${heroCta}
 <a class="cta ghost" href="${esc(SITE.kakao)}">대란 알림 단톡방 들어가기</a>
@@ -1334,7 +1339,7 @@ if (db.referral) {
   ];
   page({
     file: 'referral.html', priority: 0.8, changefreq: 'weekly', current: 'referral.html',
-    title: `마이프로틴 추천인 코드 ${db.referral} | 입력 방법 · ${REF_BENEFIT} · 할인코드와 중복`,
+    title: `마이프로틴 추천인 코드 ${db.referral} | 추천코드 입력 방법 · ${REF_BENEFIT} · 할인코드와 중복`,
     keywords: ['마이프로틴 추천인 코드', '마이프로틴 추천코드', '마이프로틴 추천인 코드 입력', '마이프로틴 추천인 입력 방법', '마이프로틴 친구 추천', '마이프로틴 가입 혜택', '마이프로틴 신규가입 할인', '마이프로틴 첫 구매 할인'],
     desc: `마이프로틴 추천인 코드 ${db.referral}. 처음 가입할 때 넣으면 ${REF_BENEFIT}을 받고, 할인코드(${pName || '할인코드'} ${last.base}%)와 같이 적용됩니다. 입력 위치, 가입부터 결제까지 순서, 안 될 때 확인할 것. ${dot(last.date)} 기준.`,
     ld: [crumbs([['홈', 'index.html'], ['마이프로틴 할인코드', 'code.html'], ['추천인 코드', 'referral.html']]), faqLd(REF_FAQ)],
@@ -1412,7 +1417,7 @@ ${kakaoBox}
   ];
   page({
     file: 'blackfriday.html', priority: bfSeason ? 0.9 : 0.7, changefreq: bfSeason ? 'daily' : 'monthly', current: 'blackfriday.html',
-    title: `마이프로틴 블랙프라이데이 ${bfYear} | ${kdate(bfDate)} · 예열 일정 · 준비 체크리스트`,
+    title: `마이프로틴 블랙프라이데이(블프) ${bfYear} | ${kdate(bfDate)} · 예열 일정 · 준비 체크리스트`,
     keywords: ['마이프로틴 블랙프라이데이', '마이프로틴 블프', `마이프로틴 블랙프라이데이 ${bfYear}`, '마이프로틴 블랙프라이데이 할인코드', '마이프로틴 블프 할인율', '마이프로틴 블프 세일', '마이프로틴 사이버먼데이', '마이프로틴 11월 세일'],
     desc: `${bfYear}년 마이프로틴 블랙프라이데이는 ${kdate(bfDate)}. 예열은 ${kdate(bfWeekStart)} 전후부터, 사이버먼데이 ${kdate(cmDate)}까지.${knownRange ? ` 올해 대란 히든코드 ${knownRange}.` : ''} 블프 전 준비 체크리스트와 날짜별 할인율 기록.`,
     ld: [crumbs([['홈', 'index.html'], ['대란 기록', 'daeran.html'], [`블랙프라이데이 ${bfYear}`, 'blackfriday.html']]), faqLd(BF_FAQ)],

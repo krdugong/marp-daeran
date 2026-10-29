@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>마이프로틴 블랙프라이데이 2026 | 11월 27일 · 예열 일정 · 준비 체크리스트</title>
+<title>마이프로틴 블랙프라이데이(블프) 2026 | 11월 27일 · 예열 일정 · 준비 체크리스트</title>
 <meta name="description" content="2026년 마이프로틴 블랙프라이데이는 11월 27일. 예열은 11월 20일 전후부터, 사이버먼데이 11월 30일까지. 올해 대란 히든코드 39~43%. 블프 전 준비 체크리스트와 날짜별 할인율 기록.">
 <link rel="canonical" href="https://proteify.kr/blackfriday.html">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -14,7 +14,7 @@
 <link rel="alternate" type="application/rss+xml" title="프로티파이" href="https://proteify.kr/rss.xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="프로티파이">
-<meta property="og:title" content="마이프로틴 블랙프라이데이 2026 | 11월 27일 · 예열 일정 · 준비 체크리스트">
+<meta property="og:title" content="마이프로틴 블랙프라이데이(블프) 2026 | 11월 27일 · 예열 일정 · 준비 체크리스트">
 <meta property="og:description" content="2026년 마이프로틴 블랙프라이데이는 11월 27일. 예열은 11월 20일 전후부터, 사이버먼데이 11월 30일까지. 올해 대란 히든코드 39~43%. 블프 전 준비 체크리스트와 날짜별 할인율 기록.">
 <meta property="og:url" content="https://proteify.kr/blackfriday.html">
 <meta property="og:locale" content="ko_KR">
@@ -89,10 +89,11 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
 .cta:active{transform:scale(.985)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
-.stats div{background:var(--surface);border-radius:var(--r-sm);padding:14px 12px}
-.stats dt{font-size:13px;color:var(--muted);margin-bottom:4px}
-.stats dd{margin:0;font-size:18px;font-weight:800;letter-spacing:-.03em}
+.stats{margin:20px 0;background:var(--surface);border-radius:var(--r);padding:2px 18px}
+.stats div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.stats div:last-child{border-bottom:0}
+.stats dt{font-size:14px;color:var(--muted)}
+.stats dd{margin:0;font-size:17px;font-weight:800;letter-spacing:-.02em;text-align:right}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{text-align:left;padding:12px 4px;border-bottom:1px solid var(--line)}
 tbody tr:last-child td{border-bottom:0}
@@ -115,14 +116,13 @@ details.more[open] summary{color:var(--ink);border-bottom:1px solid var(--line)}
 .dealLine{font-size:15px;color:var(--ink-2);line-height:1.5;margin:14px 0 0;padding:14px 16px;background:var(--brand-100);border-radius:var(--r-sm)}
 .dealLine .dh{font-size:13px;font-weight:700;color:var(--muted);margin:0 0 8px}
 .dealLine ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
-.dealLine li{display:flex;gap:10px;align-items:baseline}
-.dealLine li b{flex:none;min-width:52px}
+.dealLine li{display:grid;grid-template-columns:4.2em 1fr;gap:8px;align-items:baseline}
 .dealLine .dt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
 .dealLine b{color:var(--brand)}
 .dealLine a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
 .answer{font-size:16px;color:var(--ink);line-height:1.7}
 .answer b{color:var(--brand)}
-.aiTag{display:block;margin-top:4px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
+.aiTag{display:block;margin-top:2px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
 h1 .hl{color:var(--brand);white-space:nowrap}
 .sticky.hide{transform:translateY(140%);opacity:0;pointer-events:none}
 button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
@@ -240,15 +240,18 @@ body.hasSticky{padding-bottom:86px}
 /* 첫 화면: 왼쪽 답+버튼, 오른쪽 요약 카드 */
 .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:16px 56px;align-items:start}
 .hero > *{grid-column:1}
-.hero .stats{grid-column:2;grid-row:1 / 6;grid-template-columns:1fr;gap:10px;margin:6px 0 0}
-.hero .stats div{padding:18px 20px}
-.hero .stats dd{font-size:24px}
+.hero .state{justify-self:start}
+.hero .sideStack{grid-column:2;grid-row:1 / span 6;align-self:start;margin-top:6px}
+.hero .sideStack .stats{margin:0 0 12px;padding:4px 22px}
+.hero .sideStack .stats div{padding:16px 0}
+.hero .sideStack .stats dd{font-size:20px}
+.hero .sideStack details.more{margin:0}
 .hero details.more{grid-column:2;margin:0;align-self:start}
 .hero .calc{grid-column:1 / -1;margin-top:12px}
 .hero .calc ~ details.more{grid-column:1 / -1}
 .hero .heroMain{grid-column:1}
 .hero .heroSide{grid-column:2;grid-row:1;margin:0}
-.hero .heroSide .stats{display:grid;grid-template-columns:1fr}
+.hero .heroSide .stats{margin:0}
 .hero .cta{margin-top:12px}
 .hero .dealLine{margin-top:10px}
 /* 아래 섹션: 2열, 긴 것은 전체 폭 */
@@ -271,7 +274,7 @@ body.hasSticky{padding-bottom:0}
 .toast{bottom:28px}
 }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://proteify.kr/#website","name":"프로티파이","alternateName":["Proteify","마프대란","마프대란알리미","마이프로틴 대란 알리미"],"url":"https://proteify.kr/","inLanguage":"ko-KR","publisher":{"@id":"https://proteify.kr/#org"}},{"@type":"Organization","@id":"https://proteify.kr/#org","name":"프로티파이","alternateName":"마프대란 알리미","url":"https://proteify.kr/","logo":"https://proteify.kr/icon-512.png","sameAs":["https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA"]},{"@type":"WebPage","@id":"https://proteify.kr/blackfriday.html","url":"https://proteify.kr/blackfriday.html","name":"마이프로틴 블랙프라이데이 2026 | 11월 27일 · 예열 일정 · 준비 체크리스트","description":"2026년 마이프로틴 블랙프라이데이는 11월 27일. 예열은 11월 20일 전후부터, 사이버먼데이 11월 30일까지. 올해 대란 히든코드 39~43%. 블프 전 준비 체크리스트와 날짜별 할인율 기록.","inLanguage":"ko-KR","dateModified":"2026-10-30","isPartOf":{"@id":"https://proteify.kr/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://proteify.kr/"},{"@type":"ListItem","position":2,"name":"대란 기록","item":"https://proteify.kr/daeran.html"},{"@type":"ListItem","position":3,"name":"블랙프라이데이 2026","item":"https://proteify.kr/blackfriday.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"마이프로틴 블랙프라이데이 2026은 언제인가요?","acceptedAnswer":{"@type":"Answer","text":"11월 27일 금요일입니다. 블랙프라이데이는 11월 넷째 목요일 다음 날이라 해마다 날짜가 바뀝니다. 마이프로틴은 보통 전주부터 예열 행사를 걸고 사이버먼데이(11월 30일)까지 이어갑니다."}},{"@type":"Question","name":"마이프로틴 블랙프라이데이 할인율은 얼마나 되나요?","acceptedAnswer":{"@type":"Answer","text":"올해 평소 대란 때 히든코드는 39~43%였습니다. 블랙프라이데이는 1년 중 할인이 가장 센 때라 이보다 높게 나오는 경우가 많지만, 이 사이트는 확인된 숫자만 기록합니다. 확정되면 이 페이지와 11월 대란 페이지에 올립니다."}},{"@type":"Question","name":"블랙프라이데이 전에 사도 되나요?","acceptedAnswer":{"@type":"Answer","text":"지금 히든코드는 36%입니다. 평소 대란과 블프의 차이는 몇 %p라 당장 먹을 게 없으면 지금 사도 손해가 크지 않습니다. 2.5kg 이상 대량 구매라면 11월 20일 전후까지 기다리는 편이 낫습니다."}},{"@type":"Question","name":"블랙프라이데이와 마프대란은 뭐가 다른가요?","acceptedAnswer":{"@type":"Answer","text":"마프대란은 할인코드가 39% 이상으로 올라가는 날을 구매자들이 부르는 말이고, 블랙프라이데이는 마이프로틴의 공식 행사입니다. 블프 주간은 대부분 대란 기준을 넘기 때문에 이 사이트에서는 그 기간도 대란으로 같이 기록합니다."}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://proteify.kr/#website","name":"프로티파이","alternateName":["Proteify","마프대란","마프대란알리미","마이프로틴 대란 알리미"],"url":"https://proteify.kr/","inLanguage":"ko-KR","publisher":{"@id":"https://proteify.kr/#org"}},{"@type":"Organization","@id":"https://proteify.kr/#org","name":"프로티파이","alternateName":"마프대란 알리미","url":"https://proteify.kr/","logo":"https://proteify.kr/icon-512.png","sameAs":["https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA"]},{"@type":"WebPage","@id":"https://proteify.kr/blackfriday.html","url":"https://proteify.kr/blackfriday.html","name":"마이프로틴 블랙프라이데이(블프) 2026 | 11월 27일 · 예열 일정 · 준비 체크리스트","description":"2026년 마이프로틴 블랙프라이데이는 11월 27일. 예열은 11월 20일 전후부터, 사이버먼데이 11월 30일까지. 올해 대란 히든코드 39~43%. 블프 전 준비 체크리스트와 날짜별 할인율 기록.","inLanguage":"ko-KR","dateModified":"2026-10-30","isPartOf":{"@id":"https://proteify.kr/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://proteify.kr/"},{"@type":"ListItem","position":2,"name":"대란 기록","item":"https://proteify.kr/daeran.html"},{"@type":"ListItem","position":3,"name":"블랙프라이데이 2026","item":"https://proteify.kr/blackfriday.html"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"마이프로틴 블랙프라이데이 2026은 언제인가요?","acceptedAnswer":{"@type":"Answer","text":"11월 27일 금요일입니다. 블랙프라이데이는 11월 넷째 목요일 다음 날이라 해마다 날짜가 바뀝니다. 마이프로틴은 보통 전주부터 예열 행사를 걸고 사이버먼데이(11월 30일)까지 이어갑니다."}},{"@type":"Question","name":"마이프로틴 블랙프라이데이 할인율은 얼마나 되나요?","acceptedAnswer":{"@type":"Answer","text":"올해 평소 대란 때 히든코드는 39~43%였습니다. 블랙프라이데이는 1년 중 할인이 가장 센 때라 이보다 높게 나오는 경우가 많지만, 이 사이트는 확인된 숫자만 기록합니다. 확정되면 이 페이지와 11월 대란 페이지에 올립니다."}},{"@type":"Question","name":"블랙프라이데이 전에 사도 되나요?","acceptedAnswer":{"@type":"Answer","text":"지금 히든코드는 36%입니다. 평소 대란과 블프의 차이는 몇 %p라 당장 먹을 게 없으면 지금 사도 손해가 크지 않습니다. 2.5kg 이상 대량 구매라면 11월 20일 전후까지 기다리는 편이 낫습니다."}},{"@type":"Question","name":"블랙프라이데이와 마프대란은 뭐가 다른가요?","acceptedAnswer":{"@type":"Answer","text":"마프대란은 할인코드가 39% 이상으로 올라가는 날을 구매자들이 부르는 말이고, 블랙프라이데이는 마이프로틴의 공식 행사입니다. 블프 주간은 대부분 대란 기준을 넘기 때문에 이 사이트에서는 그 기간도 대란으로 같이 기록합니다."}}]}]}</script>
 </head>
 <body class="hasSticky" data-asof="2026-10-30">
 <header class="top"><div class="headerInner">

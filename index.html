@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>마이프로틴 대란 알리미 (마프대란) | 오늘 할인코드 36% · 숨은 할인 포함 42.9%</title>
+<title>마이프로틴 대란 알리미 (마프대란 일정) | 오늘 할인코드 36% · 숨은 할인 포함 42.9%</title>
 <meta name="description" content="10월 30일 기준 마이프로틴 히든코드 36%에 숨은 할인을 더하면 42.9%입니다. 대란 기준 39%까지 3%p 남았습니다. 3월부터 기록한 대란 날짜와 영상도 확인하세요.">
 <link rel="canonical" href="https://proteify.kr/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -14,7 +14,7 @@
 <link rel="alternate" type="application/rss+xml" title="프로티파이" href="https://proteify.kr/rss.xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="프로티파이">
-<meta property="og:title" content="마이프로틴 대란 알리미 (마프대란) | 오늘 할인코드 36% · 숨은 할인 포함 42.9%">
+<meta property="og:title" content="마이프로틴 대란 알리미 (마프대란 일정) | 오늘 할인코드 36% · 숨은 할인 포함 42.9%">
 <meta property="og:description" content="10월 30일 기준 마이프로틴 히든코드 36%에 숨은 할인을 더하면 42.9%입니다. 대란 기준 39%까지 3%p 남았습니다. 3월부터 기록한 대란 날짜와 영상도 확인하세요.">
 <meta property="og:url" content="https://proteify.kr/">
 <meta property="og:locale" content="ko_KR">
@@ -89,10 +89,11 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
 .cta:active{transform:scale(.985)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
-.stats div{background:var(--surface);border-radius:var(--r-sm);padding:14px 12px}
-.stats dt{font-size:13px;color:var(--muted);margin-bottom:4px}
-.stats dd{margin:0;font-size:18px;font-weight:800;letter-spacing:-.03em}
+.stats{margin:20px 0;background:var(--surface);border-radius:var(--r);padding:2px 18px}
+.stats div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.stats div:last-child{border-bottom:0}
+.stats dt{font-size:14px;color:var(--muted)}
+.stats dd{margin:0;font-size:17px;font-weight:800;letter-spacing:-.02em;text-align:right}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{text-align:left;padding:12px 4px;border-bottom:1px solid var(--line)}
 tbody tr:last-child td{border-bottom:0}
@@ -115,14 +116,13 @@ details.more[open] summary{color:var(--ink);border-bottom:1px solid var(--line)}
 .dealLine{font-size:15px;color:var(--ink-2);line-height:1.5;margin:14px 0 0;padding:14px 16px;background:var(--brand-100);border-radius:var(--r-sm)}
 .dealLine .dh{font-size:13px;font-weight:700;color:var(--muted);margin:0 0 8px}
 .dealLine ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
-.dealLine li{display:flex;gap:10px;align-items:baseline}
-.dealLine li b{flex:none;min-width:52px}
+.dealLine li{display:grid;grid-template-columns:4.2em 1fr;gap:8px;align-items:baseline}
 .dealLine .dt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
 .dealLine b{color:var(--brand)}
 .dealLine a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
 .answer{font-size:16px;color:var(--ink);line-height:1.7}
 .answer b{color:var(--brand)}
-.aiTag{display:block;margin-top:4px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
+.aiTag{display:block;margin-top:2px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
 h1 .hl{color:var(--brand);white-space:nowrap}
 .sticky.hide{transform:translateY(140%);opacity:0;pointer-events:none}
 button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
@@ -240,15 +240,18 @@ body.hasSticky{padding-bottom:86px}
 /* 첫 화면: 왼쪽 답+버튼, 오른쪽 요약 카드 */
 .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:16px 56px;align-items:start}
 .hero > *{grid-column:1}
-.hero .stats{grid-column:2;grid-row:1 / 6;grid-template-columns:1fr;gap:10px;margin:6px 0 0}
-.hero .stats div{padding:18px 20px}
-.hero .stats dd{font-size:24px}
+.hero .state{justify-self:start}
+.hero .sideStack{grid-column:2;grid-row:1 / span 6;align-self:start;margin-top:6px}
+.hero .sideStack .stats{margin:0 0 12px;padding:4px 22px}
+.hero .sideStack .stats div{padding:16px 0}
+.hero .sideStack .stats dd{font-size:20px}
+.hero .sideStack details.more{margin:0}
 .hero details.more{grid-column:2;margin:0;align-self:start}
 .hero .calc{grid-column:1 / -1;margin-top:12px}
 .hero .calc ~ details.more{grid-column:1 / -1}
 .hero .heroMain{grid-column:1}
 .hero .heroSide{grid-column:2;grid-row:1;margin:0}
-.hero .heroSide .stats{display:grid;grid-template-columns:1fr}
+.hero .heroSide .stats{margin:0}
 .hero .cta{margin-top:12px}
 .hero .dealLine{margin-top:10px}
 /* 아래 섹션: 2열, 긴 것은 전체 폭 */
@@ -271,7 +274,7 @@ body.hasSticky{padding-bottom:0}
 .toast{bottom:28px}
 }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://proteify.kr/#website","name":"프로티파이","alternateName":["Proteify","마프대란","마프대란알리미","마이프로틴 대란 알리미"],"url":"https://proteify.kr/","inLanguage":"ko-KR","publisher":{"@id":"https://proteify.kr/#org"}},{"@type":"Organization","@id":"https://proteify.kr/#org","name":"프로티파이","alternateName":"마프대란 알리미","url":"https://proteify.kr/","logo":"https://proteify.kr/icon-512.png","sameAs":["https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA"]},{"@type":"WebPage","@id":"https://proteify.kr/","url":"https://proteify.kr/","name":"마이프로틴 대란 알리미 (마프대란) | 오늘 할인코드 36% · 숨은 할인 포함 42.9%","description":"10월 30일 기준 마이프로틴 히든코드 36%에 숨은 할인을 더하면 42.9%입니다. 대란 기준 39%까지 3%p 남았습니다. 3월부터 기록한 대란 날짜와 영상도 확인하세요.","inLanguage":"ko-KR","dateModified":"2026-10-30","isPartOf":{"@id":"https://proteify.kr/#website"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"마프대란이 뭔가요?","acceptedAnswer":{"@type":"Answer","text":"마이프로틴 할인코드 할인율이 평소보다 확실히 올라가는 날을 구매자들이 부르는 말입니다. 공식 행사 이름은 아닙니다. 마프대란알리미 채널에서 3월부터 따라가 보니 대란 때 히든코드는 39~43%였습니다. 이 사이트는 할인코드 할인율이 39% 이상인 날을 대란으로 기록합니다."}},{"@type":"Question","name":"히든코드가 뭔가요?","acceptedAnswer":{"@type":"Answer","text":"마이프로틴 메인 배너에 걸린 공식 코드 말고 유튜버나 팬카페에 따로 주어지는 코드입니다. 대부분 공식 코드보다 1~2%p 높게 나옵니다. 4월 4일 대란 때 공식 코드 0404는 40%였고 히든코드는 42%였습니다. 코드는 복사 버튼을 누르면 자동으로 들어갑니다."}},{"@type":"Question","name":"숨은 할인이 뭔가요?","acceptedAnswer":{"@type":"Answer","text":"할인코드와 별개로 장바구니 조건을 맞추면 더 빠지는 할인입니다. 이달의 트렌드 제품을 같이 사면 최종 금액에서 7%가 더 빠지거나, 앱에서 12만원 이상 결제하면 쇼핑지원금이 붙는 식입니다. 이 사이트는 이런 조건을 할인코드 위에 쌓아 실제로 받는 할인율을 따로 계산합니다."}},{"@type":"Question","name":"실제 할인율이 39%를 넘는데 왜 대란이 아닌가요?","acceptedAnswer":{"@type":"Answer","text":"대란 판정은 할인코드 할인율로만 합니다. 숨은 할인은 평소에도 붙는 경우가 많아서, 합친 숫자로 판정하면 거의 매일이 대란이 되기 때문입니다."}},{"@type":"Question","name":"대란이면 무조건 사는 게 이득인가요?","acceptedAnswer":{"@type":"Answer","text":"아닙니다. 평소와 차이는 몇 %p 수준입니다. 지금 당장 필요한 제품이라면 대란을 기다리며 미루는 것보다 히든코드와 숨은 할인을 챙겨 지금 사는 편이 나을 수 있습니다."}}]},{"@type":"VideoObject","name":"마이프로틴 10월 대란 히든코드 + 추가할인 팁 + 5천원추가할인","description":"마이프로틴 10월 대란 히든코드 + 추가할인 팁 + 5천원추가할인 · 마프대란알리미 유튜브 2026.10.09","thumbnailUrl":"https://i.ytimg.com/vi/AArs549OUsg/hqdefault.jpg","uploadDate":"2026-10-09","embedUrl":"https://www.youtube.com/embed/AArs549OUsg","contentUrl":"https://www.youtube.com/watch?v=AArs549OUsg"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://proteify.kr/#website","name":"프로티파이","alternateName":["Proteify","마프대란","마프대란알리미","마이프로틴 대란 알리미"],"url":"https://proteify.kr/","inLanguage":"ko-KR","publisher":{"@id":"https://proteify.kr/#org"}},{"@type":"Organization","@id":"https://proteify.kr/#org","name":"프로티파이","alternateName":"마프대란 알리미","url":"https://proteify.kr/","logo":"https://proteify.kr/icon-512.png","sameAs":["https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA"]},{"@type":"WebPage","@id":"https://proteify.kr/","url":"https://proteify.kr/","name":"마이프로틴 대란 알리미 (마프대란 일정) | 오늘 할인코드 36% · 숨은 할인 포함 42.9%","description":"10월 30일 기준 마이프로틴 히든코드 36%에 숨은 할인을 더하면 42.9%입니다. 대란 기준 39%까지 3%p 남았습니다. 3월부터 기록한 대란 날짜와 영상도 확인하세요.","inLanguage":"ko-KR","dateModified":"2026-10-30","isPartOf":{"@id":"https://proteify.kr/#website"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"마프대란이 뭔가요?","acceptedAnswer":{"@type":"Answer","text":"마이프로틴 할인코드 할인율이 평소보다 확실히 올라가는 날을 구매자들이 부르는 말입니다. 공식 행사 이름은 아닙니다. 마프대란알리미 채널에서 3월부터 따라가 보니 대란 때 히든코드는 39~43%였습니다. 이 사이트는 할인코드 할인율이 39% 이상인 날을 대란으로 기록합니다."}},{"@type":"Question","name":"히든코드가 뭔가요?","acceptedAnswer":{"@type":"Answer","text":"마이프로틴 메인 배너에 걸린 공식 코드 말고 유튜버나 팬카페에 따로 주어지는 코드입니다. 대부분 공식 코드보다 1~2%p 높게 나옵니다. 4월 4일 대란 때 공식 코드 0404는 40%였고 히든코드는 42%였습니다. 코드는 복사 버튼을 누르면 자동으로 들어갑니다."}},{"@type":"Question","name":"숨은 할인이 뭔가요?","acceptedAnswer":{"@type":"Answer","text":"할인코드와 별개로 장바구니 조건을 맞추면 더 빠지는 할인입니다. 이달의 트렌드 제품을 같이 사면 최종 금액에서 7%가 더 빠지거나, 앱에서 12만원 이상 결제하면 쇼핑지원금이 붙는 식입니다. 이 사이트는 이런 조건을 할인코드 위에 쌓아 실제로 받는 할인율을 따로 계산합니다."}},{"@type":"Question","name":"실제 할인율이 39%를 넘는데 왜 대란이 아닌가요?","acceptedAnswer":{"@type":"Answer","text":"대란 판정은 할인코드 할인율로만 합니다. 숨은 할인은 평소에도 붙는 경우가 많아서, 합친 숫자로 판정하면 거의 매일이 대란이 되기 때문입니다."}},{"@type":"Question","name":"대란이면 무조건 사는 게 이득인가요?","acceptedAnswer":{"@type":"Answer","text":"아닙니다. 평소와 차이는 몇 %p 수준입니다. 지금 당장 필요한 제품이라면 대란을 기다리며 미루는 것보다 히든코드와 숨은 할인을 챙겨 지금 사는 편이 나을 수 있습니다."}}]},{"@type":"VideoObject","name":"마이프로틴 10월 대란 히든코드 + 추가할인 팁 + 5천원추가할인","description":"마이프로틴 10월 대란 히든코드 + 추가할인 팁 + 5천원추가할인 · 마프대란알리미 유튜브 2026.10.09","thumbnailUrl":"https://i.ytimg.com/vi/AArs549OUsg/hqdefault.jpg","uploadDate":"2026-10-09","embedUrl":"https://www.youtube.com/embed/AArs549OUsg","contentUrl":"https://www.youtube.com/watch?v=AArs549OUsg"}]}</script>
 </head>
 <body class="hasSticky" data-asof="2026-10-30">
 <header class="top"><div class="headerInner">
@@ -290,16 +293,18 @@ body.hasSticky{padding-bottom:0}
 <div class="hero">
 <span class="state off">지금은 대란이 아닙니다</span>
 <h1>오늘 마이프로틴 히든코드 <span class="hl">36%</span></h1>
-<p class="lede answer">10월 30일 기준 대란이 아닙니다. 대란 기준 39%까지 3%p 남았고, 다음 예상 대란일은 10월 31일입니다. 공식 코드 MP35(35%)보다 히든코드가 1%p 높습니다.</p>
+<p class="lede answer">10월 30일 기준 대란이 아닙니다. 대란 기준 39%까지 3%p 남았습니다. 공식 코드 MP35(35%)보다 히든코드가 1%p 높습니다.</p>
 <a class="cta hot heroBtn" href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">히든코드 복사하고 사러 가기</a>
 <p class="hint">누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>
 <div class="dealLine"><p class="dh">같이 챙기면 더 싸집니다</p><ul><li><b>+7%</b><span>이달의 트렌드 제품 1개 담기</span></li><li><b>+5천원</b><span>앱 12만원 이상 결제 시 쇼핑지원금</span></li></ul><div class="dt"><span>다 챙기면 <b>42.9%</b></span><a href="./calc.html">내 금액으로 계산 →</a></div></div>
+<div class="sideStack">
 <dl class="stats">
   <div><dt>마지막 대란</dt><dd>10월 9일</dd></div>
   <div><dt>평균 주기</dt><dd>약 22일</dd></div>
   <div><dt>다음 예상 대란</dt><dd>10월 31일<small class="aiTag">AI로 생성됨</small></dd></div>
 </dl>
 <details class="more"><summary>다른 코드 보기 (3개)</summary><ul class="codes"><li><span class="name">FANCAFE<em>팬카페 코드 · 마이프로틴 팬카페 코드</em></span><span class="crate">36%</span><button type="button" data-copy="RkFOQ0FGRQ==" data-label="FANCAFE">복사</button></li><li><span class="name">MP35<em>공식 행사 코드 · 마이프로틴 메인 배너 코드 · 10월 30일 18시 59분 마감</em></span><span class="crate">35%</span><button type="button" data-copy="TVAzNQ==" data-label="MP35">복사</button></li><li><span class="name">NED6-R3<em>신규 가입 추천인 코드 · 첫 구매 적립금, 할인코드와 같이 씁니다</em></span><span class="crate"></span><button type="button" data-copy="TkVENi1SMw==">복사</button></li></ul></details>
+</div>
 </div>
 </div>
 <div class="cols">
@@ -350,7 +355,7 @@ body.hasSticky{padding-bottom:0}
 <p class="lede">표시가에 오늘 코드 36%와 지난 대란 평균 코드 41%를 각각 적용한 금액입니다. 2026.10.28 표시가 기준입니다.</p>
 <table class="pt">
 <thead><tr><th>제품</th><th class="n">표시가</th><th class="n">평소<br><small>코드 36%</small></th><th class="n">대란<br><small>코드 41%</small></th><th class="n">차이</th></tr></thead>
-<tbody><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트 웨이 프로틴 <b>1kg</b></a><small>맛에 따라 840g~960g</small></td><td class="n muted">110,900원</td><td class="n">70,976원</td><td class="n hot">65,431원</td><td class="n">-5,545원</td></tr><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트 웨이 프로틴 <b>2.5kg</b></a></td><td class="n muted">225,900원</td><td class="n">144,576원</td><td class="n hot">133,281원</td><td class="n">-11,295원</td></tr><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트 웨이 프로틴 <b>5kg (2.5kg×2)</b></a></td><td class="n muted">349,500원</td><td class="n">223,680원</td><td class="n hot">206,205원</td><td class="n">-17,475원</td></tr><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트 웨이 프로틴 <b>250g</b></a><small>맛보기용. 일부 맛은 더 쌈</small></td><td class="n muted">30,900원</td><td class="n">19,776원</td><td class="n hot">18,231원</td><td class="n">-1,545원</td></tr></tbody>
+<tbody><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트웨이 프로틴 <b>1kg</b></a><small>맛에 따라 840g~960g</small></td><td class="n muted">110,900원</td><td class="n">70,976원</td><td class="n hot">65,431원</td><td class="n">-5,545원</td></tr><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트웨이 프로틴 <b>2.5kg</b></a></td><td class="n muted">225,900원</td><td class="n">144,576원</td><td class="n hot">133,281원</td><td class="n">-11,295원</td></tr><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트웨이 프로틴 <b>5kg (2.5kg×2)</b></a></td><td class="n muted">349,500원</td><td class="n">223,680원</td><td class="n hot">206,205원</td><td class="n">-17,475원</td></tr><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트웨이 프로틴 <b>250g</b></a><small>맛보기용. 일부 맛은 더 쌈</small></td><td class="n muted">30,900원</td><td class="n">19,776원</td><td class="n hot">18,231원</td><td class="n">-1,545원</td></tr></tbody>
 </table>
 <a class="cta ghost" href="./price.html">제품별 대란 가격 비교 전체 보기</a>
 </section>

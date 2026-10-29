@@ -90,10 +90,11 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
 .cta:active{transform:scale(.985)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
-.stats div{background:var(--surface);border-radius:var(--r-sm);padding:14px 12px}
-.stats dt{font-size:13px;color:var(--muted);margin-bottom:4px}
-.stats dd{margin:0;font-size:18px;font-weight:800;letter-spacing:-.03em}
+.stats{margin:20px 0;background:var(--surface);border-radius:var(--r);padding:2px 18px}
+.stats div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.stats div:last-child{border-bottom:0}
+.stats dt{font-size:14px;color:var(--muted)}
+.stats dd{margin:0;font-size:17px;font-weight:800;letter-spacing:-.02em;text-align:right}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{text-align:left;padding:12px 4px;border-bottom:1px solid var(--line)}
 tbody tr:last-child td{border-bottom:0}
@@ -116,14 +117,13 @@ details.more[open] summary{color:var(--ink);border-bottom:1px solid var(--line)}
 .dealLine{font-size:15px;color:var(--ink-2);line-height:1.5;margin:14px 0 0;padding:14px 16px;background:var(--brand-100);border-radius:var(--r-sm)}
 .dealLine .dh{font-size:13px;font-weight:700;color:var(--muted);margin:0 0 8px}
 .dealLine ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
-.dealLine li{display:flex;gap:10px;align-items:baseline}
-.dealLine li b{flex:none;min-width:52px}
+.dealLine li{display:grid;grid-template-columns:4.2em 1fr;gap:8px;align-items:baseline}
 .dealLine .dt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
 .dealLine b{color:var(--brand)}
 .dealLine a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
 .answer{font-size:16px;color:var(--ink);line-height:1.7}
 .answer b{color:var(--brand)}
-.aiTag{display:block;margin-top:4px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
+.aiTag{display:block;margin-top:2px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
 h1 .hl{color:var(--brand);white-space:nowrap}
 .sticky.hide{transform:translateY(140%);opacity:0;pointer-events:none}
 button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
@@ -241,15 +241,18 @@ body.hasSticky{padding-bottom:86px}
 /* 첫 화면: 왼쪽 답+버튼, 오른쪽 요약 카드 */
 .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:16px 56px;align-items:start}
 .hero > *{grid-column:1}
-.hero .stats{grid-column:2;grid-row:1 / 6;grid-template-columns:1fr;gap:10px;margin:6px 0 0}
-.hero .stats div{padding:18px 20px}
-.hero .stats dd{font-size:24px}
+.hero .state{justify-self:start}
+.hero .sideStack{grid-column:2;grid-row:1 / span 6;align-self:start;margin-top:6px}
+.hero .sideStack .stats{margin:0 0 12px;padding:4px 22px}
+.hero .sideStack .stats div{padding:16px 0}
+.hero .sideStack .stats dd{font-size:20px}
+.hero .sideStack details.more{margin:0}
 .hero details.more{grid-column:2;margin:0;align-self:start}
 .hero .calc{grid-column:1 / -1;margin-top:12px}
 .hero .calc ~ details.more{grid-column:1 / -1}
 .hero .heroMain{grid-column:1}
 .hero .heroSide{grid-column:2;grid-row:1;margin:0}
-.hero .heroSide .stats{display:grid;grid-template-columns:1fr}
+.hero .heroSide .stats{margin:0}
 .hero .cta{margin-top:12px}
 .hero .dealLine{margin-top:10px}
 /* 아래 섹션: 2열, 긴 것은 전체 폭 */

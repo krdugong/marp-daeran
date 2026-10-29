@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>마이프로틴 8월 대란 날짜·할인코드 총정리 (2026) | 프로티파이</title>
+<title>마이프로틴 8월 대란 일정·할인코드 총정리 (2026) | 프로티파이</title>
 <meta name="description" content="2026년 마이프로틴 8월 대란 날짜와 할인코드 정리. 대란 1회(8월 14일 – 8월 16일(할인코드 41%)). 히든코드와 숨은 할인 영상 5편 포함.">
 <link rel="canonical" href="https://proteify.kr/daeran-2026-08.html">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -14,7 +14,7 @@
 <link rel="alternate" type="application/rss+xml" title="프로티파이" href="https://proteify.kr/rss.xml">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="프로티파이">
-<meta property="og:title" content="마이프로틴 8월 대란 날짜·할인코드 총정리 (2026) | 프로티파이">
+<meta property="og:title" content="마이프로틴 8월 대란 일정·할인코드 총정리 (2026) | 프로티파이">
 <meta property="og:description" content="2026년 마이프로틴 8월 대란 날짜와 할인코드 정리. 대란 1회(8월 14일 – 8월 16일(할인코드 41%)). 히든코드와 숨은 할인 영상 5편 포함.">
 <meta property="og:url" content="https://proteify.kr/daeran-2026-08.html">
 <meta property="og:locale" content="ko_KR">
@@ -89,10 +89,11 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
 .cta:active{transform:scale(.985)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0}
-.stats div{background:var(--surface);border-radius:var(--r-sm);padding:14px 12px}
-.stats dt{font-size:13px;color:var(--muted);margin-bottom:4px}
-.stats dd{margin:0;font-size:18px;font-weight:800;letter-spacing:-.03em}
+.stats{margin:20px 0;background:var(--surface);border-radius:var(--r);padding:2px 18px}
+.stats div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
+.stats div:last-child{border-bottom:0}
+.stats dt{font-size:14px;color:var(--muted)}
+.stats dd{margin:0;font-size:17px;font-weight:800;letter-spacing:-.02em;text-align:right}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{text-align:left;padding:12px 4px;border-bottom:1px solid var(--line)}
 tbody tr:last-child td{border-bottom:0}
@@ -115,14 +116,13 @@ details.more[open] summary{color:var(--ink);border-bottom:1px solid var(--line)}
 .dealLine{font-size:15px;color:var(--ink-2);line-height:1.5;margin:14px 0 0;padding:14px 16px;background:var(--brand-100);border-radius:var(--r-sm)}
 .dealLine .dh{font-size:13px;font-weight:700;color:var(--muted);margin:0 0 8px}
 .dealLine ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
-.dealLine li{display:flex;gap:10px;align-items:baseline}
-.dealLine li b{flex:none;min-width:52px}
+.dealLine li{display:grid;grid-template-columns:4.2em 1fr;gap:8px;align-items:baseline}
 .dealLine .dt{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
 .dealLine b{color:var(--brand)}
 .dealLine a{color:var(--brand);font-weight:700;text-decoration:none;white-space:nowrap}
 .answer{font-size:16px;color:var(--ink);line-height:1.7}
 .answer b{color:var(--brand)}
-.aiTag{display:block;margin-top:4px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
+.aiTag{display:block;margin-top:2px;font-size:12px;font-weight:500;letter-spacing:0;color:var(--muted)}
 h1 .hl{color:var(--brand);white-space:nowrap}
 .sticky.hide{transform:translateY(140%);opacity:0;pointer-events:none}
 button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
@@ -240,15 +240,18 @@ body.hasSticky{padding-bottom:86px}
 /* 첫 화면: 왼쪽 답+버튼, 오른쪽 요약 카드 */
 .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:16px 56px;align-items:start}
 .hero > *{grid-column:1}
-.hero .stats{grid-column:2;grid-row:1 / 6;grid-template-columns:1fr;gap:10px;margin:6px 0 0}
-.hero .stats div{padding:18px 20px}
-.hero .stats dd{font-size:24px}
+.hero .state{justify-self:start}
+.hero .sideStack{grid-column:2;grid-row:1 / span 6;align-self:start;margin-top:6px}
+.hero .sideStack .stats{margin:0 0 12px;padding:4px 22px}
+.hero .sideStack .stats div{padding:16px 0}
+.hero .sideStack .stats dd{font-size:20px}
+.hero .sideStack details.more{margin:0}
 .hero details.more{grid-column:2;margin:0;align-self:start}
 .hero .calc{grid-column:1 / -1;margin-top:12px}
 .hero .calc ~ details.more{grid-column:1 / -1}
 .hero .heroMain{grid-column:1}
 .hero .heroSide{grid-column:2;grid-row:1;margin:0}
-.hero .heroSide .stats{display:grid;grid-template-columns:1fr}
+.hero .heroSide .stats{margin:0}
 .hero .cta{margin-top:12px}
 .hero .dealLine{margin-top:10px}
 /* 아래 섹션: 2열, 긴 것은 전체 폭 */
@@ -271,7 +274,7 @@ body.hasSticky{padding-bottom:0}
 .toast{bottom:28px}
 }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://proteify.kr/#website","name":"프로티파이","alternateName":["Proteify","마프대란","마프대란알리미","마이프로틴 대란 알리미"],"url":"https://proteify.kr/","inLanguage":"ko-KR","publisher":{"@id":"https://proteify.kr/#org"}},{"@type":"Organization","@id":"https://proteify.kr/#org","name":"프로티파이","alternateName":"마프대란 알리미","url":"https://proteify.kr/","logo":"https://proteify.kr/icon-512.png","sameAs":["https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA"]},{"@type":"WebPage","@id":"https://proteify.kr/daeran-2026-08.html","url":"https://proteify.kr/daeran-2026-08.html","name":"마이프로틴 8월 대란 날짜·할인코드 총정리 (2026) | 프로티파이","description":"2026년 마이프로틴 8월 대란 날짜와 할인코드 정리. 대란 1회(8월 14일 – 8월 16일(할인코드 41%)). 히든코드와 숨은 할인 영상 5편 포함.","inLanguage":"ko-KR","dateModified":"2026-08-16","isPartOf":{"@id":"https://proteify.kr/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://proteify.kr/"},{"@type":"ListItem","position":2,"name":"대란 기록","item":"https://proteify.kr/daeran.html"},{"@type":"ListItem","position":3,"name":"2026년 8월 대란","item":"https://proteify.kr/daeran-2026-08.html"}]},{"@type":"VideoObject","name":"마이프로틴 8월 할인코드 + 쇼핑지원금 체감 46%? 내일까지!","description":"마이프로틴 8월 할인코드 + 쇼핑지원금 체감 46%? 내일까지! · 마프대란알리미 유튜브 2026.08.07","thumbnailUrl":"https://i.ytimg.com/vi/_NyUGqa8Ym4/hqdefault.jpg","uploadDate":"2026-08-07","embedUrl":"https://www.youtube.com/embed/_NyUGqa8Ym4","contentUrl":"https://www.youtube.com/watch?v=_NyUGqa8Ym4"},{"@type":"VideoObject","name":"마이프로틴 815대란 준비 쇼핑지원금 신청하세요(오늘까지!)","description":"마이프로틴 815대란 준비 쇼핑지원금 신청하세요(오늘까지!) · 마프대란알리미 유튜브 2026.08.12","thumbnailUrl":"https://i.ytimg.com/vi/Z6XaapscSnM/hqdefault.jpg","uploadDate":"2026-08-12","embedUrl":"https://www.youtube.com/embed/Z6XaapscSnM","contentUrl":"https://www.youtube.com/watch?v=Z6XaapscSnM"},{"@type":"VideoObject","name":"마이프로틴 8월 대란 전 히든코드 + 할인코드 패턴 알려드립니다","description":"마이프로틴 8월 대란 전 히든코드 + 할인코드 패턴 알려드립니다 · 마프대란알리미 유튜브 2026.08.13","thumbnailUrl":"https://i.ytimg.com/vi/GKnBW8tVMYI/hqdefault.jpg","uploadDate":"2026-08-13","embedUrl":"https://www.youtube.com/embed/GKnBW8tVMYI","contentUrl":"https://www.youtube.com/watch?v=GKnBW8tVMYI"},{"@type":"VideoObject","name":"마이프로틴 8월 할인코드 815대란 선착순 8150 + 8150 적립금 + 이달의트렌드 5% 중복","description":"마이프로틴 8월 할인코드 815대란 선착순 8150 + 8150 적립금 + 이달의트렌드 5% 중복 · 마프대란알리미 유튜브 2026.08.14","thumbnailUrl":"https://i.ytimg.com/vi/jKZn5d2_NmE/hqdefault.jpg","uploadDate":"2026-08-14","embedUrl":"https://www.youtube.com/embed/jKZn5d2_NmE","contentUrl":"https://www.youtube.com/watch?v=jKZn5d2_NmE"},{"@type":"VideoObject","name":"[마감임박]마이프로틴 8월 대란 할인코드 랜덤적립금 + 이달의트렌드 5% 중복","description":"[마감임박]마이프로틴 8월 대란 할인코드 랜덤적립금 + 이달의트렌드 5% 중복 · 마프대란알리미 유튜브 2026.08.16","thumbnailUrl":"https://i.ytimg.com/vi/5drlvCglaDc/hqdefault.jpg","uploadDate":"2026-08-16","embedUrl":"https://www.youtube.com/embed/5drlvCglaDc","contentUrl":"https://www.youtube.com/watch?v=5drlvCglaDc"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://proteify.kr/#website","name":"프로티파이","alternateName":["Proteify","마프대란","마프대란알리미","마이프로틴 대란 알리미"],"url":"https://proteify.kr/","inLanguage":"ko-KR","publisher":{"@id":"https://proteify.kr/#org"}},{"@type":"Organization","@id":"https://proteify.kr/#org","name":"프로티파이","alternateName":"마프대란 알리미","url":"https://proteify.kr/","logo":"https://proteify.kr/icon-512.png","sameAs":["https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA"]},{"@type":"WebPage","@id":"https://proteify.kr/daeran-2026-08.html","url":"https://proteify.kr/daeran-2026-08.html","name":"마이프로틴 8월 대란 일정·할인코드 총정리 (2026) | 프로티파이","description":"2026년 마이프로틴 8월 대란 날짜와 할인코드 정리. 대란 1회(8월 14일 – 8월 16일(할인코드 41%)). 히든코드와 숨은 할인 영상 5편 포함.","inLanguage":"ko-KR","dateModified":"2026-08-16","isPartOf":{"@id":"https://proteify.kr/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"홈","item":"https://proteify.kr/"},{"@type":"ListItem","position":2,"name":"대란 기록","item":"https://proteify.kr/daeran.html"},{"@type":"ListItem","position":3,"name":"2026년 8월 대란","item":"https://proteify.kr/daeran-2026-08.html"}]},{"@type":"VideoObject","name":"마이프로틴 8월 할인코드 + 쇼핑지원금 체감 46%? 내일까지!","description":"마이프로틴 8월 할인코드 + 쇼핑지원금 체감 46%? 내일까지! · 마프대란알리미 유튜브 2026.08.07","thumbnailUrl":"https://i.ytimg.com/vi/_NyUGqa8Ym4/hqdefault.jpg","uploadDate":"2026-08-07","embedUrl":"https://www.youtube.com/embed/_NyUGqa8Ym4","contentUrl":"https://www.youtube.com/watch?v=_NyUGqa8Ym4"},{"@type":"VideoObject","name":"마이프로틴 815대란 준비 쇼핑지원금 신청하세요(오늘까지!)","description":"마이프로틴 815대란 준비 쇼핑지원금 신청하세요(오늘까지!) · 마프대란알리미 유튜브 2026.08.12","thumbnailUrl":"https://i.ytimg.com/vi/Z6XaapscSnM/hqdefault.jpg","uploadDate":"2026-08-12","embedUrl":"https://www.youtube.com/embed/Z6XaapscSnM","contentUrl":"https://www.youtube.com/watch?v=Z6XaapscSnM"},{"@type":"VideoObject","name":"마이프로틴 8월 대란 전 히든코드 + 할인코드 패턴 알려드립니다","description":"마이프로틴 8월 대란 전 히든코드 + 할인코드 패턴 알려드립니다 · 마프대란알리미 유튜브 2026.08.13","thumbnailUrl":"https://i.ytimg.com/vi/GKnBW8tVMYI/hqdefault.jpg","uploadDate":"2026-08-13","embedUrl":"https://www.youtube.com/embed/GKnBW8tVMYI","contentUrl":"https://www.youtube.com/watch?v=GKnBW8tVMYI"},{"@type":"VideoObject","name":"마이프로틴 8월 할인코드 815대란 선착순 8150 + 8150 적립금 + 이달의트렌드 5% 중복","description":"마이프로틴 8월 할인코드 815대란 선착순 8150 + 8150 적립금 + 이달의트렌드 5% 중복 · 마프대란알리미 유튜브 2026.08.14","thumbnailUrl":"https://i.ytimg.com/vi/jKZn5d2_NmE/hqdefault.jpg","uploadDate":"2026-08-14","embedUrl":"https://www.youtube.com/embed/jKZn5d2_NmE","contentUrl":"https://www.youtube.com/watch?v=jKZn5d2_NmE"},{"@type":"VideoObject","name":"[마감임박]마이프로틴 8월 대란 할인코드 랜덤적립금 + 이달의트렌드 5% 중복","description":"[마감임박]마이프로틴 8월 대란 할인코드 랜덤적립금 + 이달의트렌드 5% 중복 · 마프대란알리미 유튜브 2026.08.16","thumbnailUrl":"https://i.ytimg.com/vi/5drlvCglaDc/hqdefault.jpg","uploadDate":"2026-08-16","embedUrl":"https://www.youtube.com/embed/5drlvCglaDc","contentUrl":"https://www.youtube.com/watch?v=5drlvCglaDc"}]}</script>
 </head>
 <body class="hasSticky" data-asof="2026-10-30">
 <header class="top"><div class="headerInner">
@@ -290,7 +293,7 @@ body.hasSticky{padding-bottom:0}
 
 <div class="hero">
 <div class="heroMain">
-<h1>마이프로틴 8월 대란<br>날짜·할인코드 총정리</h1>
+<h1>마이프로틴 8월 대란<br>일정·할인코드 총정리</h1>
 <p class="updated">2026년 8월 · 유튜브 영상 기준</p>
 <p class="lede">2026년 8월 마이프로틴 대란은 1번 있었습니다. 8월 14일 – 8월 16일(할인코드 41%)입니다. 마프대란알리미 채널 영상 기준입니다.</p>
 
