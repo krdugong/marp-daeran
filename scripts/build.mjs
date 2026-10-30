@@ -765,7 +765,7 @@ ${SITE.naverAnalytics ? `<script src="https://wcs.naver.net/wcslog.js"></script>
 }
 
 // ── 문구 ──
-const pName = primary ? (primary.secret ? '히든코드' : `히든코드 ${primary.code}`) : null;
+const pName = primary ? (primary.secret ? '히든코드' : `할인코드 ${primary.code}`) : null;
 const codeWord = pName ? `${pName} ${last.base}%` : `할인코드 ${last.base}%`;
 const officialLine = primary && official && extraOf(primary)
   ? `오늘 가장 높은 코드는 ${nameOf(primary)} ${primary.rate}%로, 마이프로틴 공식 코드 ${official.code}(${official.rate}%)보다 ${extraOf(primary)}%p 높습니다.`
@@ -801,7 +801,7 @@ page({
 <span class="state ${isDaeran ? 'on' : 'off'}">${isDaeran ? '지금 대란입니다' : '지금은 대란이 아닙니다'}</span>
 <h1>오늘 마이프로틴 ${pName || '할인코드'} <span class="hl">${last.base}%</span></h1>
 <p class="lede answer">${kdate(last.date)} 기준 ${isDaeran
-    ? `할인코드 ${last.base}%로 대란 기준 ${TH}%를 넘었습니다. 지금 사면 됩니다.`
+    ? `할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}. 지금 사면 됩니다.`
     : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.${announced ? ` 마이프로틴 공식 사이트에 ${announced.label} 예고(${kdate(announced.date)})가 올라와 있습니다.` : ""}`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
 ${heroCta}
 ${dealLine}
@@ -919,7 +919,7 @@ ${(() => { const v = allVideos.find(x => /쇼핑지원금 신청/.test(x.title))
 
 <section>
 <h2>지금이 살 때일까</h2>
-<p class="lede">${isDaeran ? `지금은 대란입니다. 할인코드 ${last.base}%로 대란 기준 ${TH}%를 넘었습니다.` : `지금은 대란이 아닙니다. 할인코드 기준 대란(${TH}%)까지 ${gap}%p 남았습니다.`}${nextGuess ? ` 평균 주기로 단순 계산한 다음 예상 대란일은 ${kdate(nextGuess)}입니다.` : ''}</p>
+<p class="lede">${isDaeran ? `지금은 대란입니다. 할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}.` : `지금은 대란이 아닙니다. 할인코드 기준 대란(${TH}%)까지 ${gap}%p 남았습니다.`}${nextGuess ? ` 평균 주기로 단순 계산한 다음 예상 대란일은 ${kdate(nextGuess)}입니다.` : ''}</p>
 <a class="cta ghost" href="./">오늘 할인율 자세히 보기</a>
 <a class="cta ghost" href="./${monthFile(curYm)}">${M(curYm)}월 대란 정리 보기</a>
 </section>
@@ -1565,7 +1565,7 @@ ${kakaoBox}
   const summary = phase === 'before'
     ? `${bfYear}년 마이프로틴 블랙프라이데이는 ${kdate(bfDate)} ${wd(bfDate)}, 오늘 기준 ${bfDays}일 남았습니다. 보통 전주(${kdate(bfWeekStart)} 전후)부터 예열 행사가 걸리고 사이버먼데이 ${kdate(cmDate)}까지 이어집니다. 지금 쓸 수 있는 히든코드는 ${last.base}%이고, 블프 할인율이 확정되면 이 페이지에 날짜별로 기록합니다.`
     : phase === 'during'
-      ? `지금 블랙프라이데이 주간입니다. 본행사는 ${kdate(bfDate)}, 사이버먼데이 ${kdate(cmDate)}까지 이어집니다. 오늘 히든코드는 ${last.base}%${isDaeran ? `로 대란 기준 ${TH}%를 넘었습니다. 지금 사면 됩니다.` : `입니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}`
+      ? `지금 블랙프라이데이 주간입니다. 본행사는 ${kdate(bfDate)}, 사이버먼데이 ${kdate(cmDate)}까지 이어집니다. 오늘 ${pName || "할인코드"} ${last.base}%${isDaeran ? `로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}. 지금 사면 됩니다.` : `입니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}`
       : `${bfYear}년 블랙프라이데이(${kdate(bfDate)})는 끝났습니다.${bfPeak != null ? ` 그 주간 최고 할인코드는 ${bfPeak}%였습니다.` : ''} 다음 큰 행사까지는 평소 대란 주기(약 ${cycle ?? '-'}일)를 참고하십시오.`;
   const BF_FAQ = [
     [`마이프로틴 블랙프라이데이 ${bfYear}은 언제인가요?`,
