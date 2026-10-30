@@ -39,9 +39,12 @@ const args = process.argv.slice(2);
 const dry = args.includes('--dry');
 const manual = args.find(a => /^\d{2}$/.test(a));
 
-function today() {
+// 저녁 7시가 지나면 다음 날짜로 기록합니다. 단, 그날 끝나는 코드에 untilTime(예: "23:59")이 있고 아직 안 끝났으면 그 시각까지는 오늘로 둡니다.
+function today(codes = []) {
   const now = new Date(Date.now() + 9 * 3600 * 1000);
-  if (now.getUTCHours() >= SOURCE.rolloverHour) now.setUTCDate(now.getUTCDate() + 1);
+  const day = now.toISOString().slice(0, 10), hm = now.toISOString().slice(11, 16);
+  const extended = codes.some(c => c.until === day && c.untilTime && hm < c.untilTime);
+  if (now.getUTCHours() >= SOURCE.rolloverHour && !extended) now.setUTCDate(now.getUTCDate() + 1);
   return now.toISOString().slice(0, 10);
 }
 
@@ -68,7 +71,7 @@ const got = manual ? null : await scrape();
 const official = got ? got.rate : null;
 const officialCode = got ? got.code : null;
 const rate = manual ? Number(manual) : official + bonus;
-const date = today();
+const date = today(db.codes);
 console.log(`${date} → ${manual ? `수동 ${rate}%` : `공식 ${official}% + 히든코드 보너스 ${bonus}%p = ${rate}%`}`);
 if (dry) process.exit(0);
 

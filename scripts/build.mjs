@@ -139,11 +139,15 @@ const upcomingYm = (+last.date.slice(8, 10) > daysIn(curYm) - 10) ? shiftYm(curY
 const monthPages = upcomingYm && !months.includes(upcomingYm) ? [...months, upcomingYm] : months;
 
 // ── 할인코드 ──
-// until 은 그날 한국시간 저녁 7시(collect.mjs 의 rolloverHour)에 끝난 것으로 봅니다. 수집이 멈춰도 마감된 코드는 내려갑니다.
+// until 은 그날 한국시간 저녁 7시(collect.mjs 의 rolloverHour)에 끝난 것으로 봅니다. untilTime("23:59" 등)이 있으면 그 시각까지 둡니다.
+// 수집이 멈춰도 마감된 코드는 내려갑니다 (페이지를 다시 만들 때 기준).
 const ROLLOVER_HOUR = 19;
-const nowDay = (() => { const n = new Date(Date.now() + 9 * 3600e3); if (n.getUTCHours() >= ROLLOVER_HOUR) n.setUTCDate(n.getUTCDate() + 1); return n.toISOString().slice(0, 10); })();
+const kstNow = new Date(Date.now() + 9 * 3600e3).toISOString();
+const nowStamp = kstNow.slice(0, 10) + ' ' + kstNow.slice(11, 16);
+const nowDay = (() => { const n = new Date(Date.now() + 9 * 3600e3); const d = n.toISOString().slice(0, 10), hm = n.toISOString().slice(11, 16); const ext = (db.codes || []).some(c => c.until === d && c.untilTime && hm < c.untilTime); if (n.getUTCHours() >= ROLLOVER_HOUR && !ext) n.setUTCDate(n.getUTCDate() + 1); return n.toISOString().slice(0, 10); })();
 const codeDay = nowDay > last.date ? nowDay : last.date;
-const CODES = (db.codes || []).filter(c => !c.until || c.until >= codeDay).map(c => ({ ...c }));
+const endStamp = c => `${c.until} ${c.untilTime || String(ROLLOVER_HOUR).padStart(2, '0') + ':00'}`;
+const CODES = (db.codes || []).filter(c => !c.until || (c.until >= codeDay && nowStamp < endStamp(c))).map(c => ({ ...c }));
 // 자동 수집이 배너에서 공식 코드 이름까지 읽었으면 공식 코드를 그 이름과 할인율로 채웁니다 (목록의 공식 코드와 이름이 다르면 배너 쪽을 씀)
 const lastRow = rows.at(-1);
 if (lastRow.source === 'auto' && lastRow.officialCode && lastRow.official != null) {
@@ -331,6 +335,14 @@ header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.78);-we
 .topNav a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:999px;transition:background .2s,color .2s}
 .topNav a:hover{background:var(--surface);color:var(--ink)}
 .topNav a[aria-current]{background:var(--brand-soft);color:var(--brand)}
+.topNav .ns{display:none}
+@media(max-width:879px){.topNav .nl{display:none}.topNav .ns{display:inline}}
+@media(max-width:719px){
+.headerInner{height:auto;flex-wrap:wrap;gap:0;padding-top:10px}
+.brand{width:100%}
+.topNav{width:calc(100% + 40px);margin:0 -20px;padding:6px 14px 8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topNav::-webkit-scrollbar{display:none}
+}
 .utilBar{background:var(--surface)}
 .utilInner{padding-top:8px;padding-bottom:8px;display:flex;gap:4px 16px;flex-wrap:wrap;justify-content:center;font-size:13px;color:var(--muted)}
 .heroInner{padding:40px 0 12px}
@@ -531,7 +543,7 @@ table.cmp td.n{text-align:center}
 .meter{display:flex;justify-content:center;gap:3px;margin-bottom:4px}
 .meter i{width:14px;height:6px;border-radius:3px;background:var(--surface-2)}
 .meter i.on{background:var(--ink)}
-@media(max-width:400px){.brand{font-size:14px}.topNav{gap:0}.topNav a{font-size:12px;padding:6px 8px}}
+@media(max-width:400px){.topNav{gap:0}.topNav a{padding:6px 9px}}
 @media(min-width:880px){
 .pick{grid-template-columns:repeat(3,1fr)}
 .pick li{grid-template-columns:1fr;align-content:start}
@@ -708,7 +720,7 @@ ${hasOg ? `<meta property="og:image" content="${SITE.origin}/og.png">
 <body${sticky ? ' class="hasSticky"' : ''} data-asof="${last.date}">
 <header class="top"><div class="headerInner">
   <a class="brand" href="./">${esc(SITE.brand)}${SITE.tagline ? `<small>${esc(SITE.tagline)}</small>` : ''}</a>
-  <nav class="topNav">${navLink('code.html', '할인코드')}${calcWidget ? navLink('calc.html', '계산기') : ''}${navLink(monthFile(curYm), `${M(curYm)}월 대란`)}</nav>
+  <nav class="topNav">${navLink('code.html', '할인코드')}${calcWidget ? navLink('calc.html', '계산기') : ''}${navLink(monthFile(curYm), `${M(curYm)}월 대란`)}${fs.existsSync(path.join(ROOT, 'data/taste.json')) ? navLink('taste.html', '맛 추천') : ''}${PRODUCTS.length ? navLink('wpc-wpi.html', '<span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span>') : ''}</nav>
 </div></header>
 <div class="utilBar"><div class="utilInner">
   <span>8만원 이상 무료배송</span>
@@ -724,7 +736,7 @@ ${crumbsHtml}${heroHtml}
 ${restHtml}
 </div>
 <footer>
-  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${fs.existsSync(path.join(ROOT, 'data/taste.json')) ? '<a href="./taste.html">맛 추천</a>' : ''}${PRODUCTS.length ? '<a href="./wpc-wpi.html">임팩트웨이 vs 아이솔레이트</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
+  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 마이프로틴에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표이며 본 사이트와 무관합니다.</p>

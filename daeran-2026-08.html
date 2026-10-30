@@ -57,6 +57,14 @@ header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.78);-we
 .topNav a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:999px;transition:background .2s,color .2s}
 .topNav a:hover{background:var(--surface);color:var(--ink)}
 .topNav a[aria-current]{background:var(--brand-soft);color:var(--brand)}
+.topNav .ns{display:none}
+@media(max-width:879px){.topNav .nl{display:none}.topNav .ns{display:inline}}
+@media(max-width:719px){
+.headerInner{height:auto;flex-wrap:wrap;gap:0;padding-top:10px}
+.brand{width:100%}
+.topNav{width:calc(100% + 40px);margin:0 -20px;padding:6px 14px 8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topNav::-webkit-scrollbar{display:none}
+}
 .utilBar{background:var(--surface)}
 .utilInner{padding-top:8px;padding-bottom:8px;display:flex;gap:4px 16px;flex-wrap:wrap;justify-content:center;font-size:13px;color:var(--muted)}
 .heroInner{padding:40px 0 12px}
@@ -257,7 +265,7 @@ table.cmp td.n{text-align:center}
 .meter{display:flex;justify-content:center;gap:3px;margin-bottom:4px}
 .meter i{width:14px;height:6px;border-radius:3px;background:var(--surface-2)}
 .meter i.on{background:var(--ink)}
-@media(max-width:400px){.brand{font-size:14px}.topNav{gap:0}.topNav a{font-size:12px;padding:6px 8px}}
+@media(max-width:400px){.topNav{gap:0}.topNav a{padding:6px 9px}}
 @media(min-width:880px){
 .pick{grid-template-columns:repeat(3,1fr)}
 .pick li{grid-template-columns:1fr;align-content:start}
@@ -308,7 +316,7 @@ body.hasSticky{padding-bottom:0}
 <body class="hasSticky" data-asof="2026-10-30">
 <header class="top"><div class="headerInner">
   <a class="brand" href="./">프로티파이<small>마프대란 알리미</small></a>
-  <nav class="topNav"><a href="./code.html">할인코드</a><a href="./calc.html">계산기</a><a href="./daeran-2026-10.html">10월 대란</a></nav>
+  <nav class="topNav"><a href="./code.html">할인코드</a><a href="./calc.html">계산기</a><a href="./daeran-2026-10.html">10월 대란</a><a href="./taste.html">맛 추천</a><a href="./wpc-wpi.html"><span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span></a></nav>
 </div></header>
 <div class="utilBar"><div class="utilInner">
   <span>8만원 이상 무료배송</span>
@@ -385,7 +393,7 @@ body.hasSticky{padding-bottom:0}
 
 </div>
 <footer>
-  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a><a href="./calc.html">할인 계산기</a><a href="./price.html">대란 가격 비교</a><a href="./taste.html">맛 추천</a><a href="./wpc-wpi.html">임팩트웨이 vs 아이솔레이트</a><a href="./referral.html">추천인 코드</a><a href="./daeran.html">대란 기록</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./daeran-2026-10.html">10월 대란</a><a href="./daeran-2026-09.html">9월 대란</a><a href="./blackfriday.html">블랙프라이데이</a><a href="./about.html">소개</a><a href="https://open.kakao.com/o/gh0XALIi">알림 단톡방</a><a href="https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1">유튜브</a></nav>
+  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a><a href="./calc.html">할인 계산기</a><a href="./price.html">대란 가격 비교</a><a href="./referral.html">추천인 코드</a><a href="./daeran.html">대란 기록</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./daeran-2026-10.html">10월 대란</a><a href="./daeran-2026-09.html">9월 대란</a><a href="./blackfriday.html">블랙프라이데이</a><a href="./about.html">소개</a><a href="https://open.kakao.com/o/gh0XALIi">알림 단톡방</a><a href="https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1">유튜브</a></nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 마이프로틴에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표이며 본 사이트와 무관합니다.</p>
