@@ -599,7 +599,7 @@ const otherCount = otherCodes.length + (db.referral ? 1 : 0);
 const otherCodesBox = otherCount ? `<details class="more"><summary>다른 코드 보기 (${otherCount}개)</summary>${codeList}</details>` : '';
 
 const heroCta = primary ? `<a class="cta hot heroBtn" ${goAttrs(primary.code, nameOf(primary))}>${esc(nameOf(primary))} 복사하고 사러 가기</a>
-<p class="hint">누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>`
+<p class="hint">${primary.until ? `<b>${kdate(primary.until)} ${(primary.untilTime || '18:59').replace(':', '시 ')}분 마감.</b> ` : ''}누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>`
   : `<a class="cta heroBtn" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener">마이프로틴에서 할인받기</a>`;
 const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(primary))}><b>${esc(nameOf(primary))}</b> 복사하고 사러 가기 →</a>` : '';
 
