@@ -251,6 +251,9 @@ const won = n => Math.round(n).toLocaleString('ko-KR') + '원';
 const PRODUCTS = (db.products || []).filter(p => p.price > 0);
 const dRate = daeranRate ?? TH;
 const affTo = u => SITE.affiliate.replace(/ued=.*$/, 'ued=' + encodeURIComponent(u));
+// 대안 비교 페이지 데이터. altMp = 마이프로틴 쪽 기준 제품(첫 번째)의 대란가 1kg당 가격
+const ALT = fs.existsSync(path.join(ROOT, 'data/alternatives.json')) ? readJson('data/alternatives.json') : null;
+const altMp = (() => { const m = ALT?.myprotein?.[0]; const p = m && PRODUCTS.find(p => p.name === m.match[0] && p.size === m.match[1]); if (!p) return null; const rate = Math.max(last.base, dRate); return { p, m, rate, kg: p.price * (1 - rate / 100) / m.grams * 1000 }; })();
 const priceRows = list => `<table class="pt">
 <thead><tr><th>제품</th><th class="n">표시가</th><th class="n">평소<br><small>코드 ${last.base}%</small></th><th class="n">대란<br><small>코드 ${dRate}%</small></th><th class="n">차이</th></tr></thead>
 <tbody>${list.map(p => {
@@ -543,6 +546,25 @@ table.cmp td.n{text-align:center}
 .meter{display:flex;justify-content:center;gap:3px;margin-bottom:4px}
 .meter i{width:14px;height:6px;border-radius:3px;background:var(--surface-2)}
 .meter i.on{background:var(--ink)}
+.altWrap{margin:0 -20px;padding:0 20px;overflow-x:auto}
+table.alt{font-size:13px;min-width:335px}
+table.alt th,table.alt td{padding:11px 4px;vertical-align:top}
+table.alt thead th{font-size:12px;line-height:1.3}
+table.alt td.p a{text-decoration:none;color:var(--ink);font-weight:700;font-size:14px;display:block;line-height:1.35}
+table.alt td.p .br{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:1px;letter-spacing:.01em}
+table.alt td.p .sh{display:block;font-size:12px;color:var(--muted);font-weight:500;margin-top:3px;line-height:1.4}
+table.alt td.n{font-size:13px}
+table.alt td.n.hot{color:var(--accent);font-size:14px}
+table.alt tr.mp td.p a{color:var(--brand)}
+table.alt tr.best td.p a{color:var(--accent)}
+table.alt .tag{display:inline-block;font-style:normal;font-size:11px;font-weight:800;color:#fff;background:var(--accent);border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:1px;line-height:1.5}
+table.alt .muted{color:var(--faint);font-weight:500}
+table.alt tr.np td.n{color:var(--faint);font-weight:500}
+table.alt tr.np td.p a{color:var(--ink-2)}
+.shops{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.shops li{background:var(--surface);border-radius:var(--r);padding:14px 16px}
+.shops b{display:block;font-size:15px;margin-bottom:4px}
+.shops span{display:block;font-size:14px;color:var(--ink-2);line-height:1.6}
 @media(max-width:400px){.topNav{gap:0}.topNav a{padding:6px 9px}}
 @media(min-width:880px){
 .pick{grid-template-columns:repeat(3,1fr)}
@@ -736,7 +758,7 @@ ${crumbsHtml}${heroHtml}
 ${restHtml}
 </div>
 <footer>
-  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
+  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${altMp ? '<a href="./alternatives.html">마이프로틴 대안</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 마이프로틴에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표이며 본 사이트와 무관합니다.</p>
@@ -797,6 +819,8 @@ const HOME_FAQ = [
    '할인코드와 별개로 장바구니 조건을 맞추면 더 빠지는 할인입니다. 이달의 트렌드 제품을 같이 사면 최종 금액에서 7%가 더 빠지거나, 앱에서 12만원 이상 결제하면 쇼핑지원금이 붙는 식입니다. 이 사이트는 이런 조건을 할인코드 위에 쌓아 실제로 받는 할인율을 따로 계산합니다.'],
   ['실제 할인율이 39%를 넘는데 왜 대란이 아닌가요?',
    `대란 판정은 할인코드 할인율로만 합니다. 숨은 할인은 평소에도 붙는 경우가 많아서, 합친 숫자로 판정하면 거의 매일이 대란이 되기 때문입니다.`],
+  ...(altMp ? [['마이프로틴 말고 대안은 없나요?',
+   `있습니다. 옵티멈뉴트리션, 룰원, 다이마타이즈처럼 한국에서 직구로 많이 사는 브랜드를 단백질 1g당 가격으로 비교한 페이지를 따로 뒀습니다. 다만 대란 때는 ${altMp.p.name} ${altMp.p.size}이 1kg당 ${won(altMp.kg)}이라 여전히 싼 편이라, 대란이면 기다릴 이유가 없습니다.`]] : []),
   ['대란이면 무조건 사는 게 이득인가요?',
    '아닙니다. 평소와 차이는 몇 %p 수준입니다. 지금 당장 필요한 제품이라면 대란을 기다리며 미루는 것보다 히든코드와 숨은 할인을 챙겨 지금 사는 편이 나을 수 있습니다.'],
 ];
@@ -847,6 +871,7 @@ ${PRODUCTS.length ? `<section class="full">
 <p class="lede">표시가에 오늘 코드 ${last.base}%와 지난 대란 평균 코드 ${dRate}%를 각각 적용한 금액입니다. ${dot(db.priceDate || last.date)} 표시가 기준입니다.</p>
 ${priceRows(PRODUCTS.slice(0, 4))}
 <a class="cta ghost" href="./price.html">제품별 대란 가격 비교 전체 보기</a>
+${altMp ? '<a class="cta ghost" href="./alternatives.html">마이프로틴 말고 대안은? 다른 브랜드와 가성비 비교</a>' : ''}
 </section>` : ''}
 
 <section>
@@ -1048,6 +1073,7 @@ ${faqHtml(PRICE_FAQ)}
 <section>
 <h2>관련 페이지</h2>
 <a class="cta ghost" href="./wpc-wpi.html">임팩트웨이 vs 아이솔레이트 뭘 살까</a>
+${altMp ? '<a class="cta ghost" href="./alternatives.html">다른 브랜드와 가성비 비교</a>' : ''}
 <a class="cta ghost" href="./calc.html">내 장바구니 최종 결제금액 계산</a>
 <a class="cta ghost" href="./daeran.html">역대 대란 날짜 보기</a>
 <a class="cta ghost" href="./code.html">오늘 쓸 수 있는 할인코드</a>
@@ -1246,10 +1272,133 @@ ${faqHtml(WPI_FAQ)}
 <section>
 <h2>고른 다음에</h2>
 <a class="cta ghost" href="./taste.html">마이프로틴 맛 추천 등급표</a>
+${altMp ? '<a class="cta ghost" href="./alternatives.html">다른 브랜드와 가성비 비교</a>' : ''}
 <a class="cta ghost" href="./calc.html">장바구니 최종 결제금액 계산</a>
 <a class="cta ghost" href="./code.html">오늘 쓸 수 있는 할인코드</a>
 </section>
 
+${kakaoBox}
+`,
+  });
+}
+
+// ── 마이프로틴 대안·가성비 비교 페이지 (키워드: 마이프로틴 대안, 단백질 보충제 가성비, 단백질 1g당 가격) ──
+if (ALT && altMp) {
+  const L = ALT.links || {};
+  const shopUrl = it => {
+    if (it.aff) return it.aff;
+    if (L.iherb && /iherb\.com/.test(it.url)) return it.url + (it.url.includes('?') ? '&' : '?') + 'rcode=' + encodeURIComponent(L.iherb);
+    return it.url;
+  };
+  // 마이프로틴 쪽은 discount.json 의 표시가에 오늘 코드와 대란 코드를 적용해 줄을 만듭니다 (오늘이 대란이면 한 줄)
+  const mpRows = (ALT.myprotein || []).flatMap(m => {
+    const p = PRODUCTS.find(p => p.name === m.match[0] && p.size === m.match[1]);
+    if (!p) return [];
+    const dPrice = p.price * (1 - dRate / 100);
+    return [{ brand: '마이프로틴', product: `${p.name} ${p.size}`, type: m.type, grams: m.grams, protein: m.protein, serving: m.serving, price: p.price * (1 - last.base / 100), shop: '공식몰', tag: `${isDaeran ? '오늘 대란 코드' : '오늘 코드'} ${last.base}%`, extra: dRate !== last.base ? `대란 평균 ${dRate}%면 ${won(dPrice)} (1kg당 ${won(dPrice / m.grams * 1000)})` : '', url: p.url, mp: true, checked: db.priceDate || last.date }];
+  });
+  const others = (ALT.items || []).map(it => ({ ...it, price: it.price > 0 ? it.price : null }));
+  const all = [...mpRows, ...others].map(r => ({ ...r, kg: r.price ? r.price / r.grams * 1000 : null, pg: r.price ? r.price / (r.grams * r.protein / r.serving) : null }));
+  const priced = all.filter(r => r.pg).sort((a, b) => a.pg - b.pg);
+  const unpriced = all.filter(r => !r.pg);
+  const best = priced[0];
+  const bestAlt = priced.find(r => !r.mp) || null;
+  const mpRef = all.find(r => r.mp && r.product === `${altMp.p.name} ${altMp.p.size}`) || all[0];
+  const mpDaeranPg = altMp.p.price * (1 - dRate / 100) / (altMp.m.grams * altMp.m.protein / altMp.m.serving);
+  const daeranNote = !isDaeran && dRate !== last.base ? ` 대란 평균 ${dRate}%면 마이프로틴은 ${won(mpDaeranPg)}까지 내려갑니다.` : '';
+  const p1 = PRODUCTS.find(p => p.name === altMp.p.name && p.size === '1kg');
+  const altCount = others.length;
+
+  const row = r => `<tr class="${r.mp ? 'mp' : ''}${r === best ? ' best' : ''}${r.pg ? '' : ' np'}">
+<td class="p"><a href="${esc(r.mp ? affTo(r.url) : shopUrl(r))}" target="_blank" rel="sponsored nofollow noopener"${r.mp && primary ? ` data-copy="${b64(primary.code)}" data-label="${esc(nameOf(primary))}"` : ''}><small class="br">${esc(r.brand)}${r.type ? ` · ${esc(r.type)}` : ''}${r === best ? '<i class="tag">가장 쌈</i>' : ''}</small>${esc(r.product)}</a><small class="sh">${esc(r.shop)}${r.tag ? ` · ${esc(r.tag)}` : ''}${r.checked ? ` · ${dot(r.checked)} 확인` : ''}${r.extra ? `<br>${esc(r.extra)}` : ''}</small></td>
+<td class="n">${r.price ? won(r.price) : '<span class="muted">확인 중</span>'}</td>
+<td class="n">${r.kg ? won(r.kg) : '-'}</td>
+<td class="n hot">${r.pg ? won(r.pg) : '-'}</td></tr>`;
+
+  const altTable = `<div class="altWrap"><table class="alt">
+<thead><tr><th>제품</th><th class="n">가격</th><th class="n">1kg당</th><th class="n">단백질<br>1g당</th></tr></thead>
+<tbody>${priced.map(row).join('')}${unpriced.map(row).join('')}</tbody>
+</table></div>`;
+
+  const verdict = bestAlt
+    ? (mpRef.pg <= bestAlt.pg
+      ? `지금 표에서는 마이프로틴 ${esc(altMp.p.name)} ${esc(altMp.p.size)}(오늘 코드 ${last.base}%)가 단백질 1g당 ${won(mpRef.pg)}으로 가장 쌉니다. 그다음이 ${esc(bestAlt.brand)} ${esc(bestAlt.product)}(${won(bestAlt.pg)})입니다.${daeranNote}`
+      : `지금 표에서는 ${esc(bestAlt.brand)} ${esc(bestAlt.product)}가 단백질 1g당 ${won(bestAlt.pg)}으로 가장 싸고, 마이프로틴 ${esc(altMp.p.name)} ${esc(altMp.p.size)}(오늘 코드 ${last.base}%)는 ${won(mpRef.pg)}입니다.${daeranNote}`)
+    : `다른 브랜드 가격은 확인하는 대로 채웁니다. 마이프로틴 ${esc(altMp.p.name)} ${esc(altMp.p.size)}는 오늘 코드 ${last.base}% 기준 1kg당 ${won(mpRef.kg)}, 단백질 1g당 ${won(mpRef.pg)}입니다.${daeranNote}`;
+
+  const ALT_FAQ = [
+    ['마이프로틴 대안 있나요?',
+     `있습니다. 한국에서 직구로 많이 사는 건 옵티멈뉴트리션 골드 스탠다드, 룰원 R1, 다이마타이즈 ISO100 정도이고, 아이허브나 쿠팡 로켓직구에서 삽니다. 다만 마이프로틴도 대란 때 코드를 쓰면 ${altMp.p.name} ${altMp.p.size}이 1kg당 ${won(altMp.kg)}이라 여전히 싼 편입니다. 대란이 아닐 때 급하게 사야 하면 표에서 단백질 1g당 가격이 낮은 쪽을 고르면 됩니다.`],
+    ['마이프로틴이 왜 이렇게 비싸졌나요?',
+     p1 ? `정가가 올랐습니다. ${p1.name} 1kg 정가가 ${won(p1.rrp)}이라 코드 없이 보면 비싸 보입니다. 마이프로틴은 늘 코드를 전제로 한 가격이라 코드 ${last.base}%를 넣으면 ${won(p1.price * (1 - last.base / 100))}, 대란 ${dRate}%면 ${won(p1.price * (1 - dRate / 100))}입니다. 그리고 1kg보다 2.5kg이 1kg당 가격이 훨씬 내려가니, 비교할 때는 큰 용량끼리 보는 게 맞습니다.`
+        : `정가가 올랐습니다. 마이프로틴은 늘 코드를 전제로 한 가격이라 코드 없이 정가만 보면 비싸 보입니다. 2.5kg 이상 큰 용량일수록 1kg당 가격이 많이 내려갑니다.`],
+    ['단백질 1g당 가격은 어떻게 계산하나요?',
+     '가격 ÷ (총 용량 × 한 스쿱 단백질 ÷ 한 스쿱 무게)입니다. 같은 1kg이라도 WPI는 단백질 비율이 높아서 1kg당 가격은 비싸도 단백질 1g당으로 보면 차이가 줄어듭니다. 맛마다 함량이 조금 달라 대표값으로 계산했습니다.'],
+    ['직구하면 관세는 언제 붙나요?',
+     `한 번에 ${SHOP.customsUsd}달러(약 ${won(SHOP.customsUsd * SHOP.usdKrw)})를 넘으면 관세와 부가세가 붙습니다. 아이허브와 쿠팡 로켓직구도 같은 기준이고, 마이프로틴은 ${won(SHOP.freeShipping)} 이상이면 무료배송입니다. 넘을 것 같으면 나눠서 주문하십시오.`],
+    ['어느 사이트가 제일 싼가요?',
+     '제품마다 다릅니다. 같은 제품도 아이허브, 쿠팡 로켓직구, 공식몰 가격이 다르고 환율에 따라 바뀝니다. 그래서 이 표는 확인한 날의 가격을 적고 확인일을 같이 표시합니다. 사기 전에 링크로 들어가 현재 가격을 한 번 더 확인하십시오.'],
+  ];
+
+  page({
+    file: 'alternatives.html', priority: 0.8, current: 'alternatives.html', lastmod: db.priceDate || last.date,
+    title: '마이프로틴 대안 | 단백질 보충제 가성비 비교 (1kg당·단백질 1g당 가격)',
+    desc: `마이프로틴 너무 비싸졌다면? 옵티멈뉴트리션 골드 스탠다드, 룰원, 다이마타이즈, 아이허브 자체 브랜드까지 한국에서 직구로 많이 사는 프로틴을 1kg당·단백질 1g당 가격으로 비교했습니다. 마이프로틴 대란가(코드 ${altMp.rate}%)는 1kg당 ${won(altMp.kg)}.`,
+    keywords: ['마이프로틴 대안', '마이프로틴 대체', '마이프로틴 비싸', '단백질 보충제 가성비', '단백질 보충제 추천', '프로틴 1kg당 가격', '단백질 1g당 가격', '옵티멈뉴트리션 마이프로틴 비교', '골드스탠다드 가격', '룰원 프로틴 가격', '아이허브 프로틴 추천', '프로틴 직구 추천'],
+    ld: [crumbs([['홈', 'index.html'], ['마이프로틴 대안', 'alternatives.html']]), faqLd(ALT_FAQ)],
+    heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<h1>마이프로틴 대안<br>단백질 보충제 가성비 비교</h1>
+<p class="updated">${dot(db.priceDate || last.date)} 기준 · 마이프로틴 가격은 코드 할인율에 맞춰 매일 갱신</p>
+<p class="lede">"마이프로틴 너무 비싸졌는데 대안 없나요?"에 대한 답입니다. 대란 때는 <b>${esc(altMp.p.name)} ${esc(altMp.p.size)}이 1kg당 ${won(altMp.kg)}</b>이라 여전히 싼 편이고, 평소 가격이라면 아래 제품들과 <b>단백질 1g당 가격</b>으로 비교해 보고 고르면 됩니다.</p>
+${heroCta}
+</div>
+<div class="heroSide">
+<dl class="stats">
+  <div><dt>마이프로틴 대란가</dt><dd>1kg당 ${won(altMp.kg)}</dd></div>
+  <div><dt>가장 싼 다른 브랜드</dt><dd>${bestAlt ? `1kg당 ${won(bestAlt.kg)}` : '확인 중'}</dd></div>
+  <div><dt>비교 제품</dt><dd>${altCount + mpRows.length}개</dd></div>
+</dl>
+</div>
+</div>`,
+    restHtml: `
+<section class="full">
+<h2>단백질 1g당 가격으로 줄 세우기</h2>
+<p class="lede">${verdict}</p>
+${altTable}
+<p class="hint">단백질 1g당 가격이 낮을수록 가성비가 좋습니다. 가격은 적힌 확인일 기준이라 지금과 다를 수 있고, 마이프로틴 줄은 표시가에 코드만 적용한 값입니다. 마이프로틴 링크는 제휴 링크이고 다른 쇼핑몰 링크도 제휴 링크일 수 있습니다.</p>
+</section>
+
+<section class="full">
+<h2>어디서 사는 게 좋을까</h2>
+<ul class="shops">
+  <li><b>마이프로틴</b><span>할인코드를 넣어야 제값입니다. 대란(코드 ${TH}% 이상)이면 고민할 것 없이 마이프로틴이 가장 쌉니다. ${won(SHOP.freeShipping)} 이상 무료배송, 영국에서 옵니다.</span></li>
+  <li><b>쿠팡 로켓직구</b><span>옵티멈뉴트리션, 룰원, 다이마타이즈가 빠르면 다음 날 옵니다. 급할 때 가장 편하고, 가격은 아이허브보다 조금 비쌀 때가 많습니다.</span></li>
+  <li><b>아이허브</b><span>한국어와 원화로 결제하는 직구 사이트입니다. 자체 브랜드(캘리포니아 골드 뉴트리션)가 보통 가장 싸고, 세일이 자주 바뀝니다.</span></li>
+</ul>
+<p class="hint">어디서 사든 한 번에 ${SHOP.customsUsd}달러를 넘으면 관세가 붙으니 나눠서 주문하십시오.</p>
+</section>
+
+<section class="full">
+<h2>WPC와 WPI 중 뭘 골라야 하나요</h2>
+<p class="lede">표의 WPC는 농축 유청, WPI는 분리 유청입니다. 우유 먹고 배가 편하면 WPC가 싸고, 불편하면 WPI가 맞습니다. 둘의 차이는 그림으로 정리해 뒀습니다.</p>
+<a class="cta ghost" href="./wpc-wpi.html">임팩트웨이 vs 아이솔레이트 그림으로 보기</a>
+</section>
+
+<section>
+<h2>자주 묻는 질문</h2>
+${faqHtml(ALT_FAQ)}
+</section>
+
+<section>
+<h2>마이프로틴으로 산다면</h2>
+<a class="cta ghost" href="./price.html">용량별 평소·대란 가격 보기</a>
+<a class="cta ghost" href="./code.html">오늘 쓸 수 있는 할인코드</a>
+<a class="cta ghost" href="./calc.html">장바구니 최종 결제금액 계산</a>
+</section>
+
+${ytPromo}
 ${kakaoBox}
 `,
   });
@@ -1470,7 +1619,7 @@ ${ytUrl ? `<a class="cta" href="${esc(SITE.youtubeChannel)}" target="_blank" rel
 
 <section>
 <h2>수익과 중립성</h2>
-<p class="lede">이 사이트의 마이프로틴 링크는 제휴 링크라 구매가 생기면 수수료를 받습니다. 구매 금액에는 차이가 없습니다. 할인코드는 수수료와 관계없이 그날 가장 높은 코드를 올리고, 대란이 아니면 아니라고 씁니다.</p>
+<p class="lede">이 사이트의 마이프로틴 링크는 제휴 링크라 구매가 생기면 수수료를 받습니다. 구매 금액에는 차이가 없습니다.${altMp ? ' 대안 비교 페이지의 아이허브·쿠팡 등 다른 쇼핑몰 링크도 제휴 링크일 수 있습니다.' : ''} 할인코드는 수수료와 관계없이 그날 가장 높은 코드를 올리고, 대란이 아니면 아니라고 씁니다.</p>
 <p class="lede">마이프로틴(Myprotein)은 THG plc의 상표이며 이 사이트는 마이프로틴과 아무 관계가 없습니다. 표시된 할인율은 확인 시점의 값이고 실제 결제 금액과 다를 수 있으니 결제 전에 장바구니에서 확인하십시오.</p>
 </section>
 
@@ -1489,6 +1638,7 @@ ${ytUrl ? `<a class="cta" href="${esc(SITE.youtubeChannel)}" target="_blank" rel
   ${PRODUCTS.length ? '<li><a href="./price.html"><span class="m">대란 가격 비교</span><span class="s">평소 vs 대란</span></a></li>' : ''}
   ${TASTE ? '<li><a href="./taste.html"><span class="m">맛 추천</span><span class="s">맛 등급표</span></a></li>' : ''}
   ${PRODUCTS.length ? '<li><a href="./wpc-wpi.html"><span class="m">임팩트웨이 vs 아이솔레이트</span><span class="s">WPC·WPI 비교표</span></a></li>' : ''}
+  ${altMp ? '<li><a href="./alternatives.html"><span class="m">마이프로틴 대안</span><span class="s">다른 브랜드 가성비 비교</span></a></li>' : ''}
   ${db.referral ? '<li><a href="./referral.html"><span class="m">추천인 코드</span><span class="s">가입 혜택</span></a></li>' : ''}
   <li><a href="./daeran.html"><span class="m">대란 기록</span><span class="s">${events.length}회 · 월별 정리</span></a></li>
   <li><a href="./blackfriday.html"><span class="m">블랙프라이데이</span><span class="s">${bfYear}년 ${kdate(bfDate)}</span></a></li>
