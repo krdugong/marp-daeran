@@ -1,16 +1,115 @@
 {
-  "_readme": "마이프로틴 대안·가성비 비교 페이지(alternatives.html)의 데이터입니다. items = 비교할 다른 브랜드 제품. grams 는 총 용량(g), serving 은 한 스쿱 무게(g), protein 은 한 스쿱 단백질(g)이라 단백질 1g당 가격 = price ÷ (grams × protein ÷ serving) 으로 계산합니다. price 가 null 이면 '확인 중'으로 표 아래쪽에 나오고 순위에서 빠집니다. 가격을 채울 때 checked 에 확인한 날짜(YYYY-MM-DD)를 같이 적으십시오. url 은 제품 또는 검색 페이지 주소, aff 는 제휴 링크(있으면 aff 를 씀). links.iherb 에 아이허브 리워드/제휴 코드를 넣으면 aff 가 없는 아이허브 링크에 rcode 로 자동으로 붙습니다. 쿠팡 파트너스는 제품별로 만든 링크를 aff 에 넣어야 합니다. myprotein = 마이프로틴 쪽 비교 기준 제품(가격은 discount.json 의 products 에서 가져와 오늘 코드와 대란 코드로 계산). 국내 브랜드도 같은 형식으로 items 에 추가하면 됩니다.",
-  "links": { "iherb": "", "coupang": "" },
+  "_readme": "마이프로틴 대안·가성비 비교 페이지(alternatives.html)의 데이터입니다. items = 비교할 다른 브랜드 제품. grams 는 총 용량(g), serving 은 한 스쿱 무게(g), protein 은 한 스쿱 단백질(g)이라 단백질 1g당 가격 = price ÷ (grams × protein ÷ serving) 으로 계산합니다. price 가 null 이면 '확인 중'으로 표 아래쪽에 나오고 순위에서 빠집니다. 가격을 채울 때 checked 에 확인한 날짜(YYYY-MM-DD)를 같이 적으십시오. url 은 제품 또는 검색 페이지 주소, aff 는 제휴 링크(있으면 aff 를 씀). links.iherb 에 아이허브 리워드/제휴 코드를 넣으면 aff 가 없는 아이허브 링크에 rcode 로 자동으로 붙습니다. 쿠팡 파트너스는 제품별로 만든 링크를 aff 에 넣어야 합니다. myprotein = 마이프로틴 쪽 비교 기준 제품(가격은 discount.json 의 products 에서 가져와 오늘 코드와 대란 코드로 계산). 국내 브랜드도 같은 형식으로 items 에 추가하면 됩니다. myprotein 의 serving·protein 은 마이프로틴 한국 사이트 영양정보(30g 기준) 값입니다.",
+  "links": {
+    "iherb": "",
+    "coupang": ""
+  },
   "myprotein": [
-    { "match": ["임팩트웨이 프로틴", "2.5kg"], "type": "WPC", "grams": 2500, "serving": 25, "protein": 21 },
-    { "match": ["임팩트웨이 아이솔레이트", "2.5kg"], "type": "WPI", "grams": 2500, "serving": 25, "protein": 23 }
+    {
+      "match": [
+        "임팩트웨이 프로틴",
+        "2.5kg"
+      ],
+      "type": "WPC",
+      "grams": 2500,
+      "serving": 30,
+      "protein": 21
+    },
+    {
+      "match": [
+        "임팩트웨이 아이솔레이트",
+        "2.5kg"
+      ],
+      "type": "WPI",
+      "grams": 2500,
+      "serving": 30,
+      "protein": 24
+    }
   ],
   "items": [
-    { "brand": "옵티멈뉴트리션", "product": "골드 스탠다드 100% 웨이 2.27kg", "type": "WPC+WPI", "grams": 2270, "serving": 31, "protein": 24, "price": null, "checked": null, "shop": "쿠팡 로켓직구 · 아이허브", "url": "https://www.coupang.com/np/search?q=%EC%98%B5%ED%8B%B0%EB%A8%B8%EB%89%B4%ED%8A%B8%EB%A6%AC%EC%85%98+%EA%B3%A8%EB%93%9C%EC%8A%A4%ED%83%A0%EB%8B%A4%EB%93%9C+2.27", "aff": "", "note": "세계에서 가장 많이 팔리는 프로틴. 한국 공식몰도 있음" },
-    { "brand": "룰원", "product": "R1 프로틴 2.27kg", "type": "WPI", "grams": 2270, "serving": 30, "protein": 25, "price": 165150, "checked": "2026-10-30", "shop": "쿠팡 (공식 스토어)", "url": "https://www.coupang.com/np/search?q=%EB%A3%B0%EC%9B%90+R1+%ED%94%84%EB%A1%9C%ED%8B%B4+2.27", "aff": "", "note": "분리 유청. 쿠팡에 공식 스토어가 있어 배송이 빠름" },
-    { "brand": "다이마타이즈", "product": "ISO100 2.3kg", "type": "WPI", "grams": 2300, "serving": 32, "protein": 25, "price": null, "checked": null, "shop": "아이허브 · 쿠팡", "url": "https://kr.iherb.com/search?kw=dymatize+iso100", "aff": "", "note": "가수분해 분리 유청. 묽고 소화가 편한 편" },
-    { "brand": "머슬텍", "product": "나이트로텍 100% 웨이 골드 2.27kg", "type": "WPC+WPI", "grams": 2270, "serving": 33, "protein": 24, "price": null, "checked": null, "shop": "쿠팡 로켓직구 · 아이허브", "url": "https://kr.iherb.com/search?kw=muscletech+nitro+tech+whey+gold", "aff": "", "note": "" },
-    { "brand": "캘리포니아 골드 뉴트리션", "product": "SPORT 웨이 프로틴 아이솔레이트 2.27kg", "type": "WPI", "grams": 2270, "serving": 31, "protein": 27, "price": null, "checked": null, "shop": "아이허브 (자체 브랜드)", "url": "https://kr.iherb.com/search?kw=california+gold+nutrition+whey+protein+isolate", "aff": "", "note": "아이허브 자체 브랜드라 보통 가장 쌈" },
-    { "brand": "벌크", "product": "퓨어 웨이 프로틴 2.5kg", "type": "WPC", "grams": 2500, "serving": 30, "protein": 24, "price": null, "checked": null, "shop": "Bulk 영국 직구", "url": "https://www.bulk.com/uk/products/pure-whey-protein/bpb-wpc8-0000", "aff": "", "note": "마이프로틴과 비슷한 영국 브랜드. 한국 배송 가능 여부는 주문 전 확인" }
+    {
+      "brand": "옵티멈뉴트리션",
+      "product": "골드 스탠다드 100% 웨이 2.27kg",
+      "type": "WPC+WPI",
+      "grams": 2270,
+      "serving": 31,
+      "protein": 24,
+      "price": null,
+      "checked": null,
+      "shop": "쿠팡 로켓직구 · 아이허브",
+      "url": "https://www.coupang.com/np/search?q=%EC%98%B5%ED%8B%B0%EB%A8%B8%EB%89%B4%ED%8A%B8%EB%A6%AC%EC%85%98+%EA%B3%A8%EB%93%9C%EC%8A%A4%ED%83%A0%EB%8B%A4%EB%93%9C+2.27",
+      "aff": "",
+      "note": "세계에서 가장 많이 팔리는 프로틴. 한국 공식몰도 있음"
+    },
+    {
+      "brand": "룰원",
+      "product": "R1 프로틴 2.27kg",
+      "type": "WPI",
+      "grams": 2270,
+      "serving": 30,
+      "protein": 25,
+      "price": 165150,
+      "checked": "2026-10-30",
+      "shop": "쿠팡 (공식 스토어)",
+      "url": "https://www.coupang.com/np/search?q=%EB%A3%B0%EC%9B%90+R1+%ED%94%84%EB%A1%9C%ED%8B%B4+2.27",
+      "aff": "",
+      "note": "분리 유청. 쿠팡에 공식 스토어가 있어 배송이 빠름"
+    },
+    {
+      "brand": "다이마타이즈",
+      "product": "ISO100 2.3kg",
+      "type": "WPI",
+      "grams": 2300,
+      "serving": 32,
+      "protein": 25,
+      "price": null,
+      "checked": null,
+      "shop": "아이허브 · 쿠팡",
+      "url": "https://kr.iherb.com/search?kw=dymatize+iso100",
+      "aff": "",
+      "note": "가수분해 분리 유청. 묽고 소화가 편한 편"
+    },
+    {
+      "brand": "머슬텍",
+      "product": "나이트로텍 100% 웨이 골드 2.27kg",
+      "type": "WPC+WPI",
+      "grams": 2270,
+      "serving": 33,
+      "protein": 24,
+      "price": null,
+      "checked": null,
+      "shop": "쿠팡 로켓직구 · 아이허브",
+      "url": "https://kr.iherb.com/search?kw=muscletech+nitro+tech+whey+gold",
+      "aff": "",
+      "note": ""
+    },
+    {
+      "brand": "캘리포니아 골드 뉴트리션",
+      "product": "SPORT 웨이 프로틴 아이솔레이트 2.27kg",
+      "type": "WPI",
+      "grams": 2270,
+      "serving": 31,
+      "protein": 27,
+      "price": null,
+      "checked": null,
+      "shop": "아이허브 (자체 브랜드)",
+      "url": "https://kr.iherb.com/search?kw=california+gold+nutrition+whey+protein+isolate",
+      "aff": "",
+      "note": "아이허브 자체 브랜드라 보통 가장 쌈"
+    },
+    {
+      "brand": "벌크",
+      "product": "퓨어 웨이 프로틴 2.5kg",
+      "type": "WPC",
+      "grams": 2500,
+      "serving": 32,
+      "protein": 23,
+      "price": null,
+      "checked": null,
+      "shop": "Bulk 영국 직구",
+      "url": "https://www.bulk.com/uk/products/pure-whey-protein/bpb-wpc8-0000",
+      "aff": "",
+      "note": "마이프로틴과 비슷한 영국 브랜드. 한국 배송 가능 여부는 주문 전 확인"
+    }
   ]
 }

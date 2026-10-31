@@ -565,6 +565,33 @@ table.alt tr.np td.p a{color:var(--ink-2)}
 .shops li{background:var(--surface);border-radius:var(--r);padding:14px 16px}
 .shops b{display:block;font-size:15px;margin-bottom:4px}
 .shops span{display:block;font-size:14px;color:var(--ink-2);line-height:1.6}
+.labTag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:#1D1D1F;border-radius:999px;padding:4px 11px;margin-bottom:12px}
+.nutWrap{margin:0 -20px;padding:0 20px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.nut{font-size:13px;min-width:620px}
+table.nut.ing{min-width:900px}
+table.nut th,table.nut td{padding:10px 8px;vertical-align:top;line-height:1.45}
+table.nut thead th{white-space:nowrap}
+table.nut thead th small{display:block;font-weight:600;font-size:11px}
+table.nut tbody th{text-align:left;font-weight:700;color:var(--ink);font-size:14px;position:sticky;left:0;background:var(--bg,#fff);min-width:140px;max-width:180px;box-shadow:1px 0 0 var(--line)}
+table.nut tbody th small{display:block;font-size:11px;color:var(--muted);font-weight:700;margin-bottom:1px}
+table.nut td.n{white-space:nowrap}
+table.nut td.n small{display:block;font-size:11px;color:var(--muted);font-weight:600}
+table.nut td.hot{color:var(--accent)}
+table.nut td.ing{min-width:280px;max-width:380px;font-size:12px;color:var(--ink-2);white-space:normal}
+table.nut td.src{min-width:150px}
+table.nut td.src small{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+table.nut td.src a{font-weight:700;color:var(--brand);text-decoration:none}
+table.nut tr.np td{color:var(--faint)}
+table.nut tr.np th{color:var(--muted)}
+.rev{list-style:none;padding:0;margin:0}
+.rev li{padding:10px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.55}
+.rev li:last-child{border-bottom:0}
+.rev b{display:inline-block;font-size:12px;border-radius:999px;padding:2px 8px;background:var(--surface-2);margin-right:6px}
+.rev b.pos{background:#DDF3E7;color:#1E7A4F}
+.rev b.neg{background:#FBE3E3;color:#B13232}
+.rev i{font-style:normal;color:var(--muted);font-size:13px}
+.rev small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.rev small a{color:var(--brand);font-weight:700;text-decoration:none}
 @media(max-width:400px){.topNav{gap:0}.topNav a{padding:6px 9px}}
 @media(min-width:880px){
 .pick{grid-template-columns:repeat(3,1fr)}
@@ -1400,6 +1427,81 @@ ${faqHtml(ALT_FAQ)}
 
 ${ytPromo}
 ${kakaoBox}
+`,
+  });
+}
+
+// ── 보충제 성분 비교 (public:false 면 비밀 주소 + noindex. 메뉴·사이트맵·robots 어디에도 안 적습니다) ──
+const NUT = fs.existsSync(path.join(ROOT, 'data/nutrition.json')) ? readJson('data/nutrition.json') : null;
+if (NUT && (NUT.items || []).length) {
+  const isPublic = NUT.public === true;
+  const nutFile = isPublic ? 'nutrition.html' : `${NUT.slug || 'lab'}.html`;
+  const items = NUT.items;
+  const has = v => v != null && v !== '';
+  const num = (v, d = 1) => has(v) ? (Number.isInteger(v) ? String(v) : Number(v).toFixed(d)) : '-';
+  const ratio = it => has(it.protein) && has(it.serving) ? Math.round(it.protein / it.serving * 100) : null;
+  const filled = items.filter(it => has(it.protein));
+  const missing = items.filter(it => !has(it.protein));
+  const ranked = [...filled].sort((a, b) => ratio(b) - ratio(a));
+  const nutRow = it => `<tr class="${has(it.protein) ? '' : 'np'}"><th scope="row"><small>${esc(it.brand)}${it.type ? ' · ' + esc(it.type) : ''}</small>${esc(it.product)}</th><td class="n">${has(it.serving) ? num(it.serving, 0) + 'g' : '-'}</td><td class="n hot">${has(it.protein) ? num(it.protein) + 'g' : '-'}${ratio(it) != null ? `<small>${ratio(it)}%</small>` : ''}</td><td class="n">${num(it.carb)}</td><td class="n">${num(it.sugar)}</td><td class="n">${num(it.fat)}</td><td class="n">${has(it.sodium) ? Math.round(it.sodium) + 'mg' : '-'}</td><td class="n">${num(it.kcal, 0)}</td></tr>`;
+  const ingRow = it => `<tr class="${has(it.ingredients) ? '' : 'np'}"><th scope="row"><small>${esc(it.brand)}</small>${esc(it.product)}</th><td>${esc(it.proteinSource || '-')}</td><td>${(it.sweeteners || []).length ? it.sweeteners.map(esc).join(', ') : (has(it.ingredients) ? '없음' : '-')}</td><td class="ing">${esc(it.ingredients || '-')}</td><td>${esc(it.flavor || '-')}</td><td class="src">${it.source ? `<a href="${esc(it.source)}" target="_blank" rel="noopener nofollow">출처</a>` : ''}${it.checked ? `<small>${dot(it.checked)} 확인</small>` : ''}${it.note ? `<small>${esc(it.note)}</small>` : ''}</td></tr>`;
+  const reviews = NUT.reviews || [];
+  const byBrand = {};
+  for (const r of reviews) (byBrand[r.brand || '기타'] ||= []).push(r);
+  const cnt = (rs, s) => rs.filter(r => r.sentiment === s).length;
+  const revHtml = reviews.length
+    ? Object.entries(byBrand).map(([b, rs]) => `<details open><summary>${esc(b)} <small>${rs.length}건 · 긍정 ${cnt(rs, '긍정')} · 부정 ${cnt(rs, '부정')}</small></summary><ul class="rev">${rs.map(r => `<li><b class="${r.sentiment === '긍정' ? 'pos' : r.sentiment === '부정' ? 'neg' : ''}">${esc(r.sentiment || '중립')}</b>${r.topic ? `<i>${esc(r.topic)}</i> ` : ''}${esc(r.quote || '')}<small>${esc(r.source || '')}${r.product ? ` · ${esc(r.product)}` : ''}${r.date ? ` · ${dot(r.date)}` : ''}${r.url ? ` · <a href="${esc(r.url)}" target="_blank" rel="noopener nofollow">원문</a>` : ''}</small></li>`).join('')}</ul></details>`).join('')
+    : '<p class="lede">아직 없습니다. 디시·네이버 등에서 모은 반응을 data/nutrition.json 의 reviews 에 넣으면 브랜드별로 묶여 나옵니다.</p>';
+  const top = ranked[0];
+  page({
+    file: nutFile, noindex: !isPublic, current: '', priority: 0.5,
+    title: isPublic ? '단백질 보충제 성분 비교 | 1회분 단백질·당·감미료·원재료' : '보충제 성분 비교 (비공개 테스트)',
+    desc: '단백질 보충제의 1회분 영양성분과 원재료, 감미료를 브랜드별로 비교한 표입니다.',
+    keywords: isPublic ? ['단백질 보충제 성분 비교', '프로틴 성분 비교', '프로틴 감미료', '수크랄로스 프로틴'] : [],
+    ld: isPublic ? [crumbs([['홈', 'index.html'], ['성분 비교', nutFile]])] : [],
+    heroHtml: `
+<div class="hero">
+<div class="heroMain">
+${isPublic ? '' : '<span class="labTag">비공개 테스트 · 주소를 아는 사람만 봅니다</span>'}
+<h1>보충제 성분 비교<br>1회분 단백질·당·감미료</h1>
+<p class="updated">${filled.length}개 수집 · ${missing.length}개 미수집 · 공식 사이트 영양정보 기준</p>
+<p class="lede">같은 "유청 단백질"이라도 1회분에 단백질이 얼마나 들었는지(비율), 당과 나트륨은 얼마인지, 어떤 감미료를 쓰는지가 다릅니다.${top ? ` 지금 수집된 것 중 단백질 비율이 가장 높은 건 <b>${esc(top.brand)} ${esc(top.product)}</b>(${ratio(top)}%)입니다.` : ''}</p>
+</div>
+</div>`,
+    restHtml: `
+<section class="full">
+<h2>1회분 영양성분</h2>
+<div class="nutWrap"><table class="nut">
+<thead><tr><th>제품</th><th class="n">1회분</th><th class="n">단백질<br><small>비율</small></th><th class="n">탄수</th><th class="n">당</th><th class="n">지방</th><th class="n">나트륨</th><th class="n">열량</th></tr></thead>
+<tbody>${ranked.map(nutRow).join('')}${missing.map(nutRow).join('')}</tbody>
+</table></div>
+<p class="hint">단위는 g, 나트륨은 mg, 열량은 kcal. 비율은 1회분 무게 대비 단백질 무게입니다. 맛마다 수치가 달라서 기준 맛은 아래 표에 적었습니다.</p>
+</section>
+
+<section class="full">
+<h2>원재료와 감미료</h2>
+<div class="nutWrap"><table class="nut ing">
+<thead><tr><th>제품</th><th>단백질 원료</th><th>감미료</th><th>원재료 전문</th><th>기준 맛</th><th>출처</th></tr></thead>
+<tbody>${filled.map(ingRow).join('')}${missing.map(ingRow).join('')}</tbody>
+</table></div>
+</section>
+
+<section class="full">
+<h2>커뮤니티 반응</h2>
+${revHtml}
+</section>
+
+${missing.length ? `<section class="full">
+<h2>아직 못 모은 것</h2>
+<ul class="steps">${missing.map(it => `<li><b>${esc(it.brand)} ${esc(it.product)}</b>${it.note ? ` · ${esc(it.note)}` : ''}</li>`).join('')}</ul>
+<p class="hint">data/nutrition.json 의 해당 항목에 값을 채우면 표에 들어갑니다.</p>
+</section>` : ''}
+
+<section>
+<h2>관련 페이지</h2>
+<a class="cta ghost" href="./alternatives.html">가격으로 비교하기 (마이프로틴 대안)</a>
+<a class="cta ghost" href="./wpc-wpi.html">WPC와 WPI 차이</a>
+</section>
 `,
   });
 }
