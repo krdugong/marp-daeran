@@ -882,7 +882,7 @@ ${stickyHtml}
 })();
 </script>
 ${extraScript}
-${SITE.naverAnalytics ? `<script src="https://wcs.naver.net/wcslog.js"></script>
+${SITE.naverAnalytics ? `<script src="https://wcs.pstatic.net/wcslog.js"></script>
 <script>window.wcs_add=window.wcs_add||{};window.wcs_add.wa="${esc(SITE.naverAnalytics)}";if(window.wcs){wcs_do();}</script>
 ` : ''}${SITE.ga4 ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${esc(SITE.ga4)}"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${esc(SITE.ga4)}');</script>
