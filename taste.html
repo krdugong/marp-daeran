@@ -50,21 +50,34 @@ a{color:inherit}
 .headerInner,.utilInner,.wrap{max-width:600px;margin:0 auto;padding-left:20px;padding-right:20px}
 .wrap{padding-bottom:80px}
 header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.78);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
-.headerInner{height:52px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{text-decoration:none;font-weight:800;letter-spacing:-.02em;font-size:15px;white-space:nowrap;color:var(--brand);display:flex;align-items:baseline;gap:7px}
-.brand small{font-size:12px;font-weight:600;color:var(--muted)}
+.headerInner{min-height:64px;padding-top:9px;padding-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{text-decoration:none;white-space:nowrap;color:var(--brand);display:flex;flex-direction:column;justify-content:center;gap:3px;line-height:1.15}
+.brand .bMark{display:flex;align-items:center;gap:10px}
+.brand b{font-size:21px;font-weight:800;letter-spacing:-.04em}
+.brand i{width:1px;height:15px;background:currentColor;opacity:.22}
+.brand .bEn{font-size:12.5px;font-weight:700;letter-spacing:.24em}
+.brand small{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:-.01em}
 .topNav{display:flex;gap:4px}
 .topNav a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:999px;transition:background .2s,color .2s}
 .topNav a:hover{background:var(--surface);color:var(--ink)}
 .topNav a[aria-current]{background:var(--brand-soft);color:var(--brand)}
 .topNav .ns{display:none}
 @media(max-width:879px){.topNav .nl{display:none}.topNav .ns{display:inline}}
-@media(max-width:719px){
-.headerInner{height:auto;flex-wrap:wrap;gap:0;padding-top:10px}
-.brand{width:100%}
-.topNav{width:calc(100% + 40px);margin:0 -20px;padding:6px 14px 8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+/* 1040px 아래는 로고 줄 아래에 메뉴 줄. 스크롤하면 로고 줄(50px)만 위로 빠지고 메뉴 줄은 붙어 있습니다 */
+@media(max-width:1039px){
+header.top{top:-50px}
+.headerInner{min-height:0;flex-wrap:wrap;gap:0;padding-top:10px;padding-bottom:0}
+.brand{width:100%;height:40px}
+.topNav{width:100%;padding:6px 0 8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .topNav::-webkit-scrollbar{display:none}
+.topNav a:first-child{margin-left:-10px}
 }
+@media(max-width:719px){
+.brand b{font-size:20px}
+.topNav{width:calc(100% + 40px);margin:0 -20px;padding:6px 14px 8px}
+.topNav a:first-child{margin-left:0}
+}
+@media(max-width:359px){.brand small{font-size:11px}.brand b{font-size:19px}}
 .utilBar{background:var(--surface)}
 .utilInner{padding-top:8px;padding-bottom:8px;display:flex;gap:4px 16px;flex-wrap:wrap;justify-content:center;font-size:13px;color:var(--muted)}
 .heroInner{padding:40px 0 12px}
@@ -164,6 +177,22 @@ summary:after{content:"+";color:var(--faint);font-weight:400;font-size:18px;line
 details[open] summary:after{content:"–"}
 details p{font-size:15px;color:var(--ink-2);padding-bottom:16px;line-height:1.7;max-width:42em}
 footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);line-height:1.7}
+.fBrand{display:flex;align-items:center;gap:9px;color:var(--brand);margin:4px 0 6px}
+.fBrand b{font-size:18px;font-weight:800;letter-spacing:-.03em}
+.fBrand i{width:1px;height:13px;background:currentColor;opacity:.22}
+.fBrand span{font-size:11.5px;font-weight:700;letter-spacing:.24em}
+.fSlogan{font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.025em;line-height:1.5;margin:0 0 4px}
+.fLine{font-size:13px;color:var(--muted);margin:0 0 20px}
+.brandBand .eyebrow{font-size:12px;font-weight:700;letter-spacing:.22em;color:var(--brand);margin:56px 0 10px}
+.brandBand h2.bandTitle{font-size:31px;line-height:1.25;letter-spacing:-.045em;margin:0 0 14px}
+.tiles{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:10px}
+.tiles a{display:block;height:100%;box-sizing:border-box;background:var(--surface);border-radius:var(--r);padding:22px 20px;text-decoration:none;color:var(--ink);transition:background .2s,transform .15s}
+.tiles a:hover{background:var(--surface-2)}
+.tiles a:active{transform:scale(.99)}
+.tiles b{display:block;font-size:13px;font-weight:700;color:var(--brand);margin-bottom:6px}
+.tiles span{display:block;font-size:20px;font-weight:800;letter-spacing:-.035em;line-height:1.35}
+.tiles em{display:block;font-style:normal;font-size:14px;font-weight:600;color:var(--muted);margin-top:14px}
+@media(min-width:880px){.brandBand h2.bandTitle{font-size:46px}.tiles{grid-template-columns:repeat(3,1fr)}.tiles span{font-size:21px}}
 footer nav{margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px 16px;font-size:14px}
 footer nav a{text-decoration:none;color:var(--muted);font-weight:600}
 .warn{background:#FFF6D6;border-radius:var(--r-sm);padding:12px 14px;font-size:14px;line-height:1.6;margin:12px 0 20px}
@@ -290,7 +319,7 @@ table.alt tr.np td.p a{color:var(--ink-2)}
 .picks .go{display:inline-block;margin-top:12px;font-size:14px;font-weight:700;color:var(--brand);text-decoration:none}
 .picks li.caution{background:#FFF6D6}
 .stats dd small{display:block;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:2px}
-td.ok{color:var(--brand);font-weight:700;white-space:nowrap}td.no{color:var(--accent);font-weight:700;white-space:nowrap}
+td.ok{color:var(--brand);font-weight:700;white-space:nowrap}td.no{color:var(--accent);font-weight:700;white-space:nowrap}td.nw{white-space:nowrap}
 .labTag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:#1D1D1F;border-radius:999px;padding:4px 11px;margin-bottom:12px}
 .nutWrap{margin:0 -20px;padding:0 20px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 table.nut{font-size:13px;min-width:620px}
@@ -368,7 +397,7 @@ body.hasSticky{padding-bottom:0}
 </head>
 <body class="hasSticky" data-asof="2026-10-30">
 <header class="top"><div class="headerInner">
-  <a class="brand" href="./">프로티파이<small>마프대란 알리미</small></a>
+  <a class="brand" href="./" aria-label="프로티파이 PROTEIFY 홈"><span class="bMark"><b>프로티파이</b><i aria-hidden="true"></i><span class="bEn">PROTEIFY</span></span><small>마이프로틴 대란 알리미 · 아이허브 · 뉴트리션 비교</small></a>
   <nav class="topNav"><a href="./code.html">할인코드</a><a href="./calc.html">계산기</a><a href="./daeran-2026-10.html">10월 대란</a><a href="./taste.html" aria-current="page">맛 추천</a><a href="./wpc-wpi.html"><span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span></a><a href="./iherb.html">아이허브</a></nav>
 </div></header>
 <div class="utilBar"><div class="utilInner">
@@ -437,6 +466,9 @@ body.hasSticky{padding-bottom:0}
 
 </div>
 <footer>
+  <div class="fBrand"><b>프로티파이</b><i aria-hidden="true"></i><span>PROTEIFY</span></div>
+  <p class="fSlogan">단백질은 가장 쌀 때. 영양제는 가장 맞는 걸로.</p>
+  <p class="fLine">마이프로틴 대란 알리미 · 아이허브 · 뉴트리션 비교</p>
   <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a><a href="./calc.html">할인 계산기</a><a href="./price.html">대란 가격 비교</a><a href="./alternatives.html">마이프로틴 대안</a><a href="./referral.html">추천인 코드</a><a href="./daeran.html">대란 기록</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./daeran-2026-10.html">10월 대란</a><a href="./daeran-2026-09.html">9월 대란</a><a href="./blackfriday.html">블랙프라이데이</a><a href="./iherb.html">아이허브 할인코드</a><a href="./about.html">소개</a><a href="https://open.kakao.com/o/gh0XALIi">알림 단톡방</a><a href="https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1">유튜브</a></nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 쇼핑몰에서 최종 금액을 확인하십시오.</p>
