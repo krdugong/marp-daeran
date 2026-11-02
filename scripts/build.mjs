@@ -99,7 +99,7 @@ const peak = knownMax.length ? Math.max(...knownMax) : null;
 const announced = (db.announced || []).filter(a => a.date && a.date >= last.date).sort((a, b) => a.date.localeCompare(b.date))[0] || null;
 let nextGuess = null;
 if (lastEvent && cycle && !isDaeran) { nextGuess = addDays(lastEvent.start, cycle); while (nextGuess <= last.date) nextGuess = addDays(nextGuess, cycle); }
-// announced 에 sure:true 면 그 날을 다음 대란으로 씁니다 (평균 주기 계산 대신, "거의 확정"으로 표시)
+// announced 에 sure:true 면 그 날을 확정된 다음 대란으로 씁니다 (평균 주기 계산 대신 "확정"으로 표시)
 const sureNext = !isDaeran && announced && announced.sure ? announced : null;
 if (sureNext) nextGuess = sureNext.date;
 
@@ -139,7 +139,7 @@ const seasonal = ym => {
   // 마이프로틴이 예고한 행사는 같은 날 항목을 덮어쓰고, 없으면 추가합니다
   for (const a of db.announced || []) {
     if (!a.date || ymOf(a.date) !== ym) continue;
-    const hit = list.find(x => x.date === a.date), it = { ...a, label: `${a.label} (${a.sure ? '대란 거의 확정' : '마이프로틴 예고'})` };
+    const hit = list.find(x => x.date === a.date), it = { ...a, label: `${a.label} (${a.sure ? '대란 확정' : '마이프로틴 예고'})` };
     if (hit) Object.assign(hit, it); else list.push(it);
   }
   return list.sort((a, b) => a.date.localeCompare(b.date));
@@ -717,7 +717,7 @@ const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(prima
 // 숨은 할인 한 줄 요약
 // 금액 할인은 라벨 끝의 같은 금액('… 5천원')을 빼서 두 번 나오지 않게 합니다
 const AI_TAG = '<small class="aiTag">AI로 생성됨</small>';
-const GUESS_TAG = sureNext ? '<small class="aiTag">거의 확정</small>' : AI_TAG;
+const GUESS_TAG = sureNext ? '<small class="aiTag">확정</small>' : AI_TAG;
 const dealShort = d => d.type === 'amount'
   ? `<b>+${(d.amount / 1000).toLocaleString('ko-KR')}천원</b><span>${esc(d.label.replace(new RegExp(`\\s*${d.amount / 1000}천\\s*원$`), ''))}</span>`
   : `<b>+${d.rate}%</b><span>${esc(d.label)}</span>`;
@@ -946,7 +946,7 @@ page({
 <h1>오늘 마이프로틴 ${pName || '할인코드'} <span class="hl">${last.base}%</span></h1>
 <p class="lede answer">${kdate(last.date)} 기준 ${isDaeran
     ? `할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}. 지금 사면 됩니다.`
-    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.${sureNext ? ` 다음 대란은 <b>${kdate(sureNext.date)} ${esc(sureNext.label)}</b> 날로 거의 확정입니다. 전날 저녁부터 할인율이 바뀌니 장바구니를 미리 채워 두세요.` : announced ? ` 마이프로틴 공식 사이트에 ${announced.label} 예고(${kdate(announced.date)})가 올라와 있습니다.` : ""}`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
+    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.${sureNext ? ` 다음 대란은 <b>${kdate(sureNext.date)} ${esc(sureNext.label)}</b>입니다. 전날 저녁부터 할인율이 바뀌니 장바구니를 미리 채워 두세요.` : announced ? ` 마이프로틴 공식 사이트에 ${announced.label} 예고(${kdate(announced.date)})가 올라와 있습니다.` : ""}`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
 ${heroCta}
 ${dealLine}
 <div class="sideStack">
@@ -1153,7 +1153,7 @@ if (PRODUCTS.length) {
     ['표시가와 정가는 뭐가 다른가요?',
      '정가는 줄이 그어진 가격이고, 표시가는 지금 화면에 보이는 가격입니다. 할인코드는 표시가에 적용되므로 이 표도 표시가 기준으로 계산했습니다.'],
     ['대란까지 기다리는 게 나을까요?',
-     isDaeran ? '지금이 대란이라 기다릴 필요가 없습니다.' : `차이가 몇천 원에서 1~2만 원 수준입니다. 지금 당장 필요하면 히든코드로 사고, 2.5kg 이상 대량 구매면 다음 대란(${sureNext ? `${kdate(nextGuess)}, 거의 확정` : `예상일 ${nextGuess ? kdate(nextGuess) : '미정'}`})을 기다리는 편이 낫습니다.`],
+     isDaeran ? '지금이 대란이라 기다릴 필요가 없습니다.' : `차이가 몇천 원에서 1~2만 원 수준입니다. 지금 당장 필요하면 히든코드로 사고, 2.5kg 이상 대량 구매면 다음 대란(${sureNext ? `${kdate(nextGuess)}, 확정` : `예상일 ${nextGuess ? kdate(nextGuess) : '미정'}`})을 기다리는 편이 낫습니다.`],
     ['가격 비교 사이트와 금액이 왜 다른가요?',
      '이 표는 맛별로 다른 표시가 중 가장 흔한 값을 골라 코드만 적용한 금액입니다. 세일 중인 맛이나 한정판은 표시가가 달라서 실제 결제 금액이 다를 수 있습니다. 정확한 금액은 계산기에 장바구니 금액을 넣어 확인하십시오.'],
   ];
@@ -2023,9 +2023,9 @@ for (const ym of monthPages) {
   if (isUpcoming) {
     summary = `${y}년 ${m}월은 아직 시작 전입니다.${season.length ? ` ${m}월에는 ${seasonShort} 행사가 있어 대란 가능성이 큰 달입니다.` : ''}${guessHere ? ` 평균 주기(약 ${cycle}일)로 단순 계산한 예상 대란일은 ${kdate(nextGuess)}입니다.` : ''} 대란이 시작되면 이 페이지에 날짜와 할인율을 바로 기록합니다.`;
   } else if (st.events.length) {
-    summary = `${y}년 ${m}월 마이프로틴 대란은 ${st.events.length}번 있었습니다. ${evText}입니다.${fromVideos ? ' 마프대란알리미 채널 영상 기준입니다.' : ''}${isCur ? ' 이달은 아직 진행 중이라 매일 갱신됩니다.' : ''}${isCur && sureNext && ymOf(sureNext.date) === ym ? ` 다음 대란은 ${kdate(sureNext.date)} ${sureNext.label} 날로 거의 확정입니다.` : ''}`;
+    summary = `${y}년 ${m}월 마이프로틴 대란은 ${st.events.length}번 있었습니다. ${evText}입니다.${fromVideos ? ' 마프대란알리미 채널 영상 기준입니다.' : ''}${isCur ? ' 이달은 아직 진행 중이라 매일 갱신됩니다.' : ''}${isCur && sureNext && ymOf(sureNext.date) === ym ? ` 다음 대란은 ${kdate(sureNext.date)} ${sureNext.label}입니다.` : ''}`;
   } else {
-    summary = `${y}년 ${m}월에는 ${isCur ? '아직 ' : ''}할인코드 ${TH}% 이상 대란이 ${isCur ? '없습니다. 대란이 시작되면 바로 기록합니다.' : '없었습니다.'}${isCur && sureNext && ymOf(sureNext.date) === ym ? ` 다음 대란은 ${kdate(sureNext.date)} ${sureNext.label} 날로 거의 확정입니다.` : ''}`;
+    summary = `${y}년 ${m}월에는 ${isCur ? '아직 ' : ''}할인코드 ${TH}% 이상 대란이 ${isCur ? '없습니다. 대란이 시작되면 바로 기록합니다.' : '없었습니다.'}${isCur && sureNext && ymOf(sureNext.date) === ym ? ` 다음 대란은 ${kdate(sureNext.date)} ${sureNext.label}입니다.` : ''}`;
   }
   // 할인율을 모르는 대란이 있는 달은, 매일 기록 값이 대란 기준보다 낮으면 최고값으로 쓰지 않습니다 (대란 1회인데 최고 36%처럼 보이는 것 방지)
   const bestKnown = [st.evMax, st.dayMax].filter(v => v != null);
@@ -2139,8 +2139,8 @@ ${kakaoBox}
 const SCHEDULE = (() => {
   const list = [curYm, shiftYm(curYm, 1), shiftYm(curYm, 2)].flatMap(seasonal).filter(s => s.date >= last.date).map(s => ({
     date: s.date,
-    label: s.label.replace(/\s*\((마이프로틴 예고|대란 거의 확정)\)$/, ''),
-    kind: s.sure ? '대란 예정' : /\(마이프로틴 예고\)$/.test(s.label) ? '공식 예고' : '체크일',
+    label: s.label.replace(/\s*\((마이프로틴 예고|대란 확정)\)$/, ''),
+    kind: s.sure ? '대란 확정' : /\(마이프로틴 예고\)$/.test(s.label) ? '공식 예고' : '체크일',
     link: s.link || (monthPages.includes(ymOf(s.date)) ? monthFile(ymOf(s.date)) : null),
   }));
   if (nextGuess && !list.some(x => x.date === nextGuess)) list.push({ date: nextGuess, label: `다음 대란 (평균 주기 약 ${cycle}일로 계산)`, kind: '예상', link: null });
@@ -2155,7 +2155,7 @@ const evDays = events.map(e => e.days).filter(Boolean);
 const recYm = ymOf(events[0]?.start || rows[0].date);
 const DAERAN_FAQ = [
   ['마이프로틴 다음 대란은 언제인가요?',
-   `${isDaeran ? '지금 대란이 진행 중입니다. ' : sureNext ? `다음 대란은 ${kdate(sureNext.date)} ${sureNext.label} 날로 거의 확정입니다. ` : nextGuess ? `평균 주기(약 ${cycle}일)로 단순 계산하면 ${kdate(nextGuess)} 전후입니다. ` : ''}마이프로틴은 대란 날짜를 미리 공지하지 않습니다.${schedNamed.length ? ` 다만 ${schedNamed.slice(0, 3).map(s => `${kdate(s.date)} ${s.label}`).join(', ')}처럼 행사가 걸리는 날은 미리 체크해 둘 만합니다.` : ''} 시작되면 이 사이트와 단톡방에 바로 올립니다.`],
+   `${isDaeran ? '지금 대란이 진행 중입니다. ' : sureNext ? `다음 대란은 ${kdate(sureNext.date)} ${sureNext.label}입니다. ` : nextGuess ? `평균 주기(약 ${cycle}일)로 단순 계산하면 ${kdate(nextGuess)} 전후입니다. ` : ''}마이프로틴은 대란 날짜를 미리 공지하지 않습니다.${schedNamed.length ? ` 다만 ${schedNamed.slice(0, 3).map(s => `${kdate(s.date)} ${s.label}`).join(', ')}처럼 행사가 걸리는 날은 미리 체크해 둘 만합니다.` : ''} 시작되면 이 사이트와 단톡방에 바로 올립니다.`],
   ['마이프로틴 대란 주기는 얼마나 되나요?',
    cycle ? `${Y(recYm)}년 ${M(recYm)}월부터 기록한 대란 ${events.length}회를 보면 평균 ${cycle}일 간격입니다. 평균은 참고용이고, 11.11이나 블랙프라이데이처럼 행사가 있는 달은 평균과 다르게 올 수 있습니다.` : '아직 주기를 계산할 만큼 기록이 쌓이지 않았습니다.'],
   ['마이프로틴 할인 기간은 얼마나 되나요?',
@@ -2188,7 +2188,7 @@ ${heroCta}
   restHtml: `
 ${SCHEDULE.length ? `<section class="full">
 <h2>다음 대란 예상 일정</h2>
-<p class="lede">마이프로틴은 대란 날짜를 미리 알려주지 않습니다.${sureNext ? ` 그래도 <b>${kdate(sureNext.date)} ${esc(sureNext.label)}</b>은 대란이 거의 확정입니다.` : ''} 공식 사이트에 올라온 행사는 <b>공식 예고</b>, 해마다 행사가 걸리는 날은 <b>체크일</b>, 평균 주기로 계산한 날은 <b>예상</b>으로 적었습니다.</p>
+<p class="lede">마이프로틴은 대란 날짜를 미리 알려주지 않습니다.${sureNext ? ` 그래도 <b>${kdate(sureNext.date)} ${esc(sureNext.label)}</b>은 대란으로 확정됐습니다.` : ''} 공식 사이트에 올라온 행사는 <b>공식 예고</b>, 해마다 행사가 걸리는 날은 <b>체크일</b>, 평균 주기로 계산한 날은 <b>예상</b>으로 적었습니다.</p>
 ${scheduleTable}
 </section>` : ''}
 
