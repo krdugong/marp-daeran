@@ -95,9 +95,19 @@
       "amount": 5000,
       "min": 120000,
       "start": "2026-10-28",
-      "end": "2026-10-31",
+      "end": "2026-11-02",
       "howto": "앱에서 12만원 이상 결제하면 즉시 적용됩니다. 12만원 결제 기준 약 4%이고, 금액이 커질수록 비율은 줄어듭니다.",
       "calcLabel": "앱에서 결제해요 (12만원 이상 5천원)"
+    },
+    {
+      "id": "trend-2611",
+      "label": "이달의 트렌드 제품 1개 담기",
+      "rate": 7,
+      "stack": "multiply",
+      "start": "2026-11-01",
+      "end": "2026-11-30",
+      "howto": "이달의 트렌드 제품을 함께 사면 최종 결제 금액에서 7%가 추가로 빠집니다.",
+      "calcLabel": "이달의 트렌드 제품을 같이 담았어요"
     }
   ],
   "codes": [
@@ -105,9 +115,9 @@
       "label": "11/11 커밍순 특가전 코드",
       "code": "MP11SS",
       "rate": 39,
-      "note": "마이프로틴 VIP 추가 39% 코드 · 10월 30일 23시 59분까지",
+      "note": "마이프로틴 VIP 추가 39% 코드 · 마감임박 (11월 2일 확인)",
       "primary": true,
-      "until": "2026-10-30",
+      "until": "2026-11-02",
       "untilTime": "23:59"
     },
     {
@@ -126,11 +136,10 @@
     },
     {
       "label": "공식 행사 코드",
-      "code": "MP35",
+      "code": "SUPER35",
       "rate": 35,
-      "note": "마이프로틴 메인 배너 코드 · 10월 30일 18시 59분 마감",
-      "official": true,
-      "until": "2026-10-30"
+      "note": "마이프로틴 메인 배너 코드 (슈퍼세일 커밍순 특가전)",
+      "official": true
     }
   ],
   "referral": "NED6-R3",
@@ -387,11 +396,25 @@
       "source": "manual"
     },
     {
+      "date": "2026-10-31",
+      "base": 39,
+      "official": 35,
+      "officialCode": "MP35",
+      "source": "manual"
+    },
+    {
+      "date": "2026-11-01",
+      "base": 39,
+      "official": 35,
+      "officialCode": "MP35",
+      "source": "manual"
+    },
+    {
       "date": "2026-11-02",
-      "base": 36,
+      "base": 39,
       "official": 35,
       "officialCode": "SUPER35",
-      "source": "auto"
+      "source": "manual"
     }
   ]
 }
