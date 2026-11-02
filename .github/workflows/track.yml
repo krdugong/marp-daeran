@@ -54,7 +54,8 @@ jobs:
           done
           exit 1
 
-      # 자동 수집이 이틀 넘게 실패하면 하루 한 번(한국시간 12시 실행) 이 단계를 실패로 표시합니다.
+      # 자동 수집이 이틀 넘게 실패하면 한국시간 9시~21시 사이 예약 실행을 실패로 표시합니다.
+      # (깃허브 예약 실행은 몇 시간씩 늦게 시작하기도 해서 시간 창을 넓게 잡았습니다)
       # 깃허브가 저장소 주인에게 실패 메일을 보내 주므로, 메일이 오면 admin.html 로 직접 넣거나
       # scripts/collect.mjs 의 patterns 를 확인하십시오.
       - name: 데이터 신선도 확인
@@ -66,7 +67,7 @@ jobs:
             const today = now.toISOString().slice(0, 10);
             const days = Math.round((new Date(today) - new Date(last)) / 864e5);
             console.log("마지막 기록", last, "·", days + "일 전");
-            const noonRun = process.env.EVENT === "schedule" && now.getUTCHours() >= 12 && now.getUTCHours() < 16;
+            const noonRun = process.env.EVENT === "schedule" && now.getUTCHours() >= 9 && now.getUTCHours() < 21;
             if (days >= 2 && noonRun) {
               console.log("::error::할인율 자동 수집이 " + days + "일째 안 되고 있습니다. admin.html 로 직접 넣거나 collect.mjs 의 patterns 를 확인하십시오.");
               process.exit(1);

@@ -356,7 +356,7 @@ header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.78);-we
 .brand b{font-size:21px;font-weight:800;letter-spacing:-.04em}
 .brand i{width:1px;height:15px;background:currentColor;opacity:.22}
 .brand .bEn{font-size:12.5px;font-weight:700;letter-spacing:.24em}
-.brand small{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:-.01em}
+.brand small{font-size:12px;font-weight:500;color:var(--faint);letter-spacing:-.01em}
 .topNav{display:flex;gap:4px}
 .topNav a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:999px;transition:background .2s,color .2s}
 .topNav a:hover{background:var(--surface);color:var(--ink)}
@@ -368,14 +368,13 @@ header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.78);-we
 header.top{top:-50px}
 .headerInner{min-height:0;flex-wrap:wrap;gap:0;padding-top:10px;padding-bottom:0}
 .brand{width:100%;height:40px}
-.topNav{width:100%;padding:6px 0 8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topNav{width:100%;margin-top:10px;padding:8px 0;gap:6px;border-top:1px solid var(--line);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .topNav::-webkit-scrollbar{display:none}
-.topNav a:first-child{margin-left:-10px}
+.topNav a{background:var(--surface);color:var(--ink-2)}
 }
 @media(max-width:719px){
 .brand b{font-size:20px}
-.topNav{width:calc(100% + 40px);margin:0 -20px;padding:6px 14px 8px}
-.topNav a:first-child{margin-left:0}
+.topNav{width:calc(100% + 40px);margin:10px -20px 0;padding:8px 20px}
 }
 @media(max-width:359px){.brand small{font-size:11px}.brand b{font-size:19px}}
 .utilBar{background:var(--surface)}
@@ -866,9 +865,6 @@ ${stickyHtml}
   function old(v){var a=document.createElement('textarea');a.value=v;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
   function copy(v){try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(v).catch(function(){old(v)})}else{old(v)}}catch(e){old(v)}}
   function dec(s){try{return atob(s)}catch(e){return s}}
-  var asof=document.body.getAttribute('data-asof');
-  if(asof){var dd=Math.floor((Date.now()-new Date(asof+'T00:00:00+09:00').getTime())/864e5);
-    if(dd>=3){var w=document.createElement('p');w.className='warn';w.textContent='마지막 확인이 '+asof.replace(/-/g,'.')+'이라 '+dd+'일 지났습니다. 최신 할인율은 단톡방이나 유튜브에서 확인하세요.';var mn=document.querySelector('main');mn.insertBefore(w,mn.firstChild)}}
   var cur=document.querySelector('.topNav a[aria-current]');if(cur&&cur.scrollIntoView){try{cur.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}}
   var st=document.querySelector('.sticky'),hb=document.querySelector('.heroBtn');
   if(st&&hb&&'IntersectionObserver' in window){new IntersectionObserver(function(es){st.classList.toggle('hide',es[0].isIntersecting)},{threshold:.4}).observe(hb)}
