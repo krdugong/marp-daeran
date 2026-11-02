@@ -920,9 +920,9 @@ const HOME_FAQ = [
 // ── 메인 ──
 page({
   file: 'index.html', priority: 1.0, changefreq: 'daily', current: '',
-  title: `마이프로틴 대란 알리미 (마프대란 일정) | 오늘 할인코드 ${last.base}% · 숨은 할인 포함 ${pct(last.eff)}`,
-  keywords: ['마이프로틴 대란 일정', '마이프로틴 대란 날짜', '마이프로틴 할인 기간', '마프대란알리미', `마이프로틴 대란 ${M(curYm)}월`, `마이프로틴 할인 ${M(curYm)}월`],
-  desc: `${kdate(last.date)} 기준 마이프로틴 ${codeWord}에 숨은 할인을 더하면 ${pct(last.eff)}입니다. ${isDaeran ? '지금 대란입니다.' : `대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`} 3월부터 기록한 대란 날짜와 영상도 확인하세요.`,
+  title: `${SITE.brand} | 실시간 마이프로틴 대란 판정 · ${M(curYm)}월 할인코드 ${last.base}%`,
+  keywords: ['프로티파이', '마이프로틴 대란 일정', '마프대란 일정', '마이프로틴 대란 날짜', '마이프로틴 할인 기간', '마프대란알리미', `마이프로틴 대란 ${M(curYm)}월`, `마이프로틴 할인 ${M(curYm)}월`],
+  desc: `${SITE.brand}는 마이프로틴 대란을 실시간으로 판정해 주는 도우미입니다. ${kdate(last.date)} 기준 ${codeWord}, 숨은 할인 포함 ${pct(last.eff)}${isDaeran ? '로 지금 대란입니다.' : `이고, 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`} 이번 달 할인코드와 마프대란 일정을 매일 정리합니다.`,
   ld: [faqLd(HOME_FAQ), ...(latestVideo && latestVideo.title && latestVideo.date ? [videoLd(latestVideo)] : [])],
   heroHtml: `
 <div class="hero">
