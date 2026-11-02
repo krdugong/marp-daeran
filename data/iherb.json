@@ -3,11 +3,35 @@
   "affiliate": "https://iherb.prf.hn/click/camref:1011l4xb7",
   "rewardCode": "",
   "rewardLabel": "신규 고객 첫 주문 할인",
-  "updated": "2026-10-31",
-  "codes": [],
-  "_example": { "code": "EXAMPLE20", "label": "신규 고객 20% (최소 60달러)", "rate": 20, "who": "신규 고객", "until": "2026-11-30", "note": "앱에서도 됩니다" },
+  "updated": "2026-11-03",
+  "codes": [
+    {
+      "code": "SUPP2610",
+      "label": "영양제 전 품목 20%",
+      "rate": 20,
+      "who": "전체",
+      "until": "2026-11-09",
+      "note": "11월 3일 아이허브 메인에서 확인. 끝나는 날이 안 적혀 있어 9일에 자동으로 내립니다"
+    },
+    {
+      "code": "OCT26DAILY",
+      "label": "전문가 추천 영양제·마그네슘 일부 20%",
+      "rate": 20,
+      "who": "대상 제품만",
+      "until": "2026-11-09",
+      "note": "11월 3일 확인. 행사 페이지에 묶인 제품만 됩니다"
+    }
+  ],
+  "_example": {
+    "code": "EXAMPLE20",
+    "label": "신규 고객 20% (최소 60달러)",
+    "rate": 20,
+    "who": "신규 고객",
+    "until": "2026-11-30",
+    "note": "앱에서도 됩니다"
+  },
   "ship": {
-    "freeShipKrw": null,
+    "freeShipKrw": 40000,
     "customsUsd": 150,
     "customsUsdFromUs": 200,
     "maxBottles": 6,

@@ -617,6 +617,9 @@ table.alt tr.np td.p a{color:var(--ink-2)}
 .picks .tips li{padding:0 0 0 14px;background:none;border-radius:0}
 .picks .go{display:inline-block;margin-top:12px;font-size:14px;font-weight:700;color:var(--brand);text-decoration:none}
 .picks li.caution{background:#FFF6D6}
+.picks .go+.go{margin-left:14px}
+.ihMore{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.ihMore a{font-size:14px;font-weight:700;color:var(--brand);text-decoration:none;background:var(--surface);border-radius:999px;padding:7px 13px}
 .stats dd small{display:block;font-size:12px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:2px}
 td.ok{color:var(--brand);font-weight:700;white-space:nowrap}td.no{color:var(--accent);font-weight:700;white-space:nowrap}td.nw{white-space:nowrap}
 .labTag{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:#1D1D1F;border-radius:999px;padding:4px 11px;margin-bottom:12px}
@@ -850,7 +853,7 @@ ${restHtml}
   <div class="fBrand"><b>${esc(SITE.brand)}</b>${SITE.brandEn ? `<i aria-hidden="true"></i><span>${esc(SITE.brandEn)}</span>` : ''}</div>
   ${SITE.slogan ? `<p class="fSlogan">${esc(SITE.slogan)}</p>` : ''}
   ${HEADER_LINE ? `<p class="fLine">${esc(HEADER_LINE)}</p>` : ''}
-  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${altMp ? '<a href="./alternatives.html">마이프로틴 대안</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}${IH ? '<a href="./iherb.html">아이허브 할인코드</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
+  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${altMp ? '<a href="./alternatives.html">마이프로틴 대안</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}${IH ? '<a href="./iherb.html">아이허브 할인코드</a>' : ''}${IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? '<a href="./iherb-best.html">아이허브 추천템</a><a href="./iherb-blackfriday.html">아이허브 블프</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 쇼핑몰에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표${IH ? ', 아이허브(iHerb)는 iHerb, LLC의 상표' : ''}이며 본 사이트와 무관합니다.</p>
@@ -1555,6 +1558,8 @@ if (IH) {
      '주문 내역에서 해당 주문을 열고 고객센터 채팅으로 요청하면 됩니다. 배송 중 파손이나 누락은 사진을 보내면 대부분 환불이나 재발송으로 처리됩니다. 단순 변심은 해외로 다시 보내야 해서 반송비가 더 들 수 있습니다.'],
     ['아이허브에서 멜라토닌 살 수 있나요?',
      '한국 주소로는 살 수 없습니다. 한국에서 멜라토닌은 전문의약품이라 아이허브가 한국 배송을 막아 두었습니다. 잠 문제는 병원에서 처방받는 것이 맞습니다.'],
+    ['아이허브 페이코 할인은 있나요?',
+     '페이코로 결제하면 할인해 주는 쿠폰이 수시로 열립니다. 2026년 7월에는 5% 쿠폰이 있었습니다. 선착순 수량이라 일찍 끝나기도 하고, 앱 전용이거나 최소 결제 금액이 붙기도 합니다. 할인코드를 넣은 뒤 페이코로 결제하면 둘 다 받을 수 있으니, 결제 전에 페이코 앱 쿠폰함을 확인하십시오.'],
     ['아이허브 블랙프라이데이는 언제인가요?',
      `매년 11월 마지막 주, 블랙프라이데이부터 사이버먼데이까지입니다. ${bfYear}년은 ${kdate(bfDate)}이 블랙프라이데이입니다. 이 기간에는 전체 상품에 붙는 코드가 나오는 편이라, 코드가 뜨면 이 페이지에 바로 올립니다.`],
     ['프로틴은 아이허브와 마이프로틴 중 어디가 싼가요?',
@@ -1564,7 +1569,7 @@ if (IH) {
   page({
     file: 'iherb.html', priority: 0.9, changefreq: 'daily', current: 'iherb.html', lastmod: asof,
     title: `아이허브 할인코드 ${m}월 (${y}) | 입력 방법 · 중복 적용 · 추천템 고르는 법`,
-    keywords: ['아이허브 할인코드', `아이허브 할인코드 ${m}월`, '아이허브 할인코드 입력', '아이허브 할인코드 중복', '아이허브 할인 방법', '아이허브 할인', '아이허브 추천템', '아이허브 추천', '아이허브 유산균', '아이허브 오메가3', '아이허브 마그네슘', '아이허브 엽산', '아이허브 멜라토닌', '아이허브 환불', '아이허브 관세', '아이허브 배송', '아이허브 블프', '아이허브 리워드 코드'],
+    keywords: ['아이허브 할인코드', `아이허브 할인코드 ${m}월`, '아이허브 할인코드 입력', '아이허브 할인코드 중복', '아이허브 할인 방법', '아이허브 할인', '아이허브 추천템', '아이허브 추천', '아이허브 유산균', '아이허브 오메가3', '아이허브 마그네슘', '아이허브 엽산', '아이허브 멜라토닌', '아이허브 환불', '아이허브 관세', '아이허브 배송', '아이허브 블프', '아이허브 리워드 코드', '아이허브 페이코', '아이허브 페이코 할인'],
     desc: `아이허브 할인코드 ${y}년 ${m}월 정리. ${codeCount ? `지금 쓸 수 있는 코드 ${codeCount}개, ` : ''}할인코드 입력 위치와 중복 적용 규칙, 세일과 겹쳐 싸게 사는 순서, 유산균·오메가3·마그네슘·엽산 고르는 기준, 관세 ${IH_SHIP.customsUsd}달러 기준과 환불 방법까지. ${dot(asof)} 확인.`,
     ld: [crumbs([['홈', 'index.html'], ['아이허브 할인코드', 'iherb.html']]), faqLd(IH_FAQ)],
     utilHtml: `<span>${IH_SHIP.customsUsd}달러까지 면세 · 미국 발송 ${IH_SHIP.customsUsdFromUs}달러</span>
@@ -1638,6 +1643,7 @@ ${heroBtn.replace(' heroBtn', '').replace('pubref:pt-iherb-hero', 'pubref:pt-ihe
 ${picks.map((p, i) => `<li${p.warn ? ' class="caution"' : ''}><b>${esc(p.cat)}${p.sub ? ` <small>${esc(p.sub)}</small>` : ''}</b><ul class="tips">${(p.check || []).map(t => `<li>${esc(t)}</li>`).join('')}</ul>${p.kw && !p.warn ? `<a class="go" href="${esc(ihSearch(`pt-iherb-pick${i + 1}`, p.kw))}" ${aff}>아이허브에서 ${esc(p.cat)} 보기 →</a>` : ''}</li>`).join('\n')}
 </ul>
 <p class="hint">건강기능식품은 질병을 예방하거나 치료하는 약이 아닙니다. 먹는 약이 있으면 의사나 약사와 먼저 상의하십시오.</p>
+${fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? `<p class="ihMore"><a href="./iherb-best.html">추천템 베스트셀러 전체</a><a href="./iherb-probiotics.html">유산균 고르는 법</a><a href="./iherb-omega3.html">오메가3 고르는 법</a><a href="./iherb-magnesium.html">마그네슘 고르는 법</a><a href="./iherb-blackfriday.html">블프 ${bfYear}</a></p>` : ''}
 </section>
 
 <section class="full">
@@ -1656,6 +1662,247 @@ ${altMp ? '<a class="cta ghost" href="./alternatives.html">마이프로틴 vs �
 ${kakaoBox}
 `,
   });
+}
+
+// ── 아이허브 키워드 페이지 (data/iherb-guides.json: 추천템·유산균·오메가3·마그네슘·블프. 네이버 자동완성 기준) ──
+const IHG = IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? readJson('data/iherb-guides.json') : null;
+if (IHG) {
+  const aff = 'target="_blank" rel="sponsored nofollow noopener"';
+  const m = M(ihYm), y = Y(ihYm);
+  const best = IHG.best || { groups: [] };
+  const asof = [best.checked, IH.updated].filter(d => d && d <= ihToday).sort().pop() || ihToday;
+  const top = IH_CODES.find(c => c.rate != null) || IH_CODES[0] || null;
+  const codeLine = top ? ` 지금 쓸 수 있는 아이허브 코드는 <b>${esc(top.code)}</b>(${esc(top.label || `${top.rate}%`)})입니다.` : '';
+  const copyAttr = top ? ` data-copy="${b64(top.code)}" data-label="${esc(top.code)}"` : '';
+  const srch = kw => `${IH_HOME}search?kw=${encodeURIComponent(kw)}`;
+  const goBtn = (ref, dest, label) => `<a class="cta hot" href="${esc(ihLink(ref, dest))}" ${aff}${copyAttr}>${top ? `${esc(top.code)} 복사하고 ` : ''}${esc(label)}</a>`;
+  const stickyOf = ref => top ? `<a class="sticky" href="${esc(ihLink(ref))}" ${aff}${copyAttr}><b>${esc(top.code)}</b> 복사하고 아이허브 가기 →</a>` : '';
+  const util = `<span>${IH_SHIP.customsUsd}달러까지 면세 · 미국 발송 ${IH_SHIP.customsUsdFromUs}달러</span>
+  <span>건강기능식품 ${IH_SHIP.maxBottles}병까지</span>
+  ${IH_SHIP.freeShipKrw > 0 ? `<span>${won(IH_SHIP.freeShipKrw)} 이상 무료배송</span>` : '<span>개인통관고유부호 필요</span>'}`;
+  const codeList = IH_CODES.length ? `<ul class="codes">${IH_CODES.map(c => `<li><span class="name">${esc(c.code)}<em>${[c.who, c.label, c.until ? `${kdate(c.until)}까지` : ''].filter(Boolean).map(esc).join(' · ')}</em></span><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span><button type="button" data-copy="${b64(c.code)}" data-label="${esc(c.code)}">복사</button></li>`).join('')}</ul>` : '';
+  const codeSection = codeList ? `<section class="full">
+<h2>아이허브 할인코드 ${m}월</h2>
+${codeList}
+<p class="hint">코드는 한 주문에 하나만 들어가고 세일가 위에 겹칩니다. 입력 방법과 중복 규칙은 <a href="./iherb.html">아이허브 할인코드</a>에 정리했습니다.</p>
+</section>` : '';
+  const codeFaq = kw => [`${kw} 살 때 쓸 수 있는 할인코드가 있나요?`, IH_CODES.length
+    ? `지금은 ${IH_CODES.map(c => `${c.code}(${c.label || `${c.rate}%`})`).join(', ')}가 있습니다. 코드는 한 주문에 하나만 들어가고, 이번 주 브랜드 세일가 위에 겹쳐 쓸 수 있습니다.`
+    : `${m}월 코드는 아이허브 할인코드 페이지에 확인되는 대로 올립니다. 코드가 없어도 이번 주 브랜드 세일은 코드 없이 할인된 가격입니다.`];
+  const notMedicine = '<p class="hint">건강기능식품은 질병을 예방하거나 치료하는 약이 아닙니다. 먹는 약이 있거나 임신 중이면 의사나 약사와 먼저 상의하십시오.</p>';
+  const disclose = '<p class="hint">아이허브 링크는 제휴 링크입니다. 구매 금액은 같고 프로티파이에 수수료가 들어옵니다.</p>';
+  const more = self => `<section>
+<h2>아이허브 더 보기</h2>
+<a class="cta ghost" href="./iherb.html">아이허브 할인코드 ${m}월</a>
+${[['iherb-best.html', '아이허브 추천템 (베스트셀러)'], ...IHG.guides.map(g => [g.file, `아이허브 ${g.cat} 추천`]), ['iherb-blackfriday.html', `아이허브 블프 ${bfYear}`]].filter(([f]) => f !== self).map(([f, t]) => `<a class="cta ghost" href="./${f}">${esc(t)}</a>`).join('\n')}
+</section>`;
+
+  // 유산균·오메가3·마그네슘 고르는 법
+  for (const g of IHG.guides) {
+    const ref = 'pt-' + g.file.replace('.html', '');
+    const faq = [...g.faq, codeFaq(g.kw)];
+    const prodHtml = g.products.map((p, i) => `<li><b>${esc(p.name)}${p.tag ? ` <small>${esc(p.tag)}</small>` : ''}</b><ul class="tips">${p.points.map(t => `<li>${esc(t)}</li>`).join('')}</ul><a class="go" href="${esc(ihLink(`${ref}-${i + 1}`, srch(p.kw)))}" ${aff}>아이허브에서 보기 →</a></li>`).join('\n');
+    const tableHtml = g.table ? `<section class="full">
+<h2>${esc(g.cat)} 형태별 차이</h2>
+<table><thead><tr>${g.table.head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${g.table.rows.map(r => `<tr>${r.map((c, i) => i ? `<td>${esc(c)}</td>` : `<td><b>${esc(c)}</b></td>`).join('')}</tr>`).join('')}</tbody></table>
+</section>` : '';
+    page({
+      file: g.file, priority: 0.8, changefreq: 'weekly', current: 'iherb.html', lastmod: asof,
+      title: g.title.replace('{y}', y),
+      keywords: g.keywords,
+      desc: `${g.answer.replace(/<[^>]+>/g, '')} 고르는 기준 ${g.checks.length}가지와 자주 묻는 질문, ${m}월 아이허브 할인코드까지 정리했습니다. ${dot(asof)} 확인.`,
+      ld: [crumbs([['홈', 'index.html'], ['아이허브 할인코드', 'iherb.html'], [`아이허브 ${g.cat}`, g.file]]), faqLd(faq)],
+      utilHtml: util,
+      stickyHtml: stickyOf(`${ref}-sticky`),
+      heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<p class="updated">${dot(asof)} 확인 · 아이허브 베스트셀러 기준</p>
+<h1>${g.h1}</h1>
+<p class="lede answer">${g.answer}${codeLine}</p>
+${goBtn(`${ref}-hero`, srch(g.cat), `아이허브 ${g.cat} 보기`)}
+${disclose}
+</div>
+</div>`,
+      restHtml: `
+<section class="full">
+<h2>아이허브 ${esc(g.cat)} 베스트셀러</h2>
+<p class="lede">${dot(best.checked || asof)} 아이허브 베스트셀러에 오른 ${esc(g.cat)} 제품입니다. 가격은 매주 세일에 따라 바뀌어서 적지 않았습니다.</p>
+<ul class="shops picks">
+${prodHtml}
+</ul>
+</section>
+
+${tableHtml}
+
+<section>
+<h2>아이허브 ${esc(g.cat)} 고르는 기준</h2>
+<ol class="steps">${g.checks.map(t => `<li>${esc(t)}</li>`).join('')}</ol>
+${notMedicine}
+</section>
+
+${codeSection}
+
+<section class="full">
+<h2>자주 묻는 질문</h2>
+${faqHtml(faq)}
+</section>
+
+${more(g.file)}
+`,
+    });
+  }
+
+  // 아이허브 추천템 = 베스트셀러 묶음
+  if ((best.groups || []).length) {
+    const ref = 'pt-iherb-best';
+    const nItems = best.groups.reduce((s, g) => s + g.items.length, 0);
+    const BEST_FAQ = [
+      ['아이허브 추천템은 어떻게 골랐나요?', `${dot(best.checked)}에 아이허브 한국 사이트의 베스트셀러 목록을 보고 영양제, 운동 보충제, 뷰티, 식품으로 나눴습니다. 광고비를 받고 넣은 제품은 없습니다. 아이허브 링크는 제휴 링크라 구매하면 프로티파이에 수수료가 들어오고, 구매 금액은 같습니다.`],
+      ['아이허브 처음 사는데 뭐부터 사면 되나요?', '많이 사는 건 마그네슘, 유산균, 오메가3, 비타민C입니다. 아이허브 자체 브랜드인 캘리포니아 골드 뉴트리션(CGN)이 같은 성분에서 보통 가장 쌉니다. 첫 주문이면 아이허브 화면에 뜨는 신규 고객 할인부터 확인하십시오.'],
+      ['아이허브 무료배송 기준은 얼마인가요?', IH_SHIP.freeShipKrw > 0 ? `${dot(asof)} 기준 ${won(IH_SHIP.freeShipKrw)} 이상 주문하면 무료배송입니다. 장바구니에 무료배송까지 남은 금액이 표시됩니다.` : '기준이 자주 바뀌어서 장바구니에 표시되는 금액으로 확인하십시오.'],
+      ['아이허브에서 한 번에 많이 사도 되나요?', `건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지 개인 사용으로 통관되고, ${IH_SHIP.customsUsd}달러(미국 발송은 ${IH_SHIP.customsUsdFromUs}달러)를 넘으면 관세와 부가세가 붙습니다. 넘을 것 같으면 주문을 나누십시오.`],
+      [`아이허브 ${m}월 할인은 어떻게 받나요?`, `이번 주 브랜드 세일을 먼저 보고, 그 위에 할인코드 하나를 넣으면 됩니다.${IH_CODES.length ? ` 지금 쓸 수 있는 코드는 ${IH_CODES.map(c => c.code).join(', ')}입니다.` : ''}${m === 11 ? ` 11월 말에는 블랙프라이데이(${kdate(bfDate)})가 있어서 큰 주문은 그때로 미루는 사람도 많습니다.` : ''}`],
+      ['프로틴도 아이허브에서 사나요?', `프로틴 대용량은 대부분 마이프로틴이 쌉니다. 특히 대란(할인코드 ${TH}% 이상) 때는 차이가 큽니다. 아이허브에서는 크레아틴과 소용량, 마이프로틴에 없는 브랜드를 사는 사람이 많습니다.`],
+    ];
+    const groupHtml = best.groups.map((g, gi) => `<section class="full">
+<h2>아이허브 추천템: ${esc(g.name)}</h2>
+<ul class="shops picks">
+${g.items.map((it, i) => `<li><b>${esc(it.name)}</b><span>${esc(it.note || '')}</span><a class="go" href="${esc(ihLink(`${ref}-${gi + 1}-${i + 1}`, srch(it.kw)))}" ${aff}>아이허브에서 보기 →</a>${it.guide ? ` <a class="go" href="./${esc(it.guide)}">${it.guide === 'alternatives.html' ? '프로틴 가격 비교 →' : '고르는 법 →'}</a>` : ''}</li>`).join('\n')}
+</ul>
+</section>`).join('\n\n');
+    page({
+      file: 'iherb-best.html', priority: 0.8, changefreq: 'weekly', current: 'iherb.html', lastmod: asof,
+      title: `아이허브 추천템 ${m}월 (${y}) | 베스트셀러로 본 영양제·운동·뷰티·식품`,
+      keywords: ['아이허브 추천템', '아이허브 추천', '아이허브 베스트셀러', '아이허브 영양제 추천', '아이허브 인기상품', `아이허브 ${m}월`, '아이허브 크레아틴'],
+      desc: `아이허브 추천템 ${m}월 정리. ${dot(best.checked)} 아이허브 베스트셀러 ${nItems}개를 영양제·운동 보충제·뷰티·식품으로 나눴습니다. 마그네슘·유산균·오메가3 고르는 법과 무료배송·관세 기준, ${m}월 할인코드까지.`,
+      ld: [crumbs([['홈', 'index.html'], ['아이허브 할인코드', 'iherb.html'], ['아이허브 추천템', 'iherb-best.html']]), faqLd(BEST_FAQ)],
+      utilHtml: util,
+      stickyHtml: stickyOf(`${ref}-sticky`),
+      heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<p class="updated">${dot(best.checked)} 아이허브 베스트셀러 확인</p>
+<h1>아이허브 추천템 ${m}월<br>실제로 많이 팔리는 것</h1>
+<p class="lede answer">아이허브 추천템은 <b>실제로 많이 팔리는 순서</b>로 보는 게 가장 정확합니다. 베스트셀러 ${nItems}개를 영양제, 운동 보충제, 뷰티, 식품으로 나눴습니다. 영양제는 <b>유산균·마그네슘·오메가3</b>가 위에 몰려 있고, 자체 브랜드 캘리포니아 골드 뉴트리션이 많습니다.${codeLine}</p>
+${goBtn(`${ref}-hero`, `${IH_HOME}catalog/topsellers`, '아이허브 베스트셀러 보기')}
+${disclose}
+</div>
+<div class="heroSide">
+<dl class="stats">
+  <div><dt>정리한 제품</dt><dd>${nItems}개</dd></div>
+  <div><dt>무료배송</dt><dd>${IH_SHIP.freeShipKrw > 0 ? won(IH_SHIP.freeShipKrw) : '장바구니 확인'}<small>${IH_SHIP.freeShipKrw > 0 ? '이상 주문 시' : ''}</small></dd></div>
+  <div><dt>건강기능식품</dt><dd>${IH_SHIP.maxBottles}병까지</dd></div>
+</dl>
+</div>
+</div>`,
+      restHtml: `
+${groupHtml}
+
+${codeSection}
+
+<section class="full">
+<h2>자주 묻는 질문</h2>
+${faqHtml(BEST_FAQ)}
+</section>
+${notMedicine.replace('<p class="hint">', '<section><p class="hint">').replace('</p>', '</p></section>')}
+
+${more('iherb-best.html')}
+`,
+    });
+  }
+
+  // 아이허브 블프 (블랙프라이데이·사이버먼데이)
+  {
+    const ref = 'pt-iherb-bf';
+    const BF = IHG.blackfriday || {};
+    const bfCodes = (BF.codes || []).filter(c => c.code && (!c.until || c.until >= ihToday));
+    const dayN = d => Math.round((Date.parse(d) - Date.parse(ihToday)) / 864e5);
+    const wk = d => '일월화수목금토'[new Date(d + 'T00:00:00Z').getUTCDay()];
+    const left = dayN(bfDate);
+    const phase = left > 0 ? `블랙프라이데이까지 ${left}일 남았습니다.` : dayN(cmDate) >= 0 ? '지금 블랙프라이데이 주간입니다.' : `${bfYear}년 블랙프라이데이는 끝났습니다.`;
+    const bfBox = bfCodes.length
+      ? `<ul class="codes">${bfCodes.map(c => `<li><span class="name">${esc(c.code)}<em>${[c.label, c.until ? `${kdate(c.until)}까지` : ''].filter(Boolean).map(esc).join(' · ')}</em></span><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span><button type="button" data-copy="${b64(c.code)}" data-label="${esc(c.code)}">복사</button></li>`).join('')}</ul>`
+      : `<p class="lede">블프 코드는 아직 안 나왔습니다. 아이허브는 보통 시작 직전에 공개하고, 나오면 여기에 바로 올립니다.${IH_CODES.length ? ' 그 전까지는 아래 지금 코드를 쓰면 됩니다.' : ''}</p>${codeList}`;
+    const BF_FAQ = [
+      [`아이허브 블프 ${bfYear}는 언제인가요?`, `블랙프라이데이는 ${kdate(bfDate)}(${wk(bfDate)}), 사이버먼데이는 ${kdate(cmDate)}(${wk(cmDate)})입니다. 아이허브 행사는 이 주에 열리고 앞뒤로 며칠 늘어나기도 합니다. 정확한 시작일과 코드는 아이허브가 직전에 공개합니다.`],
+      ['아이허브 블프 할인은 얼마나 되나요?', `해마다 다릅니다. 외부 정리 글을 보면 ${(BF.history || []).map(h => `${h.year}년에는 ${h.text}`).join(', ')}이 있었습니다. 올해 코드는 나오는 대로 이 페이지에 올립니다.`],
+      ['블프 코드와 다른 할인코드 같이 쓸 수 있나요?', '할인코드는 한 주문에 하나만 들어갑니다. 블프 코드와 다른 코드 중 큰 쪽을 쓰고, 세일가와 리워드 적립금은 겹쳐 쓸 수 있습니다.'],
+      ['블프 때 많이 사도 관세 안 붙나요?', `한 번에 ${IH_SHIP.customsUsd}달러(미국 발송은 ${IH_SHIP.customsUsdFromUs}달러)를 넘으면 관세와 부가세가 붙고, 건강기능식품은 ${IH_SHIP.maxBottles}병까지만 개인 사용으로 통관됩니다. 여러 상자가 같은 날 들어오면 합쳐서 과세될 수 있으니 주문 날짜를 나누십시오.`],
+      ['블프 때 주문하면 배송이 늦나요?', `평소엔 ${IH_SHIP.deliveryDays} 걸리지만 블랙프라이데이 뒤에는 주문과 통관이 몰려서 더 걸립니다. 급한 건 블프 전에 따로 사십시오.`],
+      [`아이허브 ${m}월 할인코드는 뭔가요?`, IH_CODES.length ? `지금은 ${IH_CODES.map(c => `${c.code}(${c.label || `${c.rate}%`})`).join(', ')}가 있습니다. 블프 코드가 나오면 둘 중 큰 쪽을 쓰면 됩니다.` : `${m}월 코드는 아이허브 할인코드 페이지에 확인되는 대로 올립니다.`],
+    ];
+    page({
+      file: 'iherb-blackfriday.html', priority: 0.8, changefreq: 'daily', current: 'iherb.html', lastmod: asof,
+      title: `아이허브 블프 ${bfYear} | 블랙프라이데이 날짜·할인코드·미리 담을 것`,
+      keywords: ['아이허브 블프', '아이허브 블랙프라이데이', `아이허브 블프 ${bfYear}`, '아이허브 11월', '아이허브 11월 할인', '아이허브 사이버먼데이', '아이허브 블프 코드'],
+      desc: `아이허브 블프 ${bfYear} 정리. 블랙프라이데이 ${kdate(bfDate)}, 사이버먼데이 ${kdate(cmDate)}. ${phase} 지난 블프 할인, 관세·6병 기준, 미리 장바구니에 담을 것, 지금 쓸 수 있는 ${m}월 코드까지.`,
+      ld: [crumbs([['홈', 'index.html'], ['아이허브 할인코드', 'iherb.html'], ['아이허브 블프', 'iherb-blackfriday.html']]), faqLd(BF_FAQ)],
+      utilHtml: util,
+      stickyHtml: stickyOf(`${ref}-sticky`),
+      heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<span class="state ${left <= 0 && dayN(cmDate) >= 0 ? 'on' : 'off'}">${phase}</span>
+<h1>아이허브 블프 ${bfYear}<br>${kdate(bfDate)}(${wk(bfDate)}) ~ ${kdate(cmDate)}(${wk(cmDate)})</h1>
+<p class="lede answer">${bfYear}년 블랙프라이데이는 <b>${kdate(bfDate)}</b>, 사이버먼데이는 <b>${kdate(cmDate)}</b>입니다. 아이허브는 이 주에 전체 할인코드나 큰 브랜드 세일을 내는 편이고, 코드는 시작 직전에 나옵니다. 그 전에 장바구니를 채워 두면 됩니다.${codeLine}</p>
+${goBtn(`${ref}-hero`, IH_HOME, '아이허브 장바구니 채우기')}
+${disclose}
+</div>
+<div class="heroSide">
+<dl class="stats">
+  <div><dt>블랙프라이데이</dt><dd>${kdate(bfDate)}<small>${left > 0 ? `D-${left}` : ''}</small></dd></div>
+  <div><dt>사이버먼데이</dt><dd>${kdate(cmDate)}</dd></div>
+  <div><dt>블프 코드</dt><dd>${bfCodes.length ? `${bfCodes.length}개` : '나오면 올림'}</dd></div>
+</dl>
+</div>
+</div>`,
+      restHtml: `
+<section class="full">
+<h2>아이허브 블프 코드</h2>
+${bfBox}
+</section>
+
+<section>
+<h2>블프 전에 해 둘 것</h2>
+<ol class="steps">
+  <li><b>장바구니에 미리 담기</b> 블프 첫날 인기 제품은 품절이 잘 납니다. 살 것을 미리 담아 두고 코드가 뜨면 바로 결제하십시오.</li>
+  <li><b>계정과 개인통관고유부호 확인</b> 주소와 통관부호가 틀리면 통관에서 멈춥니다. 첫 주문이면 미리 가입해 두십시오.</li>
+  <li><b>${IH_SHIP.maxBottles}병, ${IH_SHIP.customsUsd}달러 나누기</b> 건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지, ${IH_SHIP.customsUsd}달러(미국 발송 ${IH_SHIP.customsUsdFromUs}달러)를 넘으면 관세가 붙습니다. 장바구니를 나눠 두십시오.</li>
+  <li><b>오래 먹을 것을 큰 통으로</b> 마그네슘, 비타민C처럼 매일 먹는 영양제는 블프 때 큰 통으로 사 두면 이득입니다. 유산균과 오메가3는 유통기한과 산패 때문에 너무 많이 사지 마십시오.</li>
+  <li><b>배송은 늦는다고 생각하기</b> 블프 뒤에는 통관이 몰려서 평소보다 오래 걸립니다.</li>
+</ol>
+</section>
+
+<section class="full">
+<h2>지난 아이허브 블프</h2>
+<ul class="steps">${(BF.history || []).map(h => `<li><b>${h.year}년</b> ${esc(h.text)}</li>`).join('')}</ul>
+${BF.historySource ? `<p class="hint">외부 할인 정리 글 기준입니다 (<a href="${esc(BF.historySource)}" target="_blank" rel="noopener nofollow">출처</a>). 올해 할인과 다를 수 있습니다.</p>` : ''}
+</section>
+
+<section class="full">
+<h2>블프 때 많이 사는 것</h2>
+<p class="lede">아이허브 베스트셀러 기준으로 정리했습니다. <a href="./iherb-best.html">아이허브 추천템 전체 보기</a></p>
+<ul class="shops picks">
+${IHG.guides.map(g => `<li><b>${esc(g.cat)}</b><span>${esc(g.checks[0])}</span><a class="go" href="./${g.file}">아이허브 ${esc(g.cat)} 고르는 법 →</a></li>`).join('\n')}
+</ul>
+</section>
+
+<section class="full">
+<h2>자주 묻는 질문</h2>
+${faqHtml(BF_FAQ)}
+</section>
+
+${bfSeason ? `<section>
+<h2>마이프로틴 블프도 같이</h2>
+<p class="lede">프로틴은 블프 때 마이프로틴이 가장 쌉니다. 마이프로틴 블랙프라이데이 할인율과 일정은 따로 정리했습니다.</p>
+<a class="cta ghost" href="./blackfriday.html">마이프로틴 블랙프라이데이</a>
+</section>` : ''}
+
+${more('iherb-blackfriday.html')}
+`,
+    });
+  }
 }
 
 // ── 보충제 성분 비교 (public:false 면 비밀 주소 + noindex. 메뉴·사이트맵·robots 어디에도 안 적습니다) ──
