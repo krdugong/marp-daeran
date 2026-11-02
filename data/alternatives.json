@@ -1,7 +1,6 @@
 {
-  "_readme": "마이프로틴 대안·가성비 비교 페이지(alternatives.html)의 데이터입니다. items = 비교할 다른 브랜드 제품. grams 는 총 용량(g), serving 은 한 스쿱 무게(g), protein 은 한 스쿱 단백질(g)이라 단백질 1g당 가격 = price ÷ (grams × protein ÷ serving) 으로 계산합니다. price 가 null 이면 '확인 중'으로 표 아래쪽에 나오고 순위에서 빠집니다. 가격을 채울 때 checked 에 확인한 날짜(YYYY-MM-DD)를 같이 적으십시오. url 은 제품 또는 검색 페이지 주소, aff 는 제휴 링크(있으면 aff 를 씀). links.iherb 에 아이허브 리워드/제휴 코드를 넣으면 aff 가 없는 아이허브 링크에 rcode 로 자동으로 붙습니다. 쿠팡 파트너스는 제품별로 만든 링크를 aff 에 넣어야 합니다. myprotein = 마이프로틴 쪽 비교 기준 제품(가격은 discount.json 의 products 에서 가져와 오늘 코드와 대란 코드로 계산). 국내 브랜드도 같은 형식으로 items 에 추가하면 됩니다. myprotein 의 serving·protein 은 마이프로틴 한국 사이트 영양정보(30g 기준) 값입니다.",
+  "_readme": "마이프로틴 대안·가성비 비교 페이지(alternatives.html)의 데이터입니다. items = 비교할 다른 브랜드 제품. grams 는 총 용량(g), serving 은 한 스쿱 무게(g), protein 은 한 스쿱 단백질(g)이라 단백질 1g당 가격 = price ÷ (grams × protein ÷ serving) 으로 계산합니다. price 가 null 이면 '확인 중'으로 표 아래쪽에 나오고 순위에서 빠집니다. 가격을 채울 때 checked 에 확인한 날짜(YYYY-MM-DD)를 같이 적으십시오. url 은 제품 또는 검색 페이지 주소, aff 는 제휴 링크(있으면 aff 를 씀). 아이허브 주소(iherb.com)는 data/iherb.json 의 파트너라이즈 제휴 링크로 자동으로 바뀝니다. 쿠팡 파트너스는 제품별로 만든 링크를 aff 에 넣어야 합니다. myprotein = 마이프로틴 쪽 비교 기준 제품(가격은 discount.json 의 products 에서 가져와 오늘 코드와 대란 코드로 계산). 국내 브랜드도 같은 형식으로 items 에 추가하면 됩니다. myprotein 의 serving·protein 은 마이프로틴 한국 사이트 영양정보(30g 기준) 값입니다.",
   "links": {
-    "iherb": "",
     "coupang": ""
   },
   "myprotein": [

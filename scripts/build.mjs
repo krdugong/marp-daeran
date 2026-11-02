@@ -1393,10 +1393,13 @@ ${kakaoBox}
 
 // ── 마이프로틴 대안·가성비 비교 페이지 (키워드: 마이프로틴 대안, 단백질 보충제 가성비, 단백질 1g당 가격) ──
 if (ALT && altMp) {
-  const L = ALT.links || {};
   const shopUrl = it => {
     if (it.aff) return it.aff;
-    if (L.iherb && /iherb\.com/.test(it.url)) return it.url + (it.url.includes('?') ? '&' : '?') + 'rcode=' + encodeURIComponent(L.iherb);
+    // 아이허브는 iherb.json 의 파트너라이즈 링크로 보냅니다 (pubref = pt-alt-검색어, 보고서에서 어느 제품을 눌렀는지 보임)
+    if (/iherb\.com/.test(it.url)) {
+      const kw = new URL(it.url).searchParams.get('kw') || it.product || 'item';
+      return ihLink('pt-alt-' + kw.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40), it.url);
+    }
     return it.url;
   };
   // 마이프로틴 쪽은 discount.json 의 표시가에 오늘 코드와 대란 코드를 적용해 줄을 만듭니다 (오늘이 대란이면 한 줄)
