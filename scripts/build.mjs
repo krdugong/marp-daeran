@@ -350,33 +350,36 @@ a{color:inherit}
 .headerInner,.utilInner,.wrap{max-width:600px;margin:0 auto;padding-left:20px;padding-right:20px}
 .wrap{padding-bottom:80px}
 header.top{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.78);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
-.headerInner{min-height:64px;padding-top:9px;padding-bottom:9px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand{text-decoration:none;white-space:nowrap;color:var(--brand);display:flex;flex-direction:column;justify-content:center;gap:3px;line-height:1.15}
+.headerInner{height:58px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{text-decoration:none;white-space:nowrap;color:var(--brand);display:flex;flex-direction:column;justify-content:center;gap:3px;line-height:1.15;min-width:0}
 .brand .bMark{display:flex;align-items:center;gap:10px}
 .brand b{font-size:21px;font-weight:800;letter-spacing:-.04em}
 .brand i{width:1px;height:15px;background:currentColor;opacity:.22}
 .brand .bEn{font-size:12.5px;font-weight:700;letter-spacing:.24em}
 .brand small{font-size:12px;font-weight:500;color:var(--faint);letter-spacing:-.01em}
-.topNav{display:flex;gap:4px}
-.topNav a{font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;white-space:nowrap;padding:6px 10px;border-radius:999px;transition:background .2s,color .2s}
+/* 윗줄: 로고 + 마이프로틴/아이허브 두 갈래. 아랫줄: 고른 쪽의 세부 메뉴. 스크롤하면 윗줄(58px)만 위로 빠지고 세부 메뉴는 붙어 있습니다 */
+header.top{top:-58px}
+.secNav{display:flex;flex:none;background:var(--surface);border-radius:999px;padding:3px}
+.secNav a{font-size:13.5px;font-weight:700;color:var(--muted);text-decoration:none;white-space:nowrap;padding:7px 14px;border-radius:999px;transition:background .2s,color .2s}
+.secNav a:hover{color:var(--ink)}
+.secNav a[aria-current]{background:var(--brand);color:#fff}
+.subBar{border-top:1px solid var(--line)}
+.headerInner.subInner{height:auto;display:block}
+.topNav{display:flex;gap:6px;padding:8px 0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.topNav::-webkit-scrollbar{display:none}
+.topNav a{font-size:13px;font-weight:600;color:var(--ink-2);text-decoration:none;white-space:nowrap;padding:6px 11px;border-radius:999px;transition:background .2s,color .2s}
 .topNav a:hover{background:var(--surface);color:var(--ink)}
 .topNav a[aria-current]{background:var(--brand-soft);color:var(--brand)}
 .topNav .ns{display:none}
 @media(max-width:879px){.topNav .nl{display:none}.topNav .ns{display:inline}}
-/* 1040px 아래는 로고 줄 아래에 메뉴 줄. 스크롤하면 로고 줄(50px)만 위로 빠지고 메뉴 줄은 붙어 있습니다 */
-@media(max-width:1039px){
-header.top{top:-50px}
-.headerInner{min-height:0;flex-wrap:wrap;gap:0;padding-top:10px;padding-bottom:0}
-.brand{width:100%;height:40px}
-.topNav{width:100%;margin-top:10px;padding:8px 0;gap:6px;border-top:1px solid var(--line);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.topNav::-webkit-scrollbar{display:none}
-.topNav a{background:var(--surface);color:var(--ink-2)}
-}
 @media(max-width:719px){
 .brand b{font-size:20px}
-.topNav{width:calc(100% + 40px);margin:10px -20px 0;padding:8px 20px}
+.brand small{display:none}
+.subBar .topNav{margin:0 -20px;padding:8px 20px}
 }
-@media(max-width:359px){.brand small{font-size:11px}.brand b{font-size:19px}}
+@media(max-width:479px){.brand i,.brand .bEn{display:none}}
+@media(max-width:400px){.secNav a{padding:6px 11px;font-size:13px}.topNav{gap:2px}.topNav a{padding:6px 9px}}
+@media(max-width:359px){.brand b{font-size:19px}}
 .utilBar{background:var(--surface)}
 .utilInner{padding-top:8px;padding-bottom:8px;display:flex;gap:4px 16px;flex-wrap:wrap;justify-content:center;font-size:13px;color:var(--muted)}
 .heroInner{padding:40px 0 12px}
@@ -649,7 +652,6 @@ table.nut tr.np th{color:var(--muted)}
 .rev i{font-style:normal;color:var(--muted);font-size:13px}
 .rev small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .rev small a{color:var(--brand);font-weight:700;text-decoration:none}
-@media(max-width:400px){.topNav{gap:0}.topNav a{padding:6px 9px}}
 @media(min-width:880px){
 .pick{grid-template-columns:repeat(3,1fr)}
 .pick li{grid-template-columns:1fr;align-content:start}
@@ -798,7 +800,14 @@ function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.d
   // 빵부스러기(현재 위치)를 화면에도 작게 보여줍니다. 구조화 데이터와 같은 경로여야 검색엔진이 믿습니다
   const bc = ld.find(n => n && n['@type'] === 'BreadcrumbList');
   const crumbsHtml = bc ? `<nav class="crumbs" aria-label="현재 위치">${bc.itemListElement.map((it, i, a) => i < a.length - 1 ? `<a href="${it.item}">${esc(it.name)}</a>` : `<span>${esc(it.name)}</span>`).join('<i>›</i>')}</nav>\n` : '';
-  const navLink = (href, label) => `<a href="./${href}"${current === href ? ' aria-current="page"' : ''}>${label}</a>`;
+  const navLink = (href, label) => `<a href="./${href}"${(href ? current === href || file === href : file === 'index.html') ? ' aria-current="page"' : ''}>${label}</a>`;
+  // 메뉴는 마이프로틴 / 아이허브 두 갈래. 아이허브 페이지(iherb*.html)면 아이허브 쪽 세부 메뉴를 보여줍니다
+  const sec = IH && file.startsWith('iherb') ? 'ih' : 'mp';
+  const hasGuides = IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json'));
+  const secNav = IH ? `<nav class="secNav" aria-label="사이트 구분"><a href="./"${sec === 'mp' ? ' aria-current="true"' : ''}>마이프로틴</a><a href="./iherb.html"${sec === 'ih' ? ' aria-current="true"' : ''}>아이허브</a></nav>` : '';
+  const subLinks = sec === 'ih'
+    ? navLink('iherb.html', '할인코드') + (hasGuides ? navLink('iherb-best.html', '추천템') + navLink('iherb-probiotics.html', '유산균') + navLink('iherb-omega3.html', '오메가3') + navLink('iherb-magnesium.html', '마그네슘') + navLink('iherb-blackfriday.html', '블프') : '')
+    : navLink('', '오늘 할인율') + navLink('code.html', '할인코드') + (calcWidget ? navLink('calc.html', '계산기') : '') + navLink(monthFile(curYm), `${M(curYm)}월 대란`) + (fs.existsSync(path.join(ROOT, 'data/taste.json')) ? navLink('taste.html', '맛 추천') : '') + (PRODUCTS.length ? navLink('wpc-wpi.html', '<span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span>') : '') + (altMp ? navLink('alternatives.html', '가성비 비교') : '');
   const html = `<!doctype html>
 <html lang="ko">
 <head>
@@ -834,8 +843,8 @@ ${hasOg ? `<meta property="og:image" content="${SITE.origin}/og.png">
 <body${stickyHtml ? ' class="hasSticky"' : ''} data-asof="${last.date}">
 <header class="top"><div class="headerInner">
   <a class="brand" href="./" aria-label="${esc(SITE.brand)}${SITE.brandEn ? ` ${esc(SITE.brandEn)}` : ''} 홈"><span class="bMark"><b>${esc(SITE.brand)}</b>${SITE.brandEn ? `<i aria-hidden="true"></i><span class="bEn">${esc(SITE.brandEn)}</span>` : ''}</span>${HEADER_LINE ? `<small>${esc(HEADER_LINE)}</small>` : ''}</a>
-  <nav class="topNav">${navLink('code.html', '할인코드')}${calcWidget ? navLink('calc.html', '계산기') : ''}${navLink(monthFile(curYm), `${M(curYm)}월 대란`)}${fs.existsSync(path.join(ROOT, 'data/taste.json')) ? navLink('taste.html', '맛 추천') : ''}${PRODUCTS.length ? navLink('wpc-wpi.html', '<span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span>') : ''}${IH ? navLink('iherb.html', '아이허브') : ''}</nav>
-</div></header>
+  ${secNav}
+</div><div class="subBar"><div class="headerInner subInner"><nav class="topNav" aria-label="${sec === 'ih' ? '아이허브' : '마이프로틴'} 메뉴">${subLinks}</nav></div></div></header>
 <div class="utilBar"><div class="utilInner">
   ${utilHtml ?? `<span>8만원 이상 무료배송</span>
   <span>150달러 이상 관세 발생</span>
@@ -1707,7 +1716,7 @@ ${[['iherb-best.html', '아이허브 추천템 (베스트셀러)'], ...IHG.guide
 <table><thead><tr>${g.table.head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${g.table.rows.map(r => `<tr>${r.map((c, i) => i ? `<td>${esc(c)}</td>` : `<td><b>${esc(c)}</b></td>`).join('')}</tr>`).join('')}</tbody></table>
 </section>` : '';
     page({
-      file: g.file, priority: 0.8, changefreq: 'weekly', current: 'iherb.html', lastmod: asof,
+      file: g.file, priority: 0.8, changefreq: 'weekly', current: g.file, lastmod: asof,
       title: g.title.replace('{y}', y),
       keywords: g.keywords,
       desc: `${g.answer.replace(/<[^>]+>/g, '')} 고르는 기준 ${g.checks.length}가지와 자주 묻는 질문, ${m}월 아이허브 할인코드까지 정리했습니다. ${dot(asof)} 확인.`,
@@ -1772,7 +1781,7 @@ ${g.items.map((it, i) => `<li><b>${esc(it.name)}</b><span>${esc(it.note || '')}<
 </ul>
 </section>`).join('\n\n');
     page({
-      file: 'iherb-best.html', priority: 0.8, changefreq: 'weekly', current: 'iherb.html', lastmod: asof,
+      file: 'iherb-best.html', priority: 0.8, changefreq: 'weekly', current: 'iherb-best.html', lastmod: asof,
       title: `아이허브 추천템 ${m}월 (${y}) | 베스트셀러로 본 영양제·운동·뷰티·식품`,
       keywords: ['아이허브 추천템', '아이허브 추천', '아이허브 베스트셀러', '아이허브 영양제 추천', '아이허브 인기상품', `아이허브 ${m}월`, '아이허브 크레아틴'],
       desc: `아이허브 추천템 ${m}월 정리. ${dot(best.checked)} 아이허브 베스트셀러 ${nItems}개를 영양제·운동 보충제·뷰티·식품으로 나눴습니다. 마그네슘·유산균·오메가3 고르는 법과 무료배송·관세 기준, ${m}월 할인코드까지.`,
@@ -1833,7 +1842,7 @@ ${more('iherb-best.html')}
       [`아이허브 ${m}월 할인코드는 뭔가요?`, IH_CODES.length ? `지금은 ${IH_CODES.map(c => `${c.code}(${c.label || `${c.rate}%`})`).join(', ')}가 있습니다. 블프 코드가 나오면 둘 중 큰 쪽을 쓰면 됩니다.` : `${m}월 코드는 아이허브 할인코드 페이지에 확인되는 대로 올립니다.`],
     ];
     page({
-      file: 'iherb-blackfriday.html', priority: 0.8, changefreq: 'daily', current: 'iherb.html', lastmod: asof,
+      file: 'iherb-blackfriday.html', priority: 0.8, changefreq: 'daily', current: 'iherb-blackfriday.html', lastmod: asof,
       title: `아이허브 블프 ${bfYear} | 블랙프라이데이 날짜·할인코드·미리 담을 것`,
       keywords: ['아이허브 블프', '아이허브 블랙프라이데이', `아이허브 블프 ${bfYear}`, '아이허브 11월', '아이허브 11월 할인', '아이허브 사이버먼데이', '아이허브 블프 코드'],
       desc: `아이허브 블프 ${bfYear} 정리. 블랙프라이데이 ${kdate(bfDate)}, 사이버먼데이 ${kdate(cmDate)}. ${phase} 지난 블프 할인, 관세·6병 기준, 미리 장바구니에 담을 것, 지금 쓸 수 있는 ${m}월 코드까지.`,
