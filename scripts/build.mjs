@@ -277,7 +277,8 @@ const ihToday = kstNow.slice(0, 10);
 // 25일부터는 다음 달 이름을 씁니다 (월말에는 다음 달 코드를 찾는 검색이 많습니다)
 const ihYm = +ihToday.slice(8, 10) >= 25 ? shiftYm(ihToday.slice(0, 7), 1) : ihToday.slice(0, 7);
 const IH_CODES = IH ? (IH.codes || []).filter(c => c.code && (!c.until || c.until >= ihToday)) : [];
-const IH_SHIP = { customsUsd: 150, customsUsdFromUs: 200, maxBottles: 6, deliveryDays: '일주일 안팎', ...(IH?.ship || {}) };
+const IH_SHIP = { customsUsd: 150, customsUsdFromUs: 200, maxBottles: 6, // customsUsdFromUs 는 화장품·생활용품 같은 일반 물품만 해당 (영양제·식품은 목록통관 배제라 미국 발송도 150)
+  deliveryDays: '일주일 안팎', ...(IH?.ship || {}) };
 const altMp = (() => { const m = ALT?.myprotein?.[0]; const p = m && PRODUCTS.find(p => p.name === m.match[0] && p.size === m.match[1]); if (!p) return null; const rate = Math.max(last.base, dRate); return { p, m, rate, kg: p.price * (1 - rate / 100) / m.grams * 1000 }; })();
 const priceRows = list => `<table class="pt">
 <thead><tr><th>제품</th><th class="n">표시가</th><th class="n">평소<br><small>코드 ${last.base}%</small></th><th class="n">대란<br><small>코드 ${dRate}%</small></th><th class="n">차이</th></tr></thead>
@@ -1567,7 +1568,9 @@ if (IH) {
     ['아이허브 무료배송 기준은 얼마인가요?',
      freeShip ? `${freeShip}입니다. 장바구니에 무료배송까지 남은 금액이 표시됩니다.` : '기준 금액이 자주 바뀌어서 여기에는 적지 않습니다. 장바구니에 무료배송까지 남은 금액이 바로 표시되니 거기서 확인하십시오.'],
     ['아이허브 관세는 언제 붙나요?',
-     `한 번에 ${IH_SHIP.customsUsd}달러를 넘으면 관세와 부가세가 붙습니다. 미국에서 발송되는 주문은 ${IH_SHIP.customsUsdFromUs}달러까지 면세입니다. 건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지만 개인 사용으로 통관되니, 넘을 것 같으면 주문을 나누십시오.`],
+     `영양제(건강기능식품)와 식품은 미국에서 발송돼도 물품값이 ${IH_SHIP.customsUsd}달러를 넘으면 관세와 부가세가 붙습니다. 국제 배송비는 빼고 계산하고, 넘으면 초과분이 아니라 전체 금액에 붙습니다. 건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지만 개인 사용으로 통관되니, 넘을 것 같으면 주문을 나누십시오.`],
+    ['미국 발송이면 200달러까지 면세 아닌가요?',
+     `200달러는 목록통관이 되는 일반 물품(화장품·생활용품 등)에만 해당합니다. 관세청 고시에서 건강기능식품과 식품류는 목록통관 배제 대상이라 정식 수입신고(일반통관)를 거치고, 이때 면세 한도는 미국 발송이어도 ${IH_SHIP.customsUsd}달러입니다. 아이허브에서 사는 영양제·단백질은 대부분 ${IH_SHIP.customsUsd}달러로 보면 됩니다.`],
     ['아이허브 배송은 얼마나 걸리나요?',
      `보통 ${IH_SHIP.deliveryDays}입니다. 통관이 몰리는 연말이나 블랙프라이데이 뒤에는 더 걸립니다. 개인통관고유부호가 틀리면 통관에서 멈추니 결제 전에 확인하십시오.`],
     ['아이허브 환불은 어떻게 하나요?',
@@ -1588,7 +1591,7 @@ if (IH) {
     keywords: ['아이허브 할인코드', `아이허브 할인코드 ${m}월`, '아이허브 할인코드 입력', '아이허브 할인코드 중복', '아이허브 할인 방법', '아이허브 할인', '아이허브 추천템', '아이허브 추천', '아이허브 유산균', '아이허브 오메가3', '아이허브 마그네슘', '아이허브 엽산', '아이허브 멜라토닌', '아이허브 환불', '아이허브 관세', '아이허브 배송', '아이허브 블프', '아이허브 리워드 코드', '아이허브 페이코', '아이허브 페이코 할인'],
     desc: `아이허브 할인코드 ${y}년 ${m}월 정리. ${codeCount ? `지금 쓸 수 있는 코드 ${codeCount}개, ` : ''}할인코드 입력 위치와 중복 적용 규칙, 세일과 겹쳐 싸게 사는 순서, 유산균·오메가3·마그네슘·엽산 고르는 기준, 관세 ${IH_SHIP.customsUsd}달러 기준과 환불 방법까지. ${dot(asof)} 확인.`,
     ld: [crumbs([['홈', 'index.html'], ['아이허브 할인코드', 'iherb.html']]), faqLd(IH_FAQ)],
-    utilHtml: `<span>${IH_SHIP.customsUsd}달러까지 면세 · 미국 발송 ${IH_SHIP.customsUsdFromUs}달러</span>
+    utilHtml: `<span>영양제 ${IH_SHIP.customsUsd}달러까지 면세 · 미국 발송도 같음</span>
   <span>건강기능식품 ${IH_SHIP.maxBottles}병까지</span>
   <span>개인통관고유부호 필요</span>`,
     stickyHtml: ihSticky,
@@ -1604,7 +1607,7 @@ ${heroBtn}
 <div class="heroSide">
 <dl class="stats">
   <div><dt>이번 달 코드</dt><dd>${codeCount ? `${codeCount}개` : '확인 중'}</dd></div>
-  <div><dt>면세 한도</dt><dd>${IH_SHIP.customsUsd}달러<small>미국 발송은 ${IH_SHIP.customsUsdFromUs}달러</small></dd></div>
+  <div><dt>면세 한도</dt><dd>${IH_SHIP.customsUsd}달러<small>영양제는 미국 발송도 같음</small></dd></div>
   <div><dt>건강기능식품</dt><dd>${IH_SHIP.maxBottles}병까지</dd></div>
 </dl>
 </div>
@@ -1693,7 +1696,7 @@ if (IHG) {
   const srch = kw => `${IH_HOME}search?kw=${encodeURIComponent(kw)}`;
   const goBtn = (ref, dest, label) => `<a class="cta hot" href="${esc(ihLink(ref, dest))}" ${aff}${copyAttr}>${top ? `${esc(top.code)} 복사하고 ` : ''}${esc(label)}</a>`;
   const stickyOf = ref => top ? `<a class="sticky" href="${esc(ihLink(ref))}" ${aff}${copyAttr}><b>${esc(top.code)}</b> 복사하고 아이허브 가기 →</a>` : '';
-  const util = `<span>${IH_SHIP.customsUsd}달러까지 면세 · 미국 발송 ${IH_SHIP.customsUsdFromUs}달러</span>
+  const util = `<span>영양제 ${IH_SHIP.customsUsd}달러까지 면세 · 미국 발송도 같음</span>
   <span>건강기능식품 ${IH_SHIP.maxBottles}병까지</span>
   ${IH_SHIP.freeShipKrw > 0 ? `<span>${won(IH_SHIP.freeShipKrw)} 이상 무료배송</span>` : '<span>개인통관고유부호 필요</span>'}`;
   const codeList = IH_CODES.length ? `<ul class="codes">${IH_CODES.map(c => `<li><span class="name">${esc(c.code)}<em>${[c.who, c.label, c.until ? `${kdate(c.until)}까지` : ''].filter(Boolean).map(esc).join(' · ')}</em></span><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span><button type="button" data-copy="${b64(c.code)}" data-label="${esc(c.code)}">복사</button></li>`).join('')}</ul>` : '';
@@ -1777,7 +1780,7 @@ ${more(g.file)}
       ['아이허브 추천템은 어떻게 골랐나요?', `${dot(best.checked)}에 아이허브 한국 사이트의 베스트셀러 목록을 보고 영양제, 운동 보충제, 뷰티, 식품으로 나눴습니다. 광고비를 받고 넣은 제품은 없습니다. 아이허브 링크는 제휴 링크라 구매하면 프로티파이에 수수료가 들어오고, 구매 금액은 같습니다.`],
       ['아이허브 처음 사는데 뭐부터 사면 되나요?', '많이 사는 건 마그네슘, 유산균, 오메가3, 비타민C입니다. 아이허브 자체 브랜드인 캘리포니아 골드 뉴트리션(CGN)이 같은 성분에서 보통 가장 쌉니다. 첫 주문이면 아이허브 화면에 뜨는 신규 고객 할인부터 확인하십시오.'],
       ['아이허브 무료배송 기준은 얼마인가요?', IH_SHIP.freeShipKrw > 0 ? `${dot(asof)} 기준 ${won(IH_SHIP.freeShipKrw)} 이상 주문하면 무료배송입니다. 장바구니에 무료배송까지 남은 금액이 표시됩니다.` : '기준이 자주 바뀌어서 장바구니에 표시되는 금액으로 확인하십시오.'],
-      ['아이허브에서 한 번에 많이 사도 되나요?', `건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지 개인 사용으로 통관되고, ${IH_SHIP.customsUsd}달러(미국 발송은 ${IH_SHIP.customsUsdFromUs}달러)를 넘으면 관세와 부가세가 붙습니다. 넘을 것 같으면 주문을 나누십시오.`],
+      ['아이허브에서 한 번에 많이 사도 되나요?', `건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지 개인 사용으로 통관되고, ${IH_SHIP.customsUsd}달러(미국 발송도 같음)를 넘으면 관세와 부가세가 붙습니다. 넘을 것 같으면 주문을 나누십시오.`],
       [`아이허브 ${m}월 할인은 어떻게 받나요?`, `이번 주 브랜드 세일을 먼저 보고, 그 위에 할인코드 하나를 넣으면 됩니다.${IH_CODES.length ? ` 지금 쓸 수 있는 코드는 ${IH_CODES.map(c => c.code).join(', ')}입니다.` : ''}${m === 11 ? ` 11월 말에는 블랙프라이데이(${kdate(bfDate)})가 있어서 큰 주문은 그때로 미루는 사람도 많습니다.` : ''}`],
       ['프로틴도 아이허브에서 사나요?', `프로틴 대용량은 대부분 마이프로틴이 쌉니다. 특히 대란(할인코드 ${TH}% 이상) 때는 차이가 큽니다. 아이허브에서는 크레아틴과 소용량, 마이프로틴에 없는 브랜드를 사는 사람이 많습니다.`],
     ];
@@ -1844,7 +1847,7 @@ ${more('iherb-best.html')}
       [`아이허브 블프 ${bfYear}는 언제인가요?`, `블랙프라이데이는 ${kdate(bfDate)}(${wk(bfDate)}), 사이버먼데이는 ${kdate(cmDate)}(${wk(cmDate)})입니다. 아이허브 행사는 이 주에 열리고 앞뒤로 며칠 늘어나기도 합니다. 정확한 시작일과 코드는 아이허브가 직전에 공개합니다.`],
       ['아이허브 블프 할인은 얼마나 되나요?', `해마다 다릅니다. 외부 정리 글을 보면 ${(BF.history || []).map(h => `${h.year}년에는 ${h.text}`).join(', ')}이 있었습니다. 올해 코드는 나오는 대로 이 페이지에 올립니다.`],
       ['블프 코드와 다른 할인코드 같이 쓸 수 있나요?', '할인코드는 한 주문에 하나만 들어갑니다. 블프 코드와 다른 코드 중 큰 쪽을 쓰고, 세일가와 리워드 적립금은 겹쳐 쓸 수 있습니다.'],
-      ['블프 때 많이 사도 관세 안 붙나요?', `한 번에 ${IH_SHIP.customsUsd}달러(미국 발송은 ${IH_SHIP.customsUsdFromUs}달러)를 넘으면 관세와 부가세가 붙고, 건강기능식품은 ${IH_SHIP.maxBottles}병까지만 개인 사용으로 통관됩니다. 여러 상자가 같은 날 들어오면 합쳐서 과세될 수 있으니 주문 날짜를 나누십시오.`],
+      ['블프 때 많이 사도 관세 안 붙나요?', `영양제는 미국 발송이어도 한 번에 ${IH_SHIP.customsUsd}달러를 넘으면 관세와 부가세가 붙고, 건강기능식품은 ${IH_SHIP.maxBottles}병까지만 개인 사용으로 통관됩니다. 여러 상자가 같은 날 들어오면 합쳐서 과세될 수 있으니 주문 날짜를 나누십시오.`],
       ['블프 때 주문하면 배송이 늦나요?', `평소엔 ${IH_SHIP.deliveryDays} 걸리지만 블랙프라이데이 뒤에는 주문과 통관이 몰려서 더 걸립니다. 급한 건 블프 전에 따로 사십시오.`],
       [`아이허브 ${m}월 할인코드는 뭔가요?`, IH_CODES.length ? `지금은 ${IH_CODES.map(c => `${c.code}(${c.label || `${c.rate}%`})`).join(', ')}가 있습니다. 블프 코드가 나오면 둘 중 큰 쪽을 쓰면 됩니다.` : `${m}월 코드는 아이허브 할인코드 페이지에 확인되는 대로 올립니다.`],
     ];
@@ -1884,7 +1887,7 @@ ${bfBox}
 <ol class="steps">
   <li><b>장바구니에 미리 담기</b> 블프 첫날 인기 제품은 품절이 잘 납니다. 살 것을 미리 담아 두고 코드가 뜨면 바로 결제하십시오.</li>
   <li><b>계정과 개인통관고유부호 확인</b> 주소와 통관부호가 틀리면 통관에서 멈춥니다. 첫 주문이면 미리 가입해 두십시오.</li>
-  <li><b>${IH_SHIP.maxBottles}병, ${IH_SHIP.customsUsd}달러 나누기</b> 건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지, ${IH_SHIP.customsUsd}달러(미국 발송 ${IH_SHIP.customsUsdFromUs}달러)를 넘으면 관세가 붙습니다. 장바구니를 나눠 두십시오.</li>
+  <li><b>${IH_SHIP.maxBottles}병, ${IH_SHIP.customsUsd}달러 나누기</b> 건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지, ${IH_SHIP.customsUsd}달러(미국 발송도 같음)를 넘으면 관세가 붙습니다. 장바구니를 나눠 두십시오.</li>
   <li><b>오래 먹을 것을 큰 통으로</b> 마그네슘, 비타민C처럼 매일 먹는 영양제는 블프 때 큰 통으로 사 두면 이득입니다. 유산균과 오메가3는 유통기한과 산패 때문에 너무 많이 사지 마십시오.</li>
   <li><b>배송은 늦는다고 생각하기</b> 블프 뒤에는 통관이 몰려서 평소보다 오래 걸립니다.</li>
 </ol>
