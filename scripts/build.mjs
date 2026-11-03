@@ -939,7 +939,7 @@ const HOME_FAQ = [
 // ── 메인 ──
 page({
   file: 'index.html', priority: 1.0, changefreq: 'daily', current: '',
-  title: `${SITE.brand} | 실시간 마이프로틴 대란 판정 · ${M(curYm)}월 할인코드 ${last.base}%`,
+  title: `마이프로틴 대란 · ${M(curYm)}월 할인코드 · 히든코드 안내 | ${SITE.brand}`,
   keywords: ['프로티파이', '마이프로틴 대란 일정', '마프대란 일정', '마이프로틴 대란 날짜', '마이프로틴 할인 기간', '마프대란알리미', `마이프로틴 대란 ${M(curYm)}월`, `마이프로틴 할인 ${M(curYm)}월`],
   desc: `${SITE.brand}는 마이프로틴 대란을 실시간으로 판정해 주는 도우미입니다. ${kdate(last.date)} 기준 ${codeWord}, 숨은 할인 포함 ${pct(last.eff)}${isDaeran ? '로 지금 대란입니다.' : `이고, 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`} 이번 달 할인코드와 마프대란 일정을 매일 정리합니다.`,
   ld: [faqLd(HOME_FAQ), ...(latestVideo && latestVideo.title && latestVideo.date ? [videoLd(latestVideo)] : [])],
