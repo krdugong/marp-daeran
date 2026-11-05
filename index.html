@@ -105,6 +105,16 @@ p{margin:0 0 12px}
 svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .g-tick{font-size:11px;fill:var(--muted)}
 .g-note{font-size:11px;font-weight:700}
+.g-lab{font-size:11px;font-weight:700}.g-val{font-size:12px;font-weight:700;fill:var(--ink)}
+@media(max-width:600px){.pchart .g-tick,.pgauge .g-tick,.pchart .g-lab,.pgauge .g-lab{font-size:23px}.pchart .g-val,.pgauge .g-val{font-size:24px}}
+.pchart{margin:6px 0 8px}.pchart svg,.pgauge svg{width:100%;height:auto;display:block}
+.pchart figcaption{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center;font-size:12px;color:var(--muted);margin-top:6px}
+.pchart .k{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:-8px}
+.pchart .k-reg{background:var(--faint)}.pchart .k-live{background:var(--brand)}.pchart .k-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.pgauge{background:var(--surface);border-radius:var(--r);padding:18px 18px 6px;margin:4px 0 8px}
+.pgHead{margin:0 0 4px;font-size:15px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}.pgHead b{font-size:20px}.pgHead small{color:var(--muted);font-size:12px}
+.badge{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;align-self:center}
+.badge.on{background:var(--accent);color:#fff}.badge.near{background:var(--accent-soft);color:var(--accent)}.badge.off{background:var(--surface-2);color:var(--ink-2)}
 .cta{display:block;text-align:center;background:var(--brand);color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:15px 20px;border-radius:999px;margin:8px 0;transition:transform .15s,background .2s,opacity .2s}
 .cta.hot{background:var(--accent)}
 .cta.ghost{background:var(--surface);color:var(--ink)}
@@ -494,6 +504,39 @@ body.hasSticky{padding-bottom:0}
 <p class="lede"><b>쇼핑지원금</b>을 11월 9일까지 미리 신청해 두면 할인코드와 별개로 더 빠집니다. 11월 10일 저녁 프로티파이가 알림을 보내고, 할인코드는 11월 10일 오후 6시에 공개되고, 히든코드와 최대할인조합은 프로티파이가 가장 빠르게 공개합니다. 일정과 사는 방법은 안내 페이지에 정리했습니다.</p>
 <div class="evBtns"><a class="cta hot" href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=email-protiefy&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fc%2Fflash-sale-signup" target="_blank" rel="sponsored nofollow noopener">쇼핑지원금 미리 신청하기</a><a class="cta ghost" href="./daeran-1111.html">11월 11일 대란 일정·방법 보기</a></div>
 </section>
+<section class="full">
+<h2>지금 사도 될까</h2>
+<div class="pgauge">
+<p class="pgHead"><span class="badge off">평소 가격</span> 오늘 임팩트웨이 프로틴 1kg <b>70,976원</b><small>코드 36% 적용</small></p>
+<svg viewBox="0 0 640 122" role="img" aria-label="오늘 코드 적용가 70,976원. 역대 최저 대란가 63,213원, 대란 기준 가격 67,649원, 코드 없이 110,900원">
+  <text x="89.8" y="20" class="g-lab" fill="var(--accent)">대란 기준 39% · 67,649원</text>
+  <rect x="14" y="40" width="89.8" height="12" rx="6" fill="var(--track-hot)"/>
+  <rect x="103.8" y="40" width="522.2" height="12" rx="6" fill="var(--track)"/>
+  <line x1="103.8" y1="22" x2="103.8" y2="60" stroke="var(--accent)" stroke-width="2" stroke-dasharray="3 3"/>
+  <circle cx="144.0" cy="46" r="9" fill="var(--brand)" stroke="#fff" stroke-width="3"/>
+  <text x="16" y="88" class="g-tick">역대 대란 43%</text><text x="16" y="116" class="g-val" fill="var(--accent)">63,213원</text>
+  <text x="626" y="88" class="g-tick" text-anchor="end">코드 없이</text><text x="626" y="116" class="g-val" text-anchor="end">110,900원</text>
+</svg>
+<p class="lede">대란 기준 가격보다 <b>3,327원</b>, 역대 최저 대란가보다 7,763원 비쌉니다. 급하지 않으면 11월 11일 슈퍼세일까지 기다리는 편이 낫습니다.</p>
+</div>
+<figure class="pchart">
+<svg viewBox="0 0 640 270" role="img" aria-label="임팩트웨이 프로틴 1kg 가격 흐름. 오늘 정상가 110,900원, 할인코드 적용가 70,976원, 기록 시작 전 대란가 3월 18일 64,322원, 4월 4일 64,322원, 4월 23일 64,322원, 5월 3일 63,213원, 5월 27일 67,649원, 6월 5일 66,540원, 7월 6일 66,540원, 8월 14일 65,431원">
+  <line x1="50" y1="236.0" x2="504" y2="236.0" stroke="var(--line)"/><text x="44" y="240.0" class="g-tick" text-anchor="end">5만</text><line x1="50" y1="174.3" x2="504" y2="174.3" stroke="var(--line)"/><text x="44" y="178.3" class="g-tick" text-anchor="end">7만</text><line x1="50" y1="112.6" x2="504" y2="112.6" stroke="var(--line)"/><text x="44" y="116.6" class="g-tick" text-anchor="end">9만</text><line x1="50" y1="50.9" x2="504" y2="50.9" stroke="var(--line)"/><text x="44" y="54.9" class="g-tick" text-anchor="end">11만</text>
+  <text x="89.9" y="262" class="g-tick" text-anchor="middle">4월</text><text x="146.9" y="262" class="g-tick" text-anchor="middle">5월</text><text x="205.8" y="262" class="g-tick" text-anchor="middle">6월</text><text x="262.8" y="262" class="g-tick" text-anchor="middle">7월</text><text x="321.6" y="262" class="g-tick" text-anchor="middle">8월</text><text x="380.5" y="262" class="g-tick" text-anchor="middle">9월</text><text x="437.5" y="262" class="g-tick" text-anchor="middle">10월</text><text x="496.4" y="262" class="g-tick" text-anchor="middle">11월</text>
+  <path d="M50.0 48.1 L51.9 48.1 L53.8 48.1 L55.7 48.1 L57.6 48.1 L59.5 48.1 L61.4 48.1 L63.3 48.1 L65.2 48.1 L67.1 48.1 L69.0 48.1 L70.9 48.1 L72.8 48.1 L74.7 48.1 L76.6 48.1 L78.5 48.1 L80.4 48.1 L82.3 48.1 L84.2 48.1 L86.1 48.1 L88.0 48.1 L89.9 48.1 L91.8 48.1 L93.7 48.1 L95.6 48.1 L97.5 48.1 L99.4 48.1 L101.3 48.1 L103.2 48.1 L105.1 48.1 L107.0 48.1 L108.9 48.1 L110.8 48.1 L112.7 48.1 L114.6 48.1 L116.5 48.1 L118.4 48.1 L120.3 48.1 L122.2 48.1 L124.1 48.1 L126.0 48.1 L127.9 48.1 L129.8 48.1 L131.7 48.1 L133.6 48.1 L135.5 48.1 L137.4 48.1 L139.3 48.1 L141.2 48.1 L143.1 48.1 L145.0 48.1 L146.9 48.1 L148.8 48.1 L150.7 48.1 L152.6 48.1 L154.5 48.1 L156.4 48.1 L158.3 48.1 L160.2 48.1 L162.1 48.1 L164.0 48.1 L165.9 48.1 L167.8 48.1 L169.7 48.1 L171.6 48.1 L173.5 48.1 L175.4 48.1 L177.3 48.1 L179.2 48.1 L181.1 48.1 L183.0 48.1 L184.9 48.1 L186.8 48.1 L188.7 48.1 L190.6 48.1 L192.5 48.1 L194.4 48.1 L196.3 48.1 L198.2 48.1 L200.1 48.1 L202.0 48.1 L203.9 48.1 L205.8 48.1 L207.7 48.1 L209.6 48.1 L211.5 48.1 L213.4 48.1 L215.3 48.1 L217.2 48.1 L219.1 48.1 L221.0 48.1 L222.9 48.1 L224.8 48.1 L226.7 48.1 L228.6 48.1 L230.5 48.1 L232.4 48.1 L234.3 48.1 L236.2 48.1 L238.1 48.1 L240.0 48.1 L241.9 48.1 L243.8 48.1 L245.7 48.1 L247.6 48.1 L249.5 48.1 L251.4 48.1 L253.3 48.1 L255.2 48.1 L257.1 48.1 L259.0 48.1 L260.9 48.1 L262.8 48.1 L264.7 48.1 L266.6 48.1 L268.5 48.1 L270.4 48.1 L272.3 48.1 L274.2 48.1 L276.1 48.1 L277.9 48.1 L279.8 48.1 L281.7 48.1 L283.6 48.1 L285.5 48.1 L287.4 48.1 L289.3 48.1 L291.2 48.1 L293.1 48.1 L295.0 48.1 L296.9 48.1 L298.8 48.1 L300.7 48.1 L302.6 48.1 L304.5 48.1 L306.4 48.1 L308.3 48.1 L310.2 48.1 L312.1 48.1 L314.0 48.1 L315.9 48.1 L317.8 48.1 L319.7 48.1 L321.6 48.1 L323.5 48.1 L325.4 48.1 L327.3 48.1 L329.2 48.1 L331.1 48.1 L333.0 48.1 L334.9 48.1 L336.8 48.1 L338.7 48.1 L340.6 48.1 L342.5 48.1 L344.4 48.1 L346.3 48.1 L348.2 48.1 L350.1 48.1 L352.0 48.1 L353.9 48.1 L355.8 48.1 L357.7 48.1 L359.6 48.1 L361.5 48.1 L363.4 48.1 L365.3 48.1 L367.2 48.1 L369.1 48.1 L371.0 48.1 L372.9 48.1 L374.8 48.1 L376.7 48.1 L378.6 48.1 L380.5 48.1 L382.4 48.1 L384.3 48.1 L386.2 48.1 L388.1 48.1 L390.0 48.1 L391.9 48.1 L393.8 48.1 L395.7 48.1 L397.6 48.1 L399.5 48.1 L401.4 48.1 L403.3 48.1 L405.2 48.1 L407.1 48.1 L409.0 48.1 L410.9 48.1 L412.8 48.1 L414.7 48.1 L416.6 48.1 L418.5 48.1 L420.4 48.1 L422.3 48.1 L424.2 48.1 L426.1 48.1 L428.0 48.1 L429.9 48.1 L431.8 48.1 L433.7 48.1 L435.6 48.1 L437.5 48.1 L439.4 48.1 L441.3 48.1 L443.2 48.1 L445.1 48.1 L447.0 48.1 L448.9 48.1 L450.8 48.1 L452.7 48.1 L454.6 48.1 L456.5 48.1 L458.4 48.1 L460.3 48.1 L462.2 48.1 L464.1 48.1 L466.0 48.1 L467.9 48.1 L469.8 48.1 L471.7 48.1 L473.6 48.1 L475.5 48.1 L477.4 48.1 L479.3 48.1 L481.2 48.1 L483.1 48.1 L485.0 48.1 L486.9 48.1 L488.8 48.1 L490.7 48.1 L492.6 48.1 L494.5 48.1 L496.4 48.1 L498.3 48.1 L500.2 48.1 L502.1 48.1 L504.0 48.1" fill="none" stroke="var(--faint)" stroke-width="2.5" stroke-linejoin="round"/>
+  <circle cx="63.3" cy="191.8" r="5" fill="var(--accent)"/><text x="63.3" y="215.8" class="g-tick" text-anchor="middle" fill="var(--accent)">42%</text><circle cx="95.6" cy="191.8" r="5" fill="var(--accent)"/><circle cx="131.7" cy="191.8" r="5" fill="var(--accent)"/><text x="131.7" y="215.8" class="g-tick" text-anchor="middle" fill="var(--accent)">42%</text><circle cx="150.7" cy="195.2" r="5" fill="var(--accent)"/><circle cx="196.3" cy="181.5" r="5" fill="var(--accent)"/><text x="196.3" y="205.5" class="g-tick" text-anchor="middle" fill="var(--accent)">39%</text><circle cx="213.4" cy="185.0" r="5" fill="var(--accent)"/><circle cx="272.3" cy="185.0" r="5" fill="var(--accent)"/><text x="272.3" y="209.0" class="g-tick" text-anchor="middle" fill="var(--accent)">40%</text><circle cx="346.3" cy="188.4" r="5" fill="var(--accent)"/><text x="346.3" y="212.4" class="g-tick" text-anchor="middle" fill="var(--accent)">41%</text>
+  <path d="M488.8 171.3 L490.7 171.3 L492.6 181.5 L494.5 181.5 L496.4 181.5 L498.3 181.5 L500.2 171.3 L502.1 171.3 L504.0 171.3" fill="none" stroke="var(--brand)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="492.6" cy="181.5" r="4" fill="var(--accent)"/><circle cx="494.5" cy="181.5" r="4" fill="var(--accent)"/><circle cx="496.4" cy="181.5" r="4" fill="var(--accent)"/><circle cx="498.3" cy="181.5" r="4" fill="var(--accent)"/>
+  <circle cx="504.0" cy="171.3" r="5.5" fill="var(--brand)" stroke="#fff" stroke-width="2"/>
+  <text x="512" y="52.1" class="g-lab" fill="var(--muted)">정상가</text>
+  <text x="512" y="77.1" class="g-val" fill="var(--muted)">110,900원</text>
+  <text x="512" y="175.3" class="g-lab" fill="var(--brand)">코드 36%</text>
+  <text x="512" y="200.3" class="g-val" fill="var(--brand)">70,976원</text>
+</svg>
+<figcaption><span class="k k-reg"></span>정상가 (코드 넣기 전) <span class="k k-live"></span>할인코드 적용가 <span class="k k-dot"></span>대란가</figcaption>
+</figure>
+<p class="hint">임팩트웨이 프로틴 1kg 기준입니다. 가격은 11월 5일부터 매일 자동으로 기록하고, 그 전은 10월 28일 확인한 가격으로 계산했습니다. 할인코드 적용가는 그날 히든코드 할인율 기준이고, 숨은 할인(트렌드 할인·쇼핑지원금)은 빼고 계산했습니다.</p>
+</section>
 <section>
 <h2>내 장바구니는 얼마에 살까</h2>
 <p class="lede">금액만 넣으면 히든코드와 숨은 할인까지 적용한 결제금액이 나옵니다.</p>
@@ -541,7 +584,7 @@ body.hasSticky{padding-bottom:0}
 
 <section class="full">
 <h2>대란 때 얼마나 싸질까</h2>
-<p class="lede">표시가에 오늘 코드 36%와 지난 대란 평균 코드 41%를 각각 적용한 금액입니다. 2026.10.28 표시가 기준입니다.</p>
+<p class="lede">표시가에 오늘 코드 36%와 지난 대란 평균 코드 41%를 각각 적용한 금액입니다. 2026.11.05 표시가 기준입니다.</p>
 <table class="pt">
 <thead><tr><th>제품</th><th class="n">표시가</th><th class="n">평소<br><small>코드 36%</small></th><th class="n">대란<br><small>코드 41%</small></th><th class="n">차이</th></tr></thead>
 <tbody><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트웨이 프로틴 <b>1kg</b></a><small>맛에 따라 840g~960g</small></td><td class="n muted">110,900원</td><td class="n">70,976원</td><td class="n hot">65,431원</td><td class="n">-5,545원</td></tr><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트웨이 프로틴 <b>2.5kg</b></a></td><td class="n muted">225,900원</td><td class="n">144,576원</td><td class="n hot">133,281원</td><td class="n">-11,295원</td></tr><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트웨이 프로틴 <b>5kg (2.5kg×2)</b></a></td><td class="n muted">349,500원</td><td class="n">223,680원</td><td class="n hot">206,205원</td><td class="n">-17,475원</td></tr><tr><td><a href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=alimi-homepage&amp;ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fp%2Fsports-nutrition%2Fimpact-whey-protein-powder%2F10530943%2F" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드">임팩트웨이 프로틴 <b>250g</b></a><small>맛보기용. 일부 맛은 더 쌈</small></td><td class="n muted">30,900원</td><td class="n">19,776원</td><td class="n hot">18,231원</td><td class="n">-1,545원</td></tr></tbody>

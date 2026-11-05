@@ -24,6 +24,17 @@ const write = (f, s) => fs.writeFileSync(path.join(ROOT, f), s);
 
 const cfg = readJson('data/site.json');
 const db = readJson('data/discount.json');
+// 제품 가격 기록(data/prices.json, 자동 수집). 직접 적은 products 가격보다 새 기록이 있으면 그 값을 씁니다.
+// 직접 적은 가격은 그래프에서 기록 시작 전 가격으로 씁니다.
+const PRICE_LOG = fs.existsSync(path.join(ROOT, 'data/prices.json')) ? (readJson('data/prices.json').entries || []).sort((a, b) => a.date.localeCompare(b.date)) : [];
+const PRICE_BASE = Object.fromEntries((db.products || []).map(p => [`${p.name} ${p.size}`, p.price]));
+{
+  const lastLog = PRICE_LOG.at(-1);
+  if (lastLog && lastLog.date > (db.priceDate || '')) {
+    for (const p of db.products || []) { const v = lastLog.prices[`${p.name} ${p.size}`]; if (v) { p.price = v.price; p.rrp = v.rrp; } }
+    db.priceDate = lastLog.date;
+  }
+}
 
 // 도메인이 있으면 그 도메인, 없으면 깃허브 페이지 주소
 const domain = String(cfg.domain || '').trim().replace(/^https?:\/\//, '').replace(/\/+$/, '');
@@ -345,6 +356,91 @@ function trend(series, endLabel = '오늘') {
   <text x="${W - R}" y="${H - 6}" class="g-tick" text-anchor="end">${endLabel}</text>
 </svg>`;
 }
+// ── 가격 그래프: 정상가(코드 넣기 전 판매가) vs 할인코드 적용가 ──
+// 매일 기록이 있는 날은 선으로, 기록 시작 전 대란은 그때 할인율로 계산한 점으로 그립니다.
+const CHART_KEY = '임팩트웨이 프로틴 1kg';
+const priceOn = (key, date) => {
+  let v = null;
+  for (const e of PRICE_LOG) { if (e.date > date) break; if (e.prices[key]) v = e.prices[key].price; }
+  return v ?? PRICE_BASE[key] ?? null;
+};
+const manwon = n => (n / 10000).toFixed(n % 10000 ? 1 : 0).replace(/\.0$/, '') + '만';
+function priceChart(key = CHART_KEY, days = 240) {
+  if (priceOn(key, last.date) == null) return '';
+  const end = last.date;
+  const firstHist = events.find(e => e.max != null)?.start || rows[0].date;
+  const start = [addDays(end, -days + 1), firstHist].sort().at(-1);
+  const span = Math.max(daysBetween(start, end), 1);
+  const W = 640, H = 270, L = 50, R = 136, T = 20, B = 34;
+  const x = d => L + (daysBetween(start, d) / span) * (W - L - R);
+  const reg = [], dots = [], live = [];
+  for (let d = start; d <= end; d = addDays(d, 1)) reg.push([d, priceOn(key, d)]);
+  for (const e of events) if (e.max != null && e.start >= start && e.start < rows[0].date) dots.push([e.start, priceOn(key, e.start) * (1 - e.max / 100), e.max]);
+  for (const d of day) if (d.date >= start) live.push([d.date, priceOn(key, d.date) * (1 - d.base / 100), d.base]);
+  const vals = [...reg.map(r => r[1]), ...dots.map(r => r[1]), ...live.map(r => r[1])];
+  const lo = Math.floor((Math.min(...vals) - 6000) / 10000) * 10000, hi = Math.ceil((Math.max(...vals) + 4000) / 10000) * 10000;
+  const y = v => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
+  const P = (a, b) => `${a.toFixed(1)} ${b.toFixed(1)}`;
+  const line = pts => pts.map((p, i) => `${i ? 'L' : 'M'}${P(x(p[0]), y(p[1]))}`).join(' ');
+  const step = (hi - lo) / 10000 > 6 ? 20000 : 10000;
+  const yt = []; for (let v = lo; v <= hi; v += step) yt.push(v);
+  const months = []; for (let d = start.slice(0, 8) + '01'; d <= end; d = shiftYm(d.slice(0, 7), 1) + '-01') if (d >= start) months.push(d);
+  // 붙어 있는 대란 점은 글자가 겹치니 앞 글자와 28px 이상 떨어진 것만 % 를 씁니다
+  let lastLabX = -99;
+  for (const d of dots) { d[3] = x(d[0]) - lastLabX >= 46; if (d[3]) lastLabX = x(d[0]); }
+  const todayReg = reg.at(-1)[1], todayLive = live.at(-1);
+  const labY = (v, o) => Math.min(Math.max(y(v) + o, T + 8), H - B - 2);
+  let yA = labY(todayReg, 4), yB = todayLive ? labY(todayLive[1], 4) : 0;
+  if (todayLive && yB - yA < 56) yB = Math.min(yA + 56, H - B - 26);
+  return `<figure class="pchart">
+<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(key)} 가격 흐름. 오늘 정상가 ${won(todayReg)}, 할인코드 적용가 ${todayLive ? won(todayLive[1]) : '-'}${dots.length ? `, 기록 시작 전 대란가 ${dots.map(d => `${kdate(d[0])} ${won(d[1])}`).join(', ')}` : ''}">
+  ${yt.map(v => `<line x1="${L}" y1="${y(v).toFixed(1)}" x2="${W - R}" y2="${y(v).toFixed(1)}" stroke="var(--line)"/><text x="${L - 6}" y="${(y(v) + 4).toFixed(1)}" class="g-tick" text-anchor="end">${manwon(v)}</text>`).join('')}
+  ${months.map(d => `<text x="${x(d).toFixed(1)}" y="${H - 8}" class="g-tick" text-anchor="middle">${+d.slice(5, 7)}월</text>`).join('')}
+  <path d="${line(reg)}" fill="none" stroke="var(--faint)" stroke-width="2.5" stroke-linejoin="round"/>
+  ${dots.map(d => `<circle cx="${x(d[0]).toFixed(1)}" cy="${y(d[1]).toFixed(1)}" r="5" fill="var(--accent)"/>${d[3] ? `<text x="${x(d[0]).toFixed(1)}" y="${(y(d[1]) + 24).toFixed(1)}" class="g-tick" text-anchor="middle" fill="var(--accent)">${d[2]}%</text>` : ''}`).join('')}
+  ${live.length ? `<path d="${line(live)}" fill="none" stroke="var(--brand)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>` : ''}
+  ${live.filter(p => p[2] >= TH).map(p => `<circle cx="${x(p[0]).toFixed(1)}" cy="${y(p[1]).toFixed(1)}" r="4" fill="var(--accent)"/>`).join('')}
+  ${todayLive ? `<circle cx="${x(todayLive[0]).toFixed(1)}" cy="${y(todayLive[1]).toFixed(1)}" r="5.5" fill="${todayLive[2] >= TH ? 'var(--accent)' : 'var(--brand)'}" stroke="#fff" stroke-width="2"/>` : ''}
+  <text x="${W - R + 8}" y="${yA.toFixed(1)}" class="g-lab" fill="var(--muted)">정상가</text>
+  <text x="${W - R + 8}" y="${(yA + 25).toFixed(1)}" class="g-val" fill="var(--muted)">${won(todayReg)}</text>
+  ${todayLive ? `<text x="${W - R + 8}" y="${yB.toFixed(1)}" class="g-lab" fill="var(--brand)">코드 ${todayLive[2]}%</text>
+  <text x="${W - R + 8}" y="${(yB + 25).toFixed(1)}" class="g-val" fill="var(--brand)">${won(todayLive[1])}</text>` : ''}
+</svg>
+<figcaption><span class="k k-reg"></span>정상가 (코드 넣기 전) <span class="k k-live"></span>할인코드 적용가 <span class="k k-dot"></span>대란가</figcaption>
+</figure>`;
+}
+const priceChartNote = key => {
+  const logFrom = PRICE_LOG.find(e => e.prices[key])?.date;
+  return `<p class="hint">${esc(key)} 기준입니다. ${logFrom ? `가격은 ${kdate(logFrom)}부터 매일 자동으로 기록하고, 그 전은 ${kdate('2026-10-28')} 확인한 가격으로 계산했습니다.` : '가격 기록을 막 시작해서 지금은 최근 확인한 가격으로 계산했습니다.'} 할인코드 적용가는 그날 히든코드 할인율 기준이고, 숨은 할인(트렌드 할인·쇼핑지원금)은 빼고 계산했습니다.</p>`;
+};
+
+// ── 지금 사도 될까: 오늘 코드 적용가가 역대 대란가와 정상가 사이 어디쯤인지 ──
+function priceGauge(key = CHART_KEY) {
+  const reg = priceOn(key, last.date);
+  if (reg == null || peak == null) return '';
+  const best = reg * (1 - peak / 100), th = reg * (1 - TH / 100), now = reg * (1 - last.base / 100);
+  const near = !isDaeran && last.base >= TH - 2;
+  const badge = isDaeran ? ['on', '대란가'] : near ? ['near', '대란 근처'] : ['off', '평소 가격'];
+  const W = 640, H = 122, L = 14, R = 14;
+  const lo = best - 3000, hi = reg;
+  const x = v => L + ((v - lo) / (hi - lo)) * (W - L - R);
+  return `<div class="pgauge">
+<p class="pgHead"><span class="badge ${badge[0]}">${badge[1]}</span> 오늘 ${esc(key)} <b>${won(now)}</b><small>코드 ${last.base}% 적용</small></p>
+<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="오늘 코드 적용가 ${won(now)}. 역대 최저 대란가 ${won(best)}, 대란 기준 가격 ${won(th)}, 코드 없이 ${won(reg)}">
+  <text x="${Math.max(x(th) - 14, L).toFixed(1)}" y="20" class="g-lab" fill="var(--accent)">대란 기준 ${TH}% · ${won(th)}</text>
+  <rect x="${x(lo)}" y="40" width="${(x(th) - x(lo)).toFixed(1)}" height="12" rx="6" fill="var(--track-hot)"/>
+  <rect x="${x(th).toFixed(1)}" y="40" width="${(x(hi) - x(th)).toFixed(1)}" height="12" rx="6" fill="var(--track)"/>
+  <line x1="${x(th).toFixed(1)}" y1="22" x2="${x(th).toFixed(1)}" y2="60" stroke="var(--accent)" stroke-width="2" stroke-dasharray="3 3"/>
+  <circle cx="${x(now).toFixed(1)}" cy="46" r="9" fill="${isDaeran ? 'var(--accent)' : 'var(--brand)'}" stroke="#fff" stroke-width="3"/>
+  <text x="${x(lo) + 2}" y="88" class="g-tick">역대 대란 ${peak}%</text><text x="${x(lo) + 2}" y="116" class="g-val" fill="var(--accent)">${won(best)}</text>
+  <text x="${W - R}" y="88" class="g-tick" text-anchor="end">코드 없이</text><text x="${W - R}" y="116" class="g-val" text-anchor="end">${won(reg)}</text>
+</svg>
+<p class="lede">${isDaeran
+    ? `지금이 대란가입니다. 역대 최저 대란가와 ${won(now - best)} 차이입니다.`
+    : `대란 기준 가격보다 <b>${won(now - th)}</b>, 역대 최저 대란가보다 ${won(now - best)} 비쌉니다.${sureNext ? ` 급하지 않으면 ${kdate(sureNext.date)} ${esc(sureNext.label)}까지 기다리는 편이 낫습니다.` : ' 급하지 않으면 다음 대란을 기다리는 편이 낫습니다.'}`}</p>
+</div>`;
+}
+
 const trendNote = `<p class="lede">진한 선이 할인코드 할인율, 파란 점선이 숨은 할인까지 합친 실제 할인율입니다. 빨간 구간이 대란이고 가로 점선이 대란 기준선 ${TH}%입니다.</p>`;
 
 // ── 스타일: 마이프로틴 브랜드색(딥틸·오렌지·민트) + 애플식 레이아웃 ──
@@ -424,6 +520,16 @@ p{margin:0 0 12px}
 svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .g-tick{font-size:11px;fill:var(--muted)}
 .g-note{font-size:11px;font-weight:700}
+.g-lab{font-size:11px;font-weight:700}.g-val{font-size:12px;font-weight:700;fill:var(--ink)}
+@media(max-width:600px){.pchart .g-tick,.pgauge .g-tick,.pchart .g-lab,.pgauge .g-lab{font-size:23px}.pchart .g-val,.pgauge .g-val{font-size:24px}}
+.pchart{margin:6px 0 8px}.pchart svg,.pgauge svg{width:100%;height:auto;display:block}
+.pchart figcaption{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center;font-size:12px;color:var(--muted);margin-top:6px}
+.pchart .k{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:-8px}
+.pchart .k-reg{background:var(--faint)}.pchart .k-live{background:var(--brand)}.pchart .k-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.pgauge{background:var(--surface);border-radius:var(--r);padding:18px 18px 6px;margin:4px 0 8px}
+.pgHead{margin:0 0 4px;font-size:15px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}.pgHead b{font-size:20px}.pgHead small{color:var(--muted);font-size:12px}
+.badge{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;align-self:center}
+.badge.on{background:var(--accent);color:#fff}.badge.near{background:var(--accent-soft);color:var(--accent)}.badge.off{background:var(--surface-2);color:var(--ink-2)}
 .cta{display:block;text-align:center;background:var(--brand);color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:15px 20px;border-radius:999px;margin:8px 0;transition:transform .15s,background .2s,opacity .2s}
 .cta.hot{background:var(--accent)}
 .cta.ghost{background:var(--surface);color:var(--ink)}
@@ -1034,6 +1140,12 @@ ${otherCodesBox}
   extraScript: calcWidget ? calcScript : '',
   restHtml: `
 ${evBanner}
+${priceGauge() ? `<section class="full">
+<h2>지금 사도 될까</h2>
+${priceGauge()}
+${priceChart()}
+${priceChartNote(CHART_KEY)}
+</section>` : ''}
 ${calcWidget ? `<section>
 <h2>내 장바구니는 얼마에 살까</h2>
 <p class="lede">금액만 넣으면 히든코드와 숨은 할인까지 적용한 결제금액이 나옵니다.</p>
@@ -1258,6 +1370,12 @@ ${heroCta}
 ${priceRows(PRODUCTS)}
 <p class="lede">할인코드만 적용한 금액입니다. 이달의 트렌드 7%나 쇼핑지원금까지 넣은 최종 금액은 <a href="./calc.html?amt=${ex.price}">계산기</a>에서 확인하십시오.</p>
 </section>
+${priceChart() ? `<section class="full">
+<h2>임팩트웨이 1kg 가격 흐름</h2>
+${priceGauge()}
+${priceChart()}
+${priceChartNote(CHART_KEY)}
+</section>` : ''}
 
 <section>
 <h2>자주 묻는 질문</h2>
@@ -2394,6 +2512,12 @@ ${day.length > 1 ? `<section class="full">
 <h2>할인율 추이</h2>
 ${trendNote}
 ${trend(day.slice(-90))}
+</section>` : ''}
+${priceChart() ? `<section class="full">
+<h2>임팩트웨이 가격 흐름: 정상가 vs 할인코드 적용가</h2>
+<p class="lede">회색 선이 코드 넣기 전 가격, 진한 선이 그날 할인코드를 넣은 가격입니다. 주황 점이 대란 날 가격이라, 대란을 기다리면 얼마나 아끼는지 한눈에 보입니다.</p>
+${priceChart()}
+${priceChartNote(CHART_KEY)}
 </section>` : ''}
 <section>
 <h2>월별 대란 정리</h2>

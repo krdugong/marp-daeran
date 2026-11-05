@@ -67,8 +67,56 @@ async function scrape() {
   return { rate, code };
 }
 
+// ── 제품 가격 기록 (data/prices.json) ──
+// discount.json 의 products 상품 페이지에서 판매가와 정상가(취소선 가격)를 읽어 날짜별로 쌓습니다.
+// 상품 페이지에는 용량 이름이 없어서, 정상가가 products 의 rrp 와 같은 옵션들을 그 용량으로 봅니다.
+// 맛마다 값이 다르면 가장 많은 맛이 쓰는 값을 씁니다. 실패해도 할인율 수집은 계속됩니다.
+const PRICE_FILE = path.join(ROOT, 'data/prices.json');
+async function collectPrices(products, date) {
+  const byUrl = {};
+  for (const p of products) if (p.url && p.rrp) (byUrl[p.url] ||= []).push(p);
+  const got = {};
+  for (const [url, list] of Object.entries(byUrl)) {
+    try {
+      const res = await fetch(url, { headers: { 'user-agent': 'Mozilla/5.0 (compatible; marp-daeran-bot/1.0)' } });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const html = await res.text();
+      const variants = [];
+      for (const m of html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g)) {
+        let j; try { j = JSON.parse(m[1]); } catch { continue; }
+        const g = [j, ...(j['@graph'] || [])].find(o => o && o.hasVariant);
+        if (!g) continue;
+        for (const v of g.hasVariant) {
+          const o = v.offers || {}, ps = o.priceSpecification || [];
+          const rrp = ps.find(s => /Strikethrough|ListPrice/.test(s.priceType || ''))?.price ?? o.price;
+          if (o.price > 0) variants.push({ price: Number(o.price), rrp: Number(rrp), stock: /InStock/.test(o.availability || '') });
+        }
+      }
+      for (const p of list) {
+        const vs = variants.filter(v => v.rrp === p.rrp && v.stock);
+        if (!vs.length) { console.log(`가격: ${p.name} ${p.size} 옵션을 못 찾음 (정상가가 ${p.rrp}원에서 바뀌었을 수 있음)`); continue; }
+        const count = {};
+        for (const v of vs) count[v.price] = (count[v.price] || 0) + 1;
+        const price = Number(Object.keys(count).sort((a, b) => count[b] - count[a] || b - a)[0]);
+        got[`${p.name} ${p.size}`] = { price, rrp: p.rrp, low: Math.min(...vs.map(v => v.price)) };
+      }
+    } catch (e) { console.log(`가격: ${url} 읽기 실패 (${e.message})`); }
+  }
+  const n = Object.keys(got).length;
+  console.log(`가격 ${n}개:`, Object.entries(got).map(([k, v]) => `${k} ${v.price}`).join(', '));
+  if (!n || dry) return;
+  const ph = fs.existsSync(PRICE_FILE) ? JSON.parse(fs.readFileSync(PRICE_FILE, 'utf8')) : { _readme: '', entries: [] };
+  ph._readme = '마이프로틴 제품 가격 기록입니다. 깃허브 자동 수집(collect.mjs)이 매일 채우니 직접 고칠 필요는 없습니다. price 는 상품 페이지 판매가(할인코드 넣기 전), rrp 는 취소선 정상가, low 는 그 용량에서 가장 싼 맛의 가격입니다. 키는 discount.json products 의 "이름 용량"입니다.';
+  const i = ph.entries.findIndex(e => e.date === date);
+  const row = { date, prices: { ...(i >= 0 ? ph.entries[i].prices : {}), ...got } };
+  if (i >= 0) ph.entries[i] = row; else ph.entries.push(row);
+  ph.entries.sort((a, b) => a.date.localeCompare(b.date));
+  fs.writeFileSync(PRICE_FILE, JSON.stringify(ph, null, 2) + '\n');
+}
+
 // 수동 입력은 히든코드 할인율 그대로, 자동 수집은 공식 배너 코드 + hiddenCodeBonus 로 기록합니다.
 const db = JSON.parse(fs.readFileSync(FILE, 'utf8'));
+if (!manual) await collectPrices(db.products || [], today(db.codes));
 const bonus = Number(db.hiddenCodeBonus || 0);
 const got = manual ? null : await scrape();
 const official = got ? got.rate : null;

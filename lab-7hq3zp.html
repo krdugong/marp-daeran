@@ -106,6 +106,16 @@ p{margin:0 0 12px}
 svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .g-tick{font-size:11px;fill:var(--muted)}
 .g-note{font-size:11px;font-weight:700}
+.g-lab{font-size:11px;font-weight:700}.g-val{font-size:12px;font-weight:700;fill:var(--ink)}
+@media(max-width:600px){.pchart .g-tick,.pgauge .g-tick,.pchart .g-lab,.pgauge .g-lab{font-size:23px}.pchart .g-val,.pgauge .g-val{font-size:24px}}
+.pchart{margin:6px 0 8px}.pchart svg,.pgauge svg{width:100%;height:auto;display:block}
+.pchart figcaption{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center;font-size:12px;color:var(--muted);margin-top:6px}
+.pchart .k{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:-8px}
+.pchart .k-reg{background:var(--faint)}.pchart .k-live{background:var(--brand)}.pchart .k-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.pgauge{background:var(--surface);border-radius:var(--r);padding:18px 18px 6px;margin:4px 0 8px}
+.pgHead{margin:0 0 4px;font-size:15px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}.pgHead b{font-size:20px}.pgHead small{color:var(--muted);font-size:12px}
+.badge{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;align-self:center}
+.badge.on{background:var(--accent);color:#fff}.badge.near{background:var(--accent-soft);color:var(--accent)}.badge.off{background:var(--surface-2);color:var(--ink-2)}
 .cta{display:block;text-align:center;background:var(--brand);color:#fff;text-decoration:none;font-weight:700;font-size:16px;padding:15px 20px;border-radius:999px;margin:8px 0;transition:transform .15s,background .2s,opacity .2s}
 .cta.hot{background:var(--accent)}
 .cta.ghost{background:var(--surface);color:var(--ink)}
