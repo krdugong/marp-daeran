@@ -511,6 +511,22 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-si
 .evBtns{display:grid;gap:8px}
 .evBtns .cta{margin:0}
 @media(min-width:640px){.evBtns{grid-template-columns:1fr 1fr}}
+.rvList{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.rv{background:var(--surface);border-radius:var(--r);padding:16px 18px}
+.rv.bg{box-shadow:inset 0 0 0 2px var(--mint)}
+.rvHead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.rvHead .fn{font-weight:800;font-size:17px;letter-spacing:-.02em}
+.rvHead .fp{font-size:12px;color:var(--muted)}
+.rvScore{margin-left:auto;font-size:13px;color:var(--accent);letter-spacing:.05em}
+.rvScore b{color:var(--ink);margin-left:2px}
+.rvSum{margin:8px 0 4px;font-size:15px;line-height:1.6}
+.rvMeta{margin:0 0 8px;font-size:13px;color:var(--muted)}
+.rvPc{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.rvPc span{font-size:12px;padding:4px 9px;border-radius:999px;background:var(--mint-soft)}
+.rvPc .con{background:var(--accent-soft)}
+.rvQ{margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.6}
+.rvQ small{color:var(--muted);margin-left:4px}
+@media(min-width:880px){.rvList{grid-template-columns:1fr 1fr}}
 .brandBand .eyebrow{font-size:12px;font-weight:700;letter-spacing:.22em;color:var(--brand);margin:56px 0 10px}
 .brandBand h2.bandTitle{font-size:31px;line-height:1.25;letter-spacing:-.045em;margin:0 0 14px}
 .tiles{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:10px}
@@ -1242,9 +1258,22 @@ if (TASTE) {
   <ul class="fl">${t.flavors.map(f => `<li><span class="fn">${esc(f.name)}</span>${f.product ? `<span class="fp">${esc(f.product)}</span>` : ''}${f.note ? `<span class="fnote">${esc(f.note)}</span>` : ''}</li>`).join('')}</ul>
 </div>`).join('');
   const catalogHtml = (TASTE.catalog || []).map(c => `<li><b>${esc(c.product)}</b> <span>${c.flavors.map(f => tieredNames.has(f) ? `<mark>${esc(f)}</mark>` : esc(f)).join(' · ')}</span></li>`).join('');
+  // 어사이드로 모은 커뮤니티 평가(reviews)·검색어(keywords)·질문(faq). 없으면 그대로 비워 둡니다
+  const reviews = (TASTE.reviews || []).filter(r => r.flavor && !r.discontinued).sort((a, b) => (b.score ?? 0) - (a.score ?? 0) || (b.mentions ?? 0) - (a.mentions ?? 0));
+  const stars = n => n == null ? '' : '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+  const reviewHtml = reviews.map(r => `<li class="rv${r.beginner ? ' bg' : ''}">
+  <div class="rvHead"><span class="fn">${esc(r.flavor)}</span>${r.product ? `<span class="fp">${esc(r.product)}</span>` : ''}${r.score != null ? `<span class="rvScore" title="${r.score}점">${stars(r.score)} <b>${r.score}</b></span>` : ''}</div>
+  ${r.summary ? `<p class="rvSum">${esc(r.summary)}</p>` : ''}
+  <p class="rvMeta">${r.mentions ? `후기 ${r.mentions}건 · ` : ''}${r.good != null ? `긍정 ${r.good}${r.bad != null ? ` / 부정 ${r.bad}` : ''} · ` : ''}${r.mix && r.mix !== '모름' ? `${esc(r.mix)}에 타기` : ''}${r.beginner ? ' · 입문 추천' : ''}</p>
+  ${(r.pros || []).length || (r.cons || []).length ? `<div class="rvPc">${(r.pros || []).map(x => `<span class="pro">+ ${esc(x)}</span>`).join('')}${(r.cons || []).map(x => `<span class="con">− ${esc(x)}</span>`).join('')}</div>` : ''}
+  ${(r.quotes || []).length ? `<details><summary>후기 ${r.quotes.length}개 보기</summary><ul class="rvQ">${r.quotes.map(q => `<li>${esc(q.text)}${q.source ? ` <small>${esc(q.source)}${q.date ? ` · ${dot(q.date)}` : ''}</small>` : ''}</li>`).join('')}</ul></details>` : ''}
+</li>`).join('');
+  const beginnerPick = reviews.filter(r => r.beginner && r.score != null).slice(0, 3);
+  const EXTRA_FAQ = (TASTE.faq || []).filter(f => f.q && f.a).map(f => [f.q, f.a]);
+  const KW_EXTRA = (TASTE.keywords || []).map(k => k.kw).filter(Boolean);
   const TASTE_FAQ = [
     ['마이프로틴 맛 추천, 처음이면 뭘 사야 하나요?',
-     top && top.flavors.length ? `${top.tier} 등급 중에서 고르면 실패가 없습니다. ${top.flavors.slice(0, 3).map(f => f.name).join(', ')} 순으로 많이 권합니다. 처음이면 250g 맛보기로 두세 가지를 사 보는 편이 안전합니다.` : '처음이면 250g 맛보기로 두세 가지를 사 보는 편이 안전합니다. 등급표는 영상에서 공개한 순서대로 채우고 있습니다.'],
+     top && top.flavors.length ? `${top.tier} 등급 중에서 고르면 실패가 없습니다. ${top.flavors.slice(0, 3).map(f => f.name).join(', ')} 순으로 많이 권합니다. 처음이면 250g 맛보기로 두세 가지를 사 보는 편이 안전합니다.` : beginnerPick.length ? `커뮤니티 후기에서 입문용으로 가장 많이 권하는 맛은 ${beginnerPick.map(r => `${r.flavor}(${r.score}점)`).join(', ')}입니다. 처음이면 250g 맛보기로 두세 가지를 사 보는 편이 안전합니다.` : '처음이면 250g 맛보기로 두세 가지를 사 보는 편이 안전합니다. 등급표는 영상에서 공개한 순서대로 채우고 있습니다.'],
     ['임팩트웨이와 아이솔레이트는 같은 맛이면 맛이 같나요?',
      '다릅니다. 아이솔레이트는 유당과 지방이 적어 더 묽고 담백하게 느껴집니다. 같은 초콜릿 맛이라도 임팩트웨이가 더 진합니다. 텁텁한 게 싫으면 클리어웨이를 보십시오. 주스처럼 마십니다.'],
     ['임팩트웨이와 아이솔레이트(WPI)는 뭐가 다른가요?',
@@ -1253,12 +1282,13 @@ if (TASTE) {
      '마프대란알리미 채널에서 6천만 원 넘게 사 먹으며 정리한 등급표입니다. 개인 취향이 들어가 있으니 참고용입니다. 영상 댓글의 다른 분들 경험도 같이 보십시오.'],
     ['맛 때문에 실패하지 않으려면?',
      '대용량(2.5kg 이상)은 먹어본 맛만 사십시오. 새 맛은 250g으로 먼저 확인하고, 대란 때 대용량으로 넘어가면 됩니다. 이 사이트 대란 가격 비교 페이지에서 250g과 2.5kg 가격 차이를 볼 수 있습니다.'],
+    ...EXTRA_FAQ,
   ];
   page({
     file: 'taste.html', priority: 0.8, current: 'taste.html', lastmod: TASTE.updated || last.date,
     title: `마이프로틴 맛 추천 ${Y(curYm)} | 6천만원 먹고 만든 맛 순위·등급표 (임팩트웨이·클리어웨이)`,
     desc: `마이프로틴 맛 추천과 맛 순위를 등급표로 정리했습니다. 실패 없는 S등급부터 피해야 할 맛까지, 임팩트웨이·아이솔레이트·클리어웨이 맛 종류와 후기. 6천만 원 넘게 사 먹은 마프대란알리미 기준.`,
-    keywords: ['마이프로틴 맛 추천', '마이프로틴 맛 순위', '마이프로틴 맛 종류', '마이프로틴 맛 후기', '마이프로틴 맛 비교', '마이프로틴 추천 맛', '임팩트웨이 맛 추천', '클리어웨이 맛 추천', '마이프로틴 wpi 맛 추천', '마이프로틴 맛 추천 디시'],
+    keywords: [...new Set(['마이프로틴 맛 추천', '마이프로틴 맛 순위', '마이프로틴 맛 종류', '마이프로틴 맛 후기', '마이프로틴 맛 비교', '마이프로틴 추천 맛', '임팩트웨이 맛 추천', '클리어웨이 맛 추천', '마이프로틴 wpi 맛 추천', '마이프로틴 맛 추천 디시', ...KW_EXTRA])].slice(0, 30),
     ld: [crumbs([['홈', 'index.html'], ['마이프로틴 맛 추천', 'taste.html']]), faqLd(TASTE_FAQ),
       ...(TASTE.video ? [{ '@type': 'VideoObject', name: '마이프로틴 맛 추천 : 6천만원 쓰고 만들어본 마프 맛 등급표', thumbnailUrl: `https://i.ytimg.com/vi/${TASTE.video}/hqdefault.jpg`, uploadDate: '2026-03-22', embedUrl: `https://www.youtube.com/embed/${TASTE.video}`, contentUrl: ytWatch(TASTE.video) }] : [])],
     heroHtml: `
@@ -1289,6 +1319,12 @@ ${(TASTE.comments || []).length ? `<section class="full">
 <h2>영상 댓글에 올라온 한 줄 평</h2>
 <p class="lede">맛 등급표 영상에 시청자들이 남긴 후기입니다.</p>
 <ul class="fl cmts">${TASTE.comments.map(c => `<li class="${c.good ? 'good' : 'bad'}"><span class="fn">${esc(c.flavor)}</span><span class="fnote">${esc(c.text)}</span></li>`).join('')}</ul>
+</section>` : ''}
+
+${reviews.length ? `<section class="full">
+<h2>맛별 커뮤니티 평가</h2>
+<p class="lede">디시·네이버 카페·블로그·유튜브 댓글·마이프로틴 리뷰에 올라온 후기를 맛별로 모아 점수로 정리했습니다.${TASTE.checked ? ` ${dot(TASTE.checked)} 기준.` : ''} 점수는 긍정 후기 비율이고, 입문 추천은 "처음 사도 실패 없다"는 글이 많은 맛입니다.</p>
+<ul class="rvList">${reviewHtml}</ul>
 </section>` : ''}
 
 <section class="full">
