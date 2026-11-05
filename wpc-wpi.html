@@ -207,6 +207,36 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-si
 .rvPc .con{background:var(--accent-soft)}
 .rvQ{margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.6}
 .rvQ small{color:var(--muted);margin-left:4px}
+.dv{margin:0;padding:16px 18px;background:var(--surface);border-radius:var(--r)}
+.dv figcaption{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:13px;color:var(--ink-2);margin-bottom:12px}
+.dv .lg{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.dv .lg i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.dv .lg .g{background:#2E9E6B}.dv .lg .b{background:var(--accent)}
+.dv .lgNote{color:var(--muted);margin-left:auto}
+.dvRow{display:grid;grid-template-columns:minmax(96px,32%) 1fr 1fr;align-items:center;gap:0 2px;min-height:26px;padding:3px 0;border-top:1px solid var(--line)}
+.dvRow.bg .dvName{color:#1F7A50}
+.dvName{font-size:13px;font-weight:600;line-height:1.3;padding-right:8px;display:flex;align-items:center;gap:6px}
+.dvName b{color:var(--muted);font-weight:700;font-size:12px;min-width:16px}
+.dvName small{display:block;font-size:11px;color:var(--muted);font-weight:500}
+.dvL,.dvR{position:relative;display:flex;align-items:center;height:16px;font-size:12px;color:var(--ink-2)}
+.dvL{justify-content:flex-end;border-right:1px solid var(--faint)}
+.dvL i{height:14px;border-radius:4px 0 0 4px;background:var(--accent);display:block}
+.dvL em{font-style:normal;margin-right:4px;order:-1}
+.dvR i{height:14px;border-radius:0 4px 4px 0;background:#2E9E6B;display:block}
+.dvR em{font-style:normal;margin-left:4px}
+.mixMap{display:grid;gap:10px}
+.mixCol{background:var(--surface);border-radius:var(--r);padding:14px 16px}
+.mixCol h3{margin:0 0 8px;font-size:14px;color:var(--brand)}
+.mixCol ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.mixCol li{font-size:13px;font-weight:600;padding:6px 11px;border-radius:999px;background:var(--bg);border:1px solid var(--line)}
+.mixCol li.bg{border-color:#2E9E6B;color:#1F7A50}
+.mixCol li small{font-weight:500;color:var(--muted);margin-left:4px}
+.rankTbl td small{color:var(--muted);font-size:12px}
+.rankTbl tr.bg td{background:var(--mint-soft)}
+.rankTbl tr.low td{background:var(--accent-soft)}
+@media(min-width:720px){.mixMap{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:479px){.dvRow{grid-template-columns:minmax(84px,38%) 1fr 1fr}.dvName{font-size:12px}}
+@media(max-width:719px){.rankTbl th:last-child,.rankTbl td:last-child{display:none}.rankTbl td,.rankTbl th{padding:10px 8px;font-size:13px}}
 .rvRare{margin-top:14px}
 .rvRare summary{cursor:pointer;font-weight:700;font-size:14px;padding:10px 0}
 .rvNote{font-size:13px;color:var(--muted);margin-top:14px}
@@ -255,7 +285,7 @@ footer nav a{text-decoration:none;color:var(--muted);font-weight:600}
 .cmts li{display:flex;gap:10px;align-items:baseline;padding:12px 14px;border-radius:var(--r-sm);background:var(--surface);font-size:15px;line-height:1.6}
 .cmts li:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--faint);flex:none;position:relative;top:-1px}
 .cmts li.good:before{background:var(--mint)}.cmts li.bad:before{background:var(--accent)}
-.cmts .fn{font-weight:700;white-space:nowrap}.cmts .fnote{color:var(--muted);font-size:13px}
+.cmts .fn{font-weight:700;white-space:nowrap}.cmts .fnote{color:var(--muted);font-size:13px}.cmts .fp{font-size:12px;color:var(--muted);white-space:nowrap}
 .catalog{list-style:none;padding:0;margin:0;font-size:14px}
 .catalog li{padding:12px 0;border-bottom:1px solid var(--line);line-height:1.8}
 .catalog li:last-child{border-bottom:0}
@@ -429,7 +459,7 @@ body.hasSticky{padding-bottom:0}
 <header class="top"><div class="headerInner">
   <a class="brand" href="./" aria-label="프로티파이 PROTEIFY 홈"><span class="bMark"><b>프로티파이</b><i aria-hidden="true"></i><span class="bEn">PROTEIFY</span></span><small>마이프로틴 대란 알림부터 아이허브 비교까지</small></a>
   <nav class="secNav" aria-label="사이트 구분"><a href="./" aria-current="true">마이프로틴</a><a href="./iherb.html">아이허브</a></nav>
-</div><div class="subBar"><div class="headerInner subInner"><nav class="topNav" aria-label="마이프로틴 메뉴"><a href="./">오늘 할인율</a><a href="./code.html">할인코드</a><a href="./calc.html">계산기</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./daeran-1111.html">11일 대란</a><a href="./taste.html">맛 추천</a><a href="./wpc-wpi.html" aria-current="page"><span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span></a><a href="./alternatives.html">가성비 비교</a></nav></div></div></header>
+</div><div class="subBar"><div class="headerInner subInner"><nav class="topNav" aria-label="마이프로틴 메뉴"><a href="./">오늘 할인율</a><a href="./code.html">할인코드</a><a href="./calc.html">계산기</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./daeran-1111.html">11일 대란</a><a href="./taste.html">맛 추천</a><a href="./taste-rank.html">맛 순위</a><a href="./wpc-wpi.html" aria-current="page"><span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span></a><a href="./alternatives.html">가성비 비교</a></nav></div></div></header>
 <div class="utilBar"><div class="utilInner">
   <span>8만원 이상 무료배송</span>
   <span>150달러 이상 관세 발생</span>

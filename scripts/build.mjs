@@ -526,6 +526,36 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-si
 .rvPc .con{background:var(--accent-soft)}
 .rvQ{margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.6}
 .rvQ small{color:var(--muted);margin-left:4px}
+.dv{margin:0;padding:16px 18px;background:var(--surface);border-radius:var(--r)}
+.dv figcaption{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;font-size:13px;color:var(--ink-2);margin-bottom:12px}
+.dv .lg{display:inline-flex;align-items:center;gap:6px;font-weight:600}
+.dv .lg i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.dv .lg .g{background:#2E9E6B}.dv .lg .b{background:var(--accent)}
+.dv .lgNote{color:var(--muted);margin-left:auto}
+.dvRow{display:grid;grid-template-columns:minmax(96px,32%) 1fr 1fr;align-items:center;gap:0 2px;min-height:26px;padding:3px 0;border-top:1px solid var(--line)}
+.dvRow.bg .dvName{color:#1F7A50}
+.dvName{font-size:13px;font-weight:600;line-height:1.3;padding-right:8px;display:flex;align-items:center;gap:6px}
+.dvName b{color:var(--muted);font-weight:700;font-size:12px;min-width:16px}
+.dvName small{display:block;font-size:11px;color:var(--muted);font-weight:500}
+.dvL,.dvR{position:relative;display:flex;align-items:center;height:16px;font-size:12px;color:var(--ink-2)}
+.dvL{justify-content:flex-end;border-right:1px solid var(--faint)}
+.dvL i{height:14px;border-radius:4px 0 0 4px;background:var(--accent);display:block}
+.dvL em{font-style:normal;margin-right:4px;order:-1}
+.dvR i{height:14px;border-radius:0 4px 4px 0;background:#2E9E6B;display:block}
+.dvR em{font-style:normal;margin-left:4px}
+.mixMap{display:grid;gap:10px}
+.mixCol{background:var(--surface);border-radius:var(--r);padding:14px 16px}
+.mixCol h3{margin:0 0 8px;font-size:14px;color:var(--brand)}
+.mixCol ul{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.mixCol li{font-size:13px;font-weight:600;padding:6px 11px;border-radius:999px;background:var(--bg);border:1px solid var(--line)}
+.mixCol li.bg{border-color:#2E9E6B;color:#1F7A50}
+.mixCol li small{font-weight:500;color:var(--muted);margin-left:4px}
+.rankTbl td small{color:var(--muted);font-size:12px}
+.rankTbl tr.bg td{background:var(--mint-soft)}
+.rankTbl tr.low td{background:var(--accent-soft)}
+@media(min-width:720px){.mixMap{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:479px){.dvRow{grid-template-columns:minmax(84px,38%) 1fr 1fr}.dvName{font-size:12px}}
+@media(max-width:719px){.rankTbl th:last-child,.rankTbl td:last-child{display:none}.rankTbl td,.rankTbl th{padding:10px 8px;font-size:13px}}
 .rvRare{margin-top:14px}
 .rvRare summary{cursor:pointer;font-weight:700;font-size:14px;padding:10px 0}
 .rvNote{font-size:13px;color:var(--muted);margin-top:14px}
@@ -574,7 +604,7 @@ footer nav a{text-decoration:none;color:var(--muted);font-weight:600}
 .cmts li{display:flex;gap:10px;align-items:baseline;padding:12px 14px;border-radius:var(--r-sm);background:var(--surface);font-size:15px;line-height:1.6}
 .cmts li:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--faint);flex:none;position:relative;top:-1px}
 .cmts li.good:before{background:var(--mint)}.cmts li.bad:before{background:var(--accent)}
-.cmts .fn{font-weight:700;white-space:nowrap}.cmts .fnote{color:var(--muted);font-size:13px}
+.cmts .fn{font-weight:700;white-space:nowrap}.cmts .fnote{color:var(--muted);font-size:13px}.cmts .fp{font-size:12px;color:var(--muted);white-space:nowrap}
 .catalog{list-style:none;padding:0;margin:0;font-size:14px}
 .catalog li{padding:12px 0;border-bottom:1px solid var(--line);line-height:1.8}
 .catalog li:last-child{border-bottom:0}
@@ -853,7 +883,7 @@ function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.d
   const secNav = IH ? `<nav class="secNav" aria-label="사이트 구분"><a href="./"${sec === 'mp' ? ' aria-current="true"' : ''}>마이프로틴</a><a href="./iherb.html"${sec === 'ih' ? ' aria-current="true"' : ''}>아이허브</a></nav>` : '';
   const subLinks = sec === 'ih'
     ? navLink('iherb.html', '할인코드') + (hasGuides ? navLink('iherb-best.html', '추천템') + navLink('iherb-probiotics.html', '유산균') + navLink('iherb-omega3.html', '오메가3') + navLink('iherb-magnesium.html', '마그네슘') + navLink('iherb-blackfriday.html', '블프') : '')
-    : navLink('', '오늘 할인율') + navLink('code.html', '할인코드') + (calcWidget ? navLink('calc.html', '계산기') : '') + navLink(monthFile(curYm), `${M(curYm)}월 대란`) + (EV_HOME ? navLink(EV_HOME.page, `${+EV_HOME.date.slice(8, 10)}일 대란`) : '') + (fs.existsSync(path.join(ROOT, 'data/taste.json')) ? navLink('taste.html', '맛 추천') : '') + (PRODUCTS.length ? navLink('wpc-wpi.html', '<span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span>') : '') + (altMp ? navLink('alternatives.html', '가성비 비교') : '');
+    : navLink('', '오늘 할인율') + navLink('code.html', '할인코드') + (calcWidget ? navLink('calc.html', '계산기') : '') + navLink(monthFile(curYm), `${M(curYm)}월 대란`) + (EV_HOME ? navLink(EV_HOME.page, `${+EV_HOME.date.slice(8, 10)}일 대란`) : '') + (fs.existsSync(path.join(ROOT, 'data/taste.json')) ? navLink('taste.html', '맛 추천') + (readJson('data/taste.json').reviews?.length ? navLink('taste-rank.html', '맛 순위') : '') : '') + (PRODUCTS.length ? navLink('wpc-wpi.html', '<span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span>') : '') + (altMp ? navLink('alternatives.html', '가성비 비교') : '');
   const html = `<!doctype html>
 <html lang="ko">
 <head>
@@ -1275,6 +1305,35 @@ if (TASTE) {
   ${(r.quotes || []).length ? `<details><summary>후기 ${r.quotes.length}개 보기</summary><ul class="rvQ">${r.quotes.map(q => `<li>${esc(q.text)}${q.source ? ` <small>${esc(q.source)}${q.date ? ` · ${dot(q.date)}` : ''}</small>` : ''}</li>`).join('')}</ul></details>` : ''}
 </li>`).join('');
   const beginnerPick = reviews.filter(r => r.beginner).slice(0, 3);
+  // ── 그래프: 추천 vs 비추(양방향 막대), 물/우유 다이어그램. 맛 추천 페이지와 맛 순위 페이지에 같이 씁니다 ──
+  const ranked = allReviews.filter(r => (r.mentions ?? 0) >= 3);
+  const net = r => (r.good ?? 0) - (r.bad ?? 0);
+  const dvMax = Math.max(1, ...ranked.map(r => Math.max(r.good ?? 0, r.bad ?? 0)));
+  const dvChart = ranked.length ? `<figure class="dv" role="img" aria-label="맛별 추천·비추 의견 수">
+<figcaption><span class="lg"><i class="g"></i>추천</span><span class="lg"><i class="b"></i>비추</span><span class="lgNote">의견 3건 이상인 맛 · 추천이 비추보다 많은 순</span></figcaption>
+${ranked.map((r, i) => `<div class="dvRow${r.beginner ? ' bg' : ''}" title="${esc(r.flavor)} · 추천 ${r.good ?? 0} / 비추 ${r.bad ?? 0} / 의견 ${r.mentions}">
+  <span class="dvName"><b>${i + 1}</b>${esc(r.flavor)}${r.product && r.product !== '임팩트웨이' ? `<small>${esc(r.product)}</small>` : ''}</span>
+  <span class="dvL">${r.bad ? `<i style="width:${Math.max(6, (r.bad / dvMax) * 100)}%"></i><em>${r.bad}</em>` : ''}</span>
+  <span class="dvR">${r.good ? `<i style="width:${Math.max(6, (r.good / dvMax) * 100)}%"></i><em>${r.good}</em>` : ''}</span>
+</div>`).join('')}
+</figure>` : '';
+  const mixGroups = [['물', '물에 타도 괜찮은 맛'], ['둘 다', '물·우유 다 되는 맛'], ['우유', '우유에 타야 사는 맛']].map(([k, label]) => [label, ranked.filter(r => r.mix === k && net(r) > 0)]).filter(([, l]) => l.length);
+  const mixDiagram = mixGroups.length ? `<div class="mixMap">${mixGroups.map(([label, list]) => `<div class="mixCol"><h3>${label}</h3><ul>${list.map(r => `<li${r.beginner ? ' class="bg"' : ''}>${esc(r.flavor)}${r.product && r.product !== '임팩트웨이' ? `<small>${esc(r.product)}</small>` : ''}</li>`).join('')}</ul></div>`).join('')}</div>` : '';
+  const rankTop = ranked.filter(r => net(r) > 0), rankBottom = [...ranked].filter(r => net(r) <= 0).reverse();
+  const rankTable = ranked.length ? `<table class="rankTbl">
+<thead><tr><th>순위</th><th>맛</th><th class="n">추천</th><th class="n">비추</th><th class="n">의견</th><th class="n">점수</th><th>타기</th><th>한 줄</th></tr></thead>
+<tbody>${ranked.map((r, i) => `<tr${net(r) <= 0 ? ' class="low"' : r.beginner ? ' class="bg"' : ''}><td class="n"><b>${i + 1}</b></td><td class="nw">${esc(r.flavor)}${r.product && r.product !== '임팩트웨이' ? `<small> ${esc(r.product)}</small>` : ''}</td><td class="n">${r.good ?? 0}</td><td class="n">${r.bad ?? 0}</td><td class="n">${r.mentions}</td><td class="n">${r.score ?? '-'}</td><td class="nw">${r.mix && r.mix !== '모름' ? esc(r.mix) : '-'}</td><td>${esc(r.summary || '')}</td></tr>`).join('')}</tbody>
+</table>` : '';
+  const chartSection = ranked.length ? `<section class="full">
+<h2>한눈에 보는 추천 vs 비추</h2>
+<p class="lede">글과 댓글에서 그 맛을 추천한 사람과 비추한 사람 수입니다. 오른쪽(추천)이 길수록 안전한 맛이고, 왼쪽(비추)이 긴 맛은 호불호가 갈리거나 피하는 편이 낫습니다.</p>
+${dvChart}
+</section>
+${mixDiagram ? `<section class="full">
+<h2>물에 탈까, 우유에 탈까</h2>
+<p class="lede">추천이 더 많은 맛을 후기에서 주로 어디에 탔는지로 나눴습니다. 물에 타는 사람은 왼쪽에서 고르면 됩니다.</p>
+${mixDiagram}
+</section>` : ''}` : '';
   const EXTRA_FAQ = (TASTE.faq || []).filter(f => f.q && f.a).map(f => [f.q, f.a]);
   const KW_EXTRA = (TASTE.keywords || []).map(k => k.kw).filter(Boolean);
   const TASTE_FAQ = [
@@ -1292,9 +1351,9 @@ if (TASTE) {
   ];
   page({
     file: 'taste.html', priority: 0.8, current: 'taste.html', lastmod: TASTE.updated || last.date,
-    title: `마이프로틴 맛 추천 ${Y(curYm)} | 6천만원 먹고 만든 맛 순위·등급표 (임팩트웨이·클리어웨이)`,
-    desc: `마이프로틴 맛 추천과 맛 순위를 등급표로 정리했습니다. 실패 없는 S등급부터 피해야 할 맛까지, 임팩트웨이·아이솔레이트·클리어웨이 맛 종류와 후기. 6천만 원 넘게 사 먹은 마프대란알리미 기준.`,
-    keywords: [...new Set(['마이프로틴 맛 추천', '마이프로틴 맛 순위', '마이프로틴 맛 종류', '마이프로틴 맛 후기', '마이프로틴 맛 비교', '마이프로틴 추천 맛', '임팩트웨이 맛 추천', '클리어웨이 맛 추천', '마이프로틴 wpi 맛 추천', '마이프로틴 맛 추천 디시', ...KW_EXTRA])].slice(0, 30),
+    title: `마이프로틴 맛 추천 ${Y(curYm)} | 6천만원 먹고 만든 등급표 + 후기 ${rvTotals.posts || ''}건 (임팩트웨이·클리어웨이)`,
+    desc: `마이프로틴 맛 추천. 실패 없는 S등급부터 피해야 할 맛까지 등급표로 정리하고, 블로그·카페·디시·유튜브 댓글 후기를 맛별로 모았습니다. 임팩트웨이·아이솔레이트·클리어웨이 맛 종류와 물·우유 궁합. 6천만 원 넘게 사 먹은 마프대란알리미 기준.`,
+    keywords: [...new Set(['마이프로틴 맛 추천', '마이프로틴 맛 종류', '마이프로틴 맛 후기', '마이프로틴 맛 비교', '마이프로틴 추천 맛', '임팩트웨이 맛 추천', '클리어웨이 맛 추천', '마이프로틴 wpi 맛 추천', '마이프로틴 맛 추천 디시', ...KW_EXTRA])].slice(0, 30),
     ld: [crumbs([['홈', 'index.html'], ['마이프로틴 맛 추천', 'taste.html']]), faqLd(TASTE_FAQ),
       ...(TASTE.video ? [{ '@type': 'VideoObject', name: '마이프로틴 맛 추천 : 6천만원 쓰고 만들어본 마프 맛 등급표', thumbnailUrl: `https://i.ytimg.com/vi/${TASTE.video}/hqdefault.jpg`, uploadDate: '2026-03-22', embedUrl: `https://www.youtube.com/embed/${TASTE.video}`, contentUrl: ytWatch(TASTE.video) }] : [])],
     heroHtml: `
@@ -1327,11 +1386,14 @@ ${(TASTE.comments || []).length ? `<section class="full">
 <ul class="fl cmts">${TASTE.comments.map(c => `<li class="${c.good ? 'good' : 'bad'}"><span class="fn">${esc(c.flavor)}</span><span class="fnote">${esc(c.text)}</span></li>`).join('')}</ul>
 </section>` : ''}
 
+${chartSection}
+${ranked.length ? `<p class="lede" style="margin-top:-6px"><a href="./taste-rank.html">전체 순위표와 피해야 할 맛은 맛 순위 페이지에서 →</a></p>` : ''}
+
 ${reviews.length ? `<section class="full">
 <h2>맛별 커뮤니티 평가</h2>
 <p class="lede">네이버 블로그·카페, 디시 보충제갤, 유튜브에 올라온 글과 댓글에서 맛 이름이 나온 의견 ${rvTotals.posts}건(댓글 ${rvTotals.comments}건)을 맛별로 모았습니다.${TASTE.checked ? ` ${dot(TASTE.checked)} 기준.` : ''} 추천이 비추보다 많은 순이고, 점수는 추천 비율(5점 만점)입니다. 입문 추천은 "처음 사도 실패 없다"는 의견이 많은 맛입니다. 딸기맛·스베크처럼 다르게 부르는 이름은 하나로 합쳤습니다.</p>
 <ul class="rvList">${reviewHtml}</ul>
-${rareReviews.length ? `<details class="rvRare"><summary>한 번만 언급된 맛 ${rareReviews.length}개</summary><ul class="fl">${rareReviews.map(r => `<li class="${(r.bad ?? 0) > (r.good ?? 0) ? 'bad' : (r.good ?? 0) ? 'good' : ''}"><span class="fn">${esc(r.flavor)}</span>${r.product ? `<span class="fp">${esc(r.product)}</span>` : ''}${r.summary ? `<span class="fnote">${esc(r.summary)}</span>` : ''}</li>`).join('')}</ul></details>` : ''}
+${rareReviews.length ? `<details class="rvRare"><summary>한 번만 언급된 맛 ${rareReviews.length}개</summary><ul class="fl cmts">${rareReviews.map(r => `<li class="${(r.bad ?? 0) > (r.good ?? 0) ? 'bad' : (r.good ?? 0) ? 'good' : ''}"><span class="fn">${esc(r.flavor)}</span>${r.product ? `<span class="fp">${esc(r.product)}</span>` : ''}${r.summary ? `<span class="fnote">${esc(r.summary)}</span>` : ''}</li>`).join('')}</ul></details>` : ''}
 ${TASTE.researchNote ? `<p class="rvNote">${esc(TASTE.researchNote)}</p>` : ''}
 </section>` : ''}
 
@@ -1351,6 +1413,72 @@ ${faqHtml(TASTE_FAQ)}
 <a class="cta ghost" href="./wpc-wpi.html">임팩트웨이 vs 아이솔레이트 비교표</a>
 <a class="cta ghost" href="./price.html">250g과 2.5kg 대란 가격 차이 보기</a>
 <a class="cta ghost" href="./calc.html">장바구니 최종 결제금액 계산</a>
+<a class="cta ghost" href="./code.html">오늘 쓸 수 있는 할인코드</a>
+</section>
+
+${kakaoBox}
+`,
+  });
+  // 맛 추천 페이지 FAQ 중 순위 성격인 것만 순위 페이지에 넣습니다
+  const RANK_FAQ = [
+    ['마이프로틴 맛 순위는 어떻게 매겼나요?',
+     `${dot(TASTE.checked || TASTE.updated || last.date)} 기준 네이버 블로그·카페, 디시 보충제갤, 유튜브의 글과 댓글에서 맛 이름이 나온 의견 ${rvTotals.posts}건(댓글 ${rvTotals.comments}건)을 모아, 추천 수에서 비추 수를 뺀 값이 큰 순으로 세웠습니다. 의견이 3건 미만인 맛은 순위에서 뺐습니다. 협찬·제휴 글은 뺐고, 마프대란알리미 채널의 글도 넣지 않았습니다.`],
+    ...(rankTop.length ? [['마이프로틴 맛 순위 1위는 뭐예요?',
+     `${rankTop[0].flavor}입니다. 의견 ${rankTop[0].mentions}건 중 추천 ${rankTop[0].good}, 비추 ${rankTop[0].bad ?? 0}으로 가장 안전한 맛이고${rankTop[0].beginner ? ' 입문용으로 가장 많이 권합니다' : ''}. ${rankTop.slice(1, 4).map(r => r.flavor).join(', ')}이 그 뒤를 잇습니다.`]] : []),
+    ...(rankBottom.length ? [['피해야 할 마이프로틴 맛은 뭐예요?',
+     `${rankBottom.slice(0, 4).map(r => `${r.flavor}(추천 ${r.good ?? 0}·비추 ${r.bad ?? 0})`).join(', ')}은 비추가 추천보다 많거나 같았습니다. 대용량으로 처음 사기에는 위험한 맛입니다.`]] : []),
+    ...EXTRA_FAQ.filter(([q]) => /순위|1위|비추|피해야|무난|제일/.test(q) && !/순위 1위는/.test(q)),
+    ['순위와 마프대란알리미 등급표가 다르면요?',
+     '순위는 다른 사람들의 글과 댓글을 센 것이고, 등급표는 마프대란알리미가 직접 먹어 본 기준입니다. 둘 다 높은 맛은 실패 확률이 가장 낮고, 둘이 갈리는 맛은 250g으로 먼저 먹어 보십시오.'],
+  ];
+  page({
+    file: 'taste-rank.html', priority: 0.8, current: 'taste-rank.html', lastmod: TASTE.checked || TASTE.updated || last.date, changefreq: 'weekly',
+    title: `마이프로틴 맛 순위 ${Y(curYm)} | 후기 ${rvTotals.posts}건으로 매긴 ${ranked.length}개 맛 랭킹 (1위 ${rankTop[0]?.flavor || ''})`,
+    desc: `마이프로틴 맛 순위 ${Y(curYm)}. 블로그·카페·디시·유튜브 댓글 ${rvTotals.posts}건을 세어 추천이 비추보다 많은 순으로 ${ranked.length}개 맛을 줄 세웠습니다. 1위 ${rankTop.slice(0, 3).map(r => r.flavor).join(', ')}. 피해야 할 맛과 물·우유 궁합까지.`,
+    keywords: ['마이프로틴 맛 순위', `마이프로틴 맛 순위 ${Y(curYm)}`, '마이프로틴 맛 랭킹', '마이프로틴 인기 맛', '마이프로틴 맛 순위 디시', '임팩트웨이 맛 순위', '마이프로틴 맛 비교', '마이프로틴 맛 1위', '마이프로틴 비추 맛', '마이프로틴 맛 추천 순위', ...KW_EXTRA.filter(k => /순위|비교|랭킹|1위|인기/.test(k))],
+    ld: [crumbs([['홈', 'index.html'], ['마이프로틴 맛 추천', 'taste.html'], ['마이프로틴 맛 순위', 'taste-rank.html']]), faqLd(RANK_FAQ),
+      { '@type': 'ItemList', name: `마이프로틴 맛 순위 ${Y(curYm)}`, itemListOrder: 'https://schema.org/ItemListOrderDescending', numberOfItems: ranked.length, itemListElement: ranked.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: `${r.flavor}${r.product ? ` (${r.product})` : ''}` })) }],
+    heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<h1>마이프로틴 맛 순위<br>후기 ${rvTotals.posts}건으로 세운 ${ranked.length}개</h1>
+<p class="updated">${dot(TASTE.checked || TASTE.updated || last.date)} 기준 · 글 51개와 댓글 227개</p>
+<p class="lede answer">${rankTop.length ? `1위는 <b>${esc(rankTop[0].flavor)}</b>(추천 ${rankTop[0].good}, 비추 ${rankTop[0].bad ?? 0})입니다. ${rankTop.slice(1, 4).map(r => esc(r.flavor)).join(', ')}이 뒤를 잇고, ` : ''}${rankBottom.length ? `${rankBottom.slice(0, 3).map(r => esc(r.flavor)).join(', ')}은 비추가 더 많았습니다. ` : ''}네이버 블로그·카페, 디시, 유튜브 댓글에서 맛 이름이 나온 의견을 세어 추천이 비추보다 많은 순으로 줄 세웠습니다.</p>
+${heroCta}
+<a class="cta ghost" href="./taste.html">맛별 후기 전부 보기 (맛 추천 페이지)</a>
+</div>
+<div class="heroSide">
+<dl class="stats">
+  ${rankTop.slice(0, 3).map((r, i) => `<div><dt>${i + 1}위</dt><dd>${esc(r.flavor)}<small>추천 ${r.good} · 비추 ${r.bad ?? 0}${r.beginner ? ' · 입문 추천' : ''}</small></dd></div>`).join('')}
+  ${rankBottom.length ? `<div><dt>최다 비추</dt><dd>${esc([...ranked].sort((a, b) => (b.bad ?? 0) - (a.bad ?? 0))[0].flavor)}<small>비추 ${[...ranked].sort((a, b) => (b.bad ?? 0) - (a.bad ?? 0))[0].bad}건</small></dd></div>` : ''}
+</dl>
+</div>
+</div>`,
+    restHtml: `
+${chartSection}
+
+<section class="full">
+<h2>마이프로틴 맛 순위표</h2>
+<p class="lede">점수는 추천 비율(5점 만점)입니다. 의견이 적은 맛은 점수가 널뛰니 의견 수를 같이 보십시오. 연한 배경은 입문 추천, 붉은 줄은 비추가 추천보다 많은 맛입니다.</p>
+${rankTable}
+</section>
+
+${rareReviews.length || allReviews.length > ranked.length ? `<section class="full">
+<h2>순위에 못 든 맛</h2>
+<p class="lede">의견이 3건 미만이라 순위에 넣지 않은 맛입니다. 언급이 적다고 나쁜 맛은 아닙니다.</p>
+<ul class="fl cmts">${allReviews.filter(r => (r.mentions ?? 0) < 3).map(r => `<li class="${(r.bad ?? 0) > (r.good ?? 0) ? 'bad' : (r.good ?? 0) ? 'good' : ''}"><span class="fn">${esc(r.flavor)}</span>${r.product ? `<span class="fp">${esc(r.product)}</span>` : ''}<span class="fnote">추천 ${r.good ?? 0} · 비추 ${r.bad ?? 0}${r.summary ? ` · ${esc(r.summary)}` : ''}</span></li>`).join('')}</ul>
+</section>` : ''}
+
+<section class="full">
+<h2>자주 묻는 질문</h2>
+${faqHtml(RANK_FAQ)}
+</section>
+
+<section>
+<h2>관련 페이지</h2>
+<a class="cta ghost" href="./taste.html">마이프로틴 맛 추천 · 맛별 후기와 등급표</a>
+<a class="cta ghost" href="./wpc-wpi.html">임팩트웨이 vs 아이솔레이트 뭘 살까</a>
+<a class="cta ghost" href="./price.html">250g과 2.5kg 대란 가격 차이 보기</a>
 <a class="cta ghost" href="./code.html">오늘 쓸 수 있는 할인코드</a>
 </section>
 
@@ -2468,6 +2596,7 @@ ${ytUrl ? `<a class="cta" href="${esc(SITE.youtubeChannel)}" target="_blank" rel
   ${calcWidget ? '<li><a href="./calc.html"><span class="m">할인 계산기</span><span class="s">최종 결제금액</span></a></li>' : ''}
   ${PRODUCTS.length ? '<li><a href="./price.html"><span class="m">대란 가격 비교</span><span class="s">평소 vs 대란</span></a></li>' : ''}
   ${TASTE ? '<li><a href="./taste.html"><span class="m">맛 추천</span><span class="s">맛 등급표</span></a></li>' : ''}
+  ${TASTE && (TASTE.reviews || []).length ? '<li><a href="./taste-rank.html"><span class="m">맛 순위</span><span class="s">커뮤니티 후기로 매긴 순위</span></a></li>' : ''}
   ${PRODUCTS.length ? '<li><a href="./wpc-wpi.html"><span class="m">임팩트웨이 vs 아이솔레이트</span><span class="s">WPC·WPI 비교표</span></a></li>' : ''}
   ${altMp ? '<li><a href="./alternatives.html"><span class="m">마이프로틴 대안</span><span class="s">다른 브랜드 가성비 비교</span></a></li>' : ''}
   ${db.referral ? '<li><a href="./referral.html"><span class="m">추천인 코드</span><span class="s">가입 혜택</span></a></li>' : ''}
