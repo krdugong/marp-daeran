@@ -526,6 +526,9 @@ footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-si
 .rvPc .con{background:var(--accent-soft)}
 .rvQ{margin:8px 0 0;padding-left:18px;font-size:14px;line-height:1.6}
 .rvQ small{color:var(--muted);margin-left:4px}
+.rvRare{margin-top:14px}
+.rvRare summary{cursor:pointer;font-weight:700;font-size:14px;padding:10px 0}
+.rvNote{font-size:13px;color:var(--muted);margin-top:14px}
 @media(min-width:880px){.rvList{grid-template-columns:1fr 1fr}}
 .brandBand .eyebrow{font-size:12px;font-weight:700;letter-spacing:.22em;color:var(--brand);margin:56px 0 10px}
 .brandBand h2.bandTitle{font-size:31px;line-height:1.25;letter-spacing:-.045em;margin:0 0 14px}
@@ -1259,16 +1262,19 @@ if (TASTE) {
 </div>`).join('');
   const catalogHtml = (TASTE.catalog || []).map(c => `<li><b>${esc(c.product)}</b> <span>${c.flavors.map(f => tieredNames.has(f) ? `<mark>${esc(f)}</mark>` : esc(f)).join(' · ')}</span></li>`).join('');
   // 어사이드로 모은 커뮤니티 평가(reviews)·검색어(keywords)·질문(faq). 없으면 그대로 비워 둡니다
-  const reviews = (TASTE.reviews || []).filter(r => r.flavor && !r.discontinued).sort((a, b) => (b.score ?? 0) - (a.score ?? 0) || (b.mentions ?? 0) - (a.mentions ?? 0));
+  const allReviews = (TASTE.reviews || []).filter(r => r.flavor && !r.discontinued).sort((a, b) => ((b.good ?? 0) - (b.bad ?? 0)) - ((a.good ?? 0) - (a.bad ?? 0)) || (b.mentions ?? 0) - (a.mentions ?? 0) || (b.score ?? 0) - (a.score ?? 0));
+  const reviews = allReviews.filter(r => (r.mentions ?? 0) >= 2);
+  const rareReviews = allReviews.filter(r => (r.mentions ?? 0) < 2);
+  const rvTotals = { posts: allReviews.reduce((n, r) => n + (r.mentions ?? 0), 0), comments: allReviews.reduce((n, r) => n + (r.fromComments ?? 0), 0) };
   const stars = n => n == null ? '' : '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
   const reviewHtml = reviews.map(r => `<li class="rv${r.beginner ? ' bg' : ''}">
   <div class="rvHead"><span class="fn">${esc(r.flavor)}</span>${r.product ? `<span class="fp">${esc(r.product)}</span>` : ''}${r.score != null ? `<span class="rvScore" title="${r.score}점">${stars(r.score)} <b>${r.score}</b></span>` : ''}</div>
   ${r.summary ? `<p class="rvSum">${esc(r.summary)}</p>` : ''}
-  <p class="rvMeta">${r.mentions ? `후기 ${r.mentions}건 · ` : ''}${r.good != null ? `긍정 ${r.good}${r.bad != null ? ` / 부정 ${r.bad}` : ''} · ` : ''}${r.mix && r.mix !== '모름' ? `${esc(r.mix)}에 타기` : ''}${r.beginner ? ' · 입문 추천' : ''}</p>
+  <p class="rvMeta">${r.mentions ? `의견 ${r.mentions}건${r.fromComments ? `(댓글 ${r.fromComments})` : ''} · ` : ''}${r.good != null ? `긍정 ${r.good}${r.bad != null ? ` / 부정 ${r.bad}` : ''} · ` : ''}${r.mix && r.mix !== '모름' ? `${esc(r.mix)}에 타기` : ''}${r.beginner ? ' · 입문 추천' : ''}</p>
   ${(r.pros || []).length || (r.cons || []).length ? `<div class="rvPc">${(r.pros || []).map(x => `<span class="pro">+ ${esc(x)}</span>`).join('')}${(r.cons || []).map(x => `<span class="con">− ${esc(x)}</span>`).join('')}</div>` : ''}
   ${(r.quotes || []).length ? `<details><summary>후기 ${r.quotes.length}개 보기</summary><ul class="rvQ">${r.quotes.map(q => `<li>${esc(q.text)}${q.source ? ` <small>${esc(q.source)}${q.date ? ` · ${dot(q.date)}` : ''}</small>` : ''}</li>`).join('')}</ul></details>` : ''}
 </li>`).join('');
-  const beginnerPick = reviews.filter(r => r.beginner && r.score != null).slice(0, 3);
+  const beginnerPick = reviews.filter(r => r.beginner).slice(0, 3);
   const EXTRA_FAQ = (TASTE.faq || []).filter(f => f.q && f.a).map(f => [f.q, f.a]);
   const KW_EXTRA = (TASTE.keywords || []).map(k => k.kw).filter(Boolean);
   const TASTE_FAQ = [
@@ -1323,8 +1329,10 @@ ${(TASTE.comments || []).length ? `<section class="full">
 
 ${reviews.length ? `<section class="full">
 <h2>맛별 커뮤니티 평가</h2>
-<p class="lede">디시·네이버 카페·블로그·유튜브 댓글·마이프로틴 리뷰에 올라온 후기를 맛별로 모아 점수로 정리했습니다.${TASTE.checked ? ` ${dot(TASTE.checked)} 기준.` : ''} 점수는 긍정 후기 비율이고, 입문 추천은 "처음 사도 실패 없다"는 글이 많은 맛입니다.</p>
+<p class="lede">네이버 블로그·카페, 디시 보충제갤, 유튜브에 올라온 글과 댓글에서 맛 이름이 나온 의견 ${rvTotals.posts}건(댓글 ${rvTotals.comments}건)을 맛별로 모았습니다.${TASTE.checked ? ` ${dot(TASTE.checked)} 기준.` : ''} 추천이 비추보다 많은 순이고, 점수는 추천 비율(5점 만점)입니다. 입문 추천은 "처음 사도 실패 없다"는 의견이 많은 맛입니다. 딸기맛·스베크처럼 다르게 부르는 이름은 하나로 합쳤습니다.</p>
 <ul class="rvList">${reviewHtml}</ul>
+${rareReviews.length ? `<details class="rvRare"><summary>한 번만 언급된 맛 ${rareReviews.length}개</summary><ul class="fl">${rareReviews.map(r => `<li class="${(r.bad ?? 0) > (r.good ?? 0) ? 'bad' : (r.good ?? 0) ? 'good' : ''}"><span class="fn">${esc(r.flavor)}</span>${r.product ? `<span class="fp">${esc(r.product)}</span>` : ''}${r.summary ? `<span class="fnote">${esc(r.summary)}</span>` : ''}</li>`).join('')}</ul></details>` : ''}
+${TASTE.researchNote ? `<p class="rvNote">${esc(TASTE.researchNote)}</p>` : ''}
 </section>` : ''}
 
 <section class="full">
