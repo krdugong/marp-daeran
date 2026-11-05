@@ -1,5 +1,5 @@
 {
-  "_readme": "entries = 매일 할인코드 할인율 기록(base = 히든코드 기준, official = 공식 배너 코드). 자동 수집은 official 에 hiddenCodeBonus 를 더해 base 로 씁니다. deals = 장바구니 조건으로 더 붙는 숨은 할인. codes = 할인코드 목록(primary 가 메인 버튼, until 이 지나면 자동으로 숨김, secret:true 면 화면에는 코드 대신 히든코드로만 보이고 복사할 때만 실제 코드가 들어감). history = 매일 기록을 시작하기 전의 대란과 유튜브 영상(daeran:false 는 대란은 아니지만 그 달 페이지에 보여줄 영상). products = 가격 비교 표에 쓰는 대표 제품의 표시가(코드가 적용되는 가격)와 정가. priceDate 는 표시가를 확인한 날. 대란 판정은 base 가 threshold 이상인 날입니다. entries 의 officialCode 는 자동 수집이 배너에서 읽은 공식 코드 이름입니다. codes 의 rate 는 페이지를 만들 때 그날 기록에 맞춰 같이 움직입니다(fixed:true 인 코드는 그대로). announced: 마이프로틴이 미리 예고한 행사 [{date,label,note}]. 날짜가 지나지 않았으면 홈 요약 카드에 \"예고된 행사\"로, 그 달 페이지의 체크할 날짜에 \"(마이프로틴 예고)\"로 나옵니다. 끝난 행사는 지워도 됩니다. sure:true 를 넣으면 대란이 확정된 날로 보고, 평균 주기 계산 대신 그 날을 다음 대란으로 보여 줍니다(\"확정\" 표시). time(\"18:00\")을 넣으면 그 시각을 할인코드 공개 시각으로 보여 줍니다. codes 에서 primary 가 여러 개면 목록 맨 앞의 것이 메인이 됩니다(기간 한정 코드를 맨 앞에 primary 로 넣고 until 을 걸면, 끝난 뒤 히든코드가 다시 메인). codes 의 untilTime(\"23:59\" 등)을 넣으면 until 날짜 저녁 7시가 아니라 그 시각까지 보여 주고, 그 시각까지는 자동 수집도 날짜를 넘기지 않습니다.",
+  "_readme": "entries = 매일 할인코드 할인율 기록(base = 히든코드 기준, official = 공식 배너 코드). 자동 수집은 official 에 hiddenCodeBonus 를 더해 base 로 씁니다. deals = 장바구니 조건으로 더 붙는 숨은 할인. codes = 할인코드 목록(primary 가 메인 버튼, until 이 지나면 자동으로 숨김, secret:true 면 화면에는 코드 대신 히든코드로만 보이고 복사할 때만 실제 코드가 들어감). history = 매일 기록을 시작하기 전의 대란과 유튜브 영상(daeran:false 는 대란은 아니지만 그 달 페이지에 보여줄 영상). products = 가격 비교 표에 쓰는 대표 제품의 표시가(코드가 적용되는 가격)와 정가. priceDate 는 표시가를 확인한 날. 대란 판정은 base 가 threshold 이상인 날입니다. entries 의 officialCode 는 자동 수집이 배너에서 읽은 공식 코드 이름입니다. codes 의 rate 는 페이지를 만들 때 그날 기록에 맞춰 같이 움직입니다(fixed:true 인 코드는 그대로). announced: 마이프로틴이 미리 예고한 행사 [{date,label,note}]. 날짜가 지나지 않았으면 홈 요약 카드에 \"예고된 행사\"로, 그 달 페이지의 체크할 날짜에 \"(마이프로틴 예고)\"로 나옵니다. 끝난 행사는 지워도 됩니다. sure:true 를 넣으면 대란이 확정된 날로 보고, 평균 주기 계산 대신 그 날을 다음 대란으로 보여 줍니다(\"확정\" 표시). time(\"18:00\")을 넣으면 그 시각을 할인코드 공개 시각으로 보여 줍니다. codes 에서 primary 가 여러 개면 목록 맨 앞의 것이 메인이 됩니다(기간 한정 코드를 맨 앞에 primary 로 넣고 until 을 걸면, 끝난 뒤 히든코드가 다시 메인). codes 의 untilTime(\"23:59\" 등)을 넣으면 until 날짜 저녁 7시가 아니라 그 시각까지 보여 주고, 그 시각까지는 자동 수집도 날짜를 넘기지 않습니다. announced 에 page(\"daeran-1111.html\")를 넣으면 그 행사만의 안내 페이지를 만들고 홈 띠·메뉴·일정표에서 연결합니다. alert 는 프로티파이가 알림을 보내는 때를 글로 적고(\"11월 10일 저녁\"), signup 은 마이프로틴 사전 신청(쇼핑지원금) 정보 {url(제휴 링크), label, applyFrom, applyUntil, applyUntilTime, useFrom, useFromTime, useTo, useToTime, how} 입니다. applyUntil 이 지나면 신청 버튼이 자동으로 빠지고, useTo 가 지나면 페이지가 기록 모드로 바뀝니다.",
   "threshold": 39,
   "hiddenCodeBonus": 1,
   "shop": {
@@ -151,7 +151,21 @@
       "label": "슈퍼세일",
       "note": "11월 11일 슈퍼세일 대란이 확정됐습니다. 할인코드는 11월 11일 오후 6시에 공개되고, 프로티파이가 가장 빠르게 공개할 예정입니다.",
       "sure": true,
-      "time": "18:00"
+      "time": "18:00",
+      "page": "daeran-1111.html",
+      "alert": "11월 10일 저녁",
+      "signup": {
+        "url": "https://www.awin1.com/cread.php?awinmid=10751&awinaffid=325265&clickref=email-protiefy&ued=https%3A%2F%2Fwww.myprotein.co.kr%2Fc%2Fflash-sale-signup",
+        "label": "쇼핑지원금",
+        "applyFrom": "2026-10-23",
+        "applyUntil": "2026-11-09",
+        "applyUntilTime": "23:59",
+        "useFrom": "2026-11-10",
+        "useFromTime": "18:00",
+        "useTo": "2026-11-12",
+        "useToTime": "00:59",
+        "how": "이메일을 등록하면 되고, 로그인한 마이프로틴 계정에 연동된 이메일만 인정됩니다. 1인 1회이며 사용 기간에 그 계정으로 구매하면 자동 적용됩니다."
+      }
     }
   ],
   "history": [
