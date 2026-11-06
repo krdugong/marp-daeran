@@ -462,6 +462,13 @@
       "officialCode": "SUPER35",
       "source": "manual",
       "note": "장바구니 실측: HORSEKING 37%, SUPER35 35% (2026-11-06 14:00)"
+    },
+    {
+      "date": "2026-11-07",
+      "base": 37,
+      "official": 35,
+      "officialCode": "SUPER35",
+      "source": "auto"
     }
   ]
 }
