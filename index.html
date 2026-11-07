@@ -111,27 +111,16 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .pchart figcaption{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center;font-size:12px;color:var(--muted);margin-top:6px}
 .pchart .k{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:-8px}
 .pchart .k-reg{background:var(--faint)}.pchart .k-live{background:var(--brand)}.pchart .k-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
-.lowG{background:var(--surface);border-radius:var(--r);padding:18px 18px 16px;margin:4px 0 12px}
-.lgTop{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}.lgLab{font-size:13px;color:var(--muted)}
-.lgBadge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
-.lgBadge.hot{background:var(--accent);color:#fff}.lgBadge.good{background:var(--mint-soft);color:#0B5A3A}.lgBadge.mid{background:#FAEEDA;color:#633806}.lgBadge.low{background:var(--surface-2);color:var(--ink-2)}
-.lgNow{margin:4px 0 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}.lgNow b{font-size:34px;line-height:1.2;letter-spacing:-.02em}.lgNow span{font-size:14px;color:var(--muted)}
-.lgBar{position:relative;height:76px;margin:12px 6px 2px}
-.lgBar i,.lgBar em{position:absolute;display:block;font-style:normal}
-.lgBar .tr{left:0;right:0;top:30px;height:10px;border-radius:5px;background:var(--track)}
-.lgBar .calm{top:30px;height:10px;background:#C9C7C0}
-.lgBar .hot{right:0;top:30px;height:10px;border-radius:0 5px 5px 0;background:var(--track-hot)}
-.lgBar .th{top:18px;height:34px;border-left:2px dashed var(--accent);margin-left:-1px}
-.lgBar .thL{top:0;font-size:12px;color:var(--accent);transform:translateX(-50%);white-space:nowrap}
-.lgBar .dr{top:27px;width:16px;height:16px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);transform:translateX(-50%)}
-.lgBar .now{top:22px;width:26px;height:26px;border-radius:50%;background:var(--brand);border:3px solid var(--bg);transform:translateX(-50%);box-shadow:0 0 0 1px var(--line)}.lgBar .now.on{background:var(--accent)}
-.lgBar .nowL{top:56px;font-size:12px;font-weight:700;transform:translateX(-50%);white-space:nowrap}
-.lgBar .ax{top:56px;font-size:12px;color:var(--faint)}.lgBar .ax.r{right:0}
-.lgKey{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 12px;font-size:12px;color:var(--muted)}
-.lgKey .k{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}.lgKey .k.calm{background:#C9C7C0}.lgKey .k.hot{background:var(--track-hot)}.lgKey .k.dr{border-radius:50%;border:2px solid var(--accent)}
-.lgPrice{margin:0;border-top:1px solid var(--line);padding-top:10px;font-variant-numeric:tabular-nums}
-.lgPrice div{display:flex;justify-content:space-between;gap:12px;padding:3px 0}.lgPrice dt{color:var(--muted);font-size:14px}.lgPrice dd{margin:0;font-weight:700;text-align:right}.lgPrice dd.hot{color:var(--accent)}.lgPrice small{font-weight:400}
-.lgNote{margin:8px 0 0;font-size:13px;color:var(--muted)}
+.lowG{background:var(--surface);border-radius:var(--r);padding:22px 20px 16px;margin:4px 0 12px;text-align:center}
+.lgTag{display:inline-block;margin:0;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--ink-2)}
+.lowG.buy .lgTag{background:var(--accent);color:#fff}
+.lgHead{margin:8px 0 2px;font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1.2;color:var(--brand)}.lowG.buy .lgHead{color:var(--accent)}
+.lgSub{margin:0 0 16px;font-size:15px;color:var(--ink-2)}.lgSub b{color:var(--accent)}
+.lgVs{display:flex;align-items:stretch;gap:8px;font-variant-numeric:tabular-nums}.lgVs>i{align-self:center;font-style:normal;color:var(--faint);font-size:18px}
+.lgC{flex:1;background:var(--bg);border-radius:var(--r-sm);padding:12px 8px;display:flex;flex-direction:column;gap:2px}
+.lgC span{font-size:13px;color:var(--muted)}.lgC span b{color:var(--ink)}.lgC strong{font-size:19px;letter-spacing:-.01em}
+.lgC.hot{background:var(--accent-soft)}.lgC.hot span b,.lgC.hot strong{color:var(--accent)}
+.lgNote{margin:10px 0 0;font-size:12px;color:var(--faint)}
 .pgauge{background:var(--surface);border-radius:var(--r);padding:18px 18px 6px;margin:4px 0 8px}
 .pgHead{margin:0 0 4px;font-size:15px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}.pgHead b{font-size:20px}.pgHead small{color:var(--muted);font-size:12px}
 .badge{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;align-self:center}
@@ -528,41 +517,13 @@ body.hasSticky{padding-bottom:0}
 <section class="full">
 <h2>지금 사도 될까</h2>
 <div class="lowG">
-<p class="lgTop"><span class="lgLab">오늘 마이프로틴 할인율</span><span class="lgBadge mid">평소 수준 · 기다리면 더 쌈</span></p>
-<p class="lgNow"><b>37%</b><span>최근 12일 평소 평균 36.4%보다 0.6%p 높음</span></p>
-<div class="lgBar" role="img" aria-label="오늘 할인코드 37퍼센트. 최근 12일 평소 범위 36~37퍼센트, 평균 36.4퍼센트. 대란 기준 39퍼센트, 지난 대란 평균 41퍼센트">
-  <i class="tr"></i>
-  <i class="calm" style="left:25%;width:12.5%"></i>
-  <i class="hot" style="left:62.5%"></i>
-  <i class="th" style="left:62.5%"></i><em class="thL" style="left:62.5%">대란 기준 39</em>
-  <i class="dr" style="left:87.5%"></i>
-  <i class="now" style="left:37.5%"></i><em class="nowL" style="left:37.5%">오늘 37</em>
-  <em class="ax" style="left:0">34%</em><em class="ax r">42%</em>
+<p class="lgTag">평소 수준</p>
+<p class="lgHead">기다리세요</p>
+<p class="lgSub">11일 대란(3일 뒤)에 사면 임팩트웨이 2.5kg가 <b>9,036원</b> 더 쌉니다.</p>
+<div class="lgVs"><div class="lgC"><span>오늘 <b>37%</b></span><strong>142,317원</strong></div><i>→</i><div class="lgC hot"><span>11일 대란 <b>41%</b></span><strong>133,281원</strong></div></div>
+<p class="lgNote">11월 8일 확인 · 대란 할인율은 지난 대란 평균</p>
 </div>
-<p class="lgKey"><span><i class="k calm"></i>평소 범위 36~37%</span><span><i class="k hot"></i>대란 구간</span><span><i class="k dr"></i>지난 대란 평균 41%</span></p>
-<dl class="lgPrice">
-  <div><dt>임팩트웨이 2.5kg 오늘</dt><dd>142,317원</dd></div>
-  <div><dt>11일 대란 41%면</dt><dd class="hot">133,281원 <small>(9,036원 더 쌈)</small></dd></div>
-</dl>
-<p class="lgNote">급하지 않으면 3일 뒤 11월 11일 대란까지 기다리는 게 낫습니다. 11월 8일 자동 확인 기준이고, 대란 할인율은 지난 대란들의 평균입니다.</p>
-</div>
-<figure class="pchart">
-<svg viewBox="0 0 640 270" role="img" aria-label="임팩트웨이 프로틴 1kg 가격 흐름. 오늘 정상가 110,900원, 할인코드 적용가 69,867원, 기록 시작 전 대란가 3월 18일 64,322원, 4월 4일 64,322원, 4월 23일 64,322원, 5월 3일 63,213원, 5월 27일 67,649원, 6월 5일 66,540원, 7월 6일 66,540원, 8월 14일 65,431원">
-  <line x1="50" y1="236.0" x2="504" y2="236.0" stroke="var(--line)"/><text x="44" y="240.0" class="g-tick" text-anchor="end">5만</text><line x1="50" y1="174.3" x2="504" y2="174.3" stroke="var(--line)"/><text x="44" y="178.3" class="g-tick" text-anchor="end">7만</text><line x1="50" y1="112.6" x2="504" y2="112.6" stroke="var(--line)"/><text x="44" y="116.6" class="g-tick" text-anchor="end">9만</text><line x1="50" y1="50.9" x2="504" y2="50.9" stroke="var(--line)"/><text x="44" y="54.9" class="g-tick" text-anchor="end">11만</text>
-  <text x="84.2" y="262" class="g-tick" text-anchor="middle">4월</text><text x="141.2" y="262" class="g-tick" text-anchor="middle">5월</text><text x="200.1" y="262" class="g-tick" text-anchor="middle">6월</text><text x="257.1" y="262" class="g-tick" text-anchor="middle">7월</text><text x="315.9" y="262" class="g-tick" text-anchor="middle">8월</text><text x="374.8" y="262" class="g-tick" text-anchor="middle">9월</text><text x="431.8" y="262" class="g-tick" text-anchor="middle">10월</text><text x="490.7" y="262" class="g-tick" text-anchor="middle">11월</text>
-  <path d="M50.0 48.1 L51.9 48.1 L53.8 48.1 L55.7 48.1 L57.6 48.1 L59.5 48.1 L61.4 48.1 L63.3 48.1 L65.2 48.1 L67.1 48.1 L69.0 48.1 L70.9 48.1 L72.8 48.1 L74.7 48.1 L76.6 48.1 L78.5 48.1 L80.4 48.1 L82.3 48.1 L84.2 48.1 L86.1 48.1 L88.0 48.1 L89.9 48.1 L91.8 48.1 L93.7 48.1 L95.6 48.1 L97.5 48.1 L99.4 48.1 L101.3 48.1 L103.2 48.1 L105.1 48.1 L107.0 48.1 L108.9 48.1 L110.8 48.1 L112.7 48.1 L114.6 48.1 L116.5 48.1 L118.4 48.1 L120.3 48.1 L122.2 48.1 L124.1 48.1 L126.0 48.1 L127.9 48.1 L129.8 48.1 L131.7 48.1 L133.6 48.1 L135.5 48.1 L137.4 48.1 L139.3 48.1 L141.2 48.1 L143.1 48.1 L145.0 48.1 L146.9 48.1 L148.8 48.1 L150.7 48.1 L152.6 48.1 L154.5 48.1 L156.4 48.1 L158.3 48.1 L160.2 48.1 L162.1 48.1 L164.0 48.1 L165.9 48.1 L167.8 48.1 L169.7 48.1 L171.6 48.1 L173.5 48.1 L175.4 48.1 L177.3 48.1 L179.2 48.1 L181.1 48.1 L183.0 48.1 L184.9 48.1 L186.8 48.1 L188.7 48.1 L190.6 48.1 L192.5 48.1 L194.4 48.1 L196.3 48.1 L198.2 48.1 L200.1 48.1 L202.0 48.1 L203.9 48.1 L205.8 48.1 L207.7 48.1 L209.6 48.1 L211.5 48.1 L213.4 48.1 L215.3 48.1 L217.2 48.1 L219.1 48.1 L221.0 48.1 L222.9 48.1 L224.8 48.1 L226.7 48.1 L228.6 48.1 L230.5 48.1 L232.4 48.1 L234.3 48.1 L236.2 48.1 L238.1 48.1 L240.0 48.1 L241.9 48.1 L243.8 48.1 L245.7 48.1 L247.6 48.1 L249.5 48.1 L251.4 48.1 L253.3 48.1 L255.2 48.1 L257.1 48.1 L259.0 48.1 L260.9 48.1 L262.8 48.1 L264.7 48.1 L266.6 48.1 L268.5 48.1 L270.4 48.1 L272.3 48.1 L274.2 48.1 L276.1 48.1 L277.9 48.1 L279.8 48.1 L281.7 48.1 L283.6 48.1 L285.5 48.1 L287.4 48.1 L289.3 48.1 L291.2 48.1 L293.1 48.1 L295.0 48.1 L296.9 48.1 L298.8 48.1 L300.7 48.1 L302.6 48.1 L304.5 48.1 L306.4 48.1 L308.3 48.1 L310.2 48.1 L312.1 48.1 L314.0 48.1 L315.9 48.1 L317.8 48.1 L319.7 48.1 L321.6 48.1 L323.5 48.1 L325.4 48.1 L327.3 48.1 L329.2 48.1 L331.1 48.1 L333.0 48.1 L334.9 48.1 L336.8 48.1 L338.7 48.1 L340.6 48.1 L342.5 48.1 L344.4 48.1 L346.3 48.1 L348.2 48.1 L350.1 48.1 L352.0 48.1 L353.9 48.1 L355.8 48.1 L357.7 48.1 L359.6 48.1 L361.5 48.1 L363.4 48.1 L365.3 48.1 L367.2 48.1 L369.1 48.1 L371.0 48.1 L372.9 48.1 L374.8 48.1 L376.7 48.1 L378.6 48.1 L380.5 48.1 L382.4 48.1 L384.3 48.1 L386.2 48.1 L388.1 48.1 L390.0 48.1 L391.9 48.1 L393.8 48.1 L395.7 48.1 L397.6 48.1 L399.5 48.1 L401.4 48.1 L403.3 48.1 L405.2 48.1 L407.1 48.1 L409.0 48.1 L410.9 48.1 L412.8 48.1 L414.7 48.1 L416.6 48.1 L418.5 48.1 L420.4 48.1 L422.3 48.1 L424.2 48.1 L426.1 48.1 L428.0 48.1 L429.9 48.1 L431.8 48.1 L433.7 48.1 L435.6 48.1 L437.5 48.1 L439.4 48.1 L441.3 48.1 L443.2 48.1 L445.1 48.1 L447.0 48.1 L448.9 48.1 L450.8 48.1 L452.7 48.1 L454.6 48.1 L456.5 48.1 L458.4 48.1 L460.3 48.1 L462.2 48.1 L464.1 48.1 L466.0 48.1 L467.9 48.1 L469.8 48.1 L471.7 48.1 L473.6 48.1 L475.5 48.1 L477.4 48.1 L479.3 48.1 L481.2 48.1 L483.1 48.1 L485.0 48.1 L486.9 48.1 L488.8 48.1 L490.7 48.1 L492.6 48.1 L494.5 48.1 L496.4 48.1 L498.3 48.1 L500.2 48.1 L502.1 48.1 L504.0 48.1" fill="none" stroke="var(--faint)" stroke-width="2.5" stroke-linejoin="round"/>
-  <circle cx="57.6" cy="191.8" r="5" fill="var(--accent)"/><text x="57.6" y="215.8" class="g-tick" text-anchor="middle" fill="var(--accent)">42%</text><circle cx="89.9" cy="191.8" r="5" fill="var(--accent)"/><circle cx="126.0" cy="191.8" r="5" fill="var(--accent)"/><text x="126.0" y="215.8" class="g-tick" text-anchor="middle" fill="var(--accent)">42%</text><circle cx="145.0" cy="195.2" r="5" fill="var(--accent)"/><circle cx="190.6" cy="181.5" r="5" fill="var(--accent)"/><text x="190.6" y="205.5" class="g-tick" text-anchor="middle" fill="var(--accent)">39%</text><circle cx="207.7" cy="185.0" r="5" fill="var(--accent)"/><circle cx="266.6" cy="185.0" r="5" fill="var(--accent)"/><text x="266.6" y="209.0" class="g-tick" text-anchor="middle" fill="var(--accent)">40%</text><circle cx="340.6" cy="188.4" r="5" fill="var(--accent)"/><text x="340.6" y="212.4" class="g-tick" text-anchor="middle" fill="var(--accent)">41%</text>
-  <path d="M483.1 171.3 L485.0 171.3 L486.9 181.5 L488.8 181.5 L490.7 181.5 L492.6 181.5 L494.5 171.3 L496.4 171.3 L498.3 171.3 L500.2 174.7 L502.1 174.7 L504.0 174.7" fill="none" stroke="var(--brand)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-  <circle cx="486.9" cy="181.5" r="4" fill="var(--accent)"/><circle cx="488.8" cy="181.5" r="4" fill="var(--accent)"/><circle cx="490.7" cy="181.5" r="4" fill="var(--accent)"/><circle cx="492.6" cy="181.5" r="4" fill="var(--accent)"/>
-  <circle cx="504.0" cy="174.7" r="5.5" fill="var(--brand)" stroke="#fff" stroke-width="2"/>
-  <text x="512" y="52.1" class="g-lab" fill="var(--muted)">정상가</text>
-  <text x="512" y="77.1" class="g-val" fill="var(--muted)">110,900원</text>
-  <text x="512" y="178.7" class="g-lab" fill="var(--brand)">코드 37%</text>
-  <text x="512" y="203.7" class="g-val" fill="var(--brand)">69,867원</text>
-</svg>
-<figcaption><span class="k k-reg"></span>정상가 (코드 넣기 전) <span class="k k-live"></span>할인코드 적용가 <span class="k k-dot"></span>대란가</figcaption>
-</figure>
-<p class="hint">임팩트웨이 프로틴 1kg 기준입니다. 가격은 11월 5일부터 매일 자동으로 기록하고, 그 전은 10월 28일 확인한 가격으로 계산했습니다. 할인코드 적용가는 그날 히든코드 할인율 기준이고, 숨은 할인(트렌드 할인·쇼핑지원금)은 빼고 계산했습니다.</p>
+<a class="cta ghost" href="./price.html">가격 흐름 그래프와 제품별 대란 가격 보기</a>
 </section>
 <section>
 <h2>내 장바구니는 얼마에 살까</h2>

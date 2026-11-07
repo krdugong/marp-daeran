@@ -445,50 +445,30 @@ function priceGauge(key = CHART_KEY) {
 // 평소 = 최근 90일 중 대란 기준 미만인 날. 기록이 60일 미만이면 "최근 N일"로 씁니다
 function lowGauge() {
   const from = addDays(last.date, -90);
-  const win = day.filter(d => d.date > from);
-  const calm = win.filter(d => d.base < TH);
-  if (!calm.length) return '';
-  const avg = r1(calm.reduce((s, d) => s + d.base, 0) / calm.length);
-  const cMin = Math.min(...calm.map(d => d.base)), cMax = Math.max(...calm.map(d => d.base));
-  const spanDays = daysBetween(win[0].date, last.date) + 1;
-  const winLabel = spanDays >= 60 ? '최근 3개월' : `최근 ${spanDays}일`;
-  const diff = r1(last.base - avg);
-  const tier = isDaeran ? ['hot', '대란급 · 지금 사세요']
-    : diff >= 1 ? ['good', '평소보다 좋음']
-    : diff <= -1 ? ['low', '평소보다 낮음 · 비추']
-    : ['mid', `평소 수준${last.base < dRate ? ' · 기다리면 더 쌈' : ''}`];
-  const cmp = Math.abs(diff) < 0.5 ? `${winLabel} 평소 평균 ${avg}%와 같음` : `${winLabel} 평소 평균 ${avg}%보다 ${Math.abs(diff)}%p ${diff > 0 ? '높음' : '낮음'}`;
-  const lo = Math.floor(Math.min(cMin, last.base)) - 2, hi = Math.ceil(Math.max(dRate, TH, last.base)) + 1;
-  const x = v => r1(((v - lo) / (hi - lo)) * 100);
+  const calm = day.filter(d => d.date > from && d.base < TH);
+  const avg = calm.length ? calm.reduce((s, d) => s + d.base, 0) / calm.length : last.base;
+  const diff = last.base - avg;
   const key = PRODUCTS.find(p => /임팩트웨이 프로틴/.test(p.name) && p.size === '2.5kg') ? '임팩트웨이 프로틴 2.5kg' : CHART_KEY;
   const reg = priceOn(key, last.date);
-  const now = reg != null ? reg * (1 - last.base / 100) : null, dPrice = reg != null ? reg * (1 - dRate / 100) : null;
-  const dLabel = sureNext ? `${+sureNext.date.slice(8, 10)}일 대란` : '대란';
+  if (reg == null) return '';
+  const name = key.replace('프로틴 ', '');
+  const now = reg * (1 - last.base / 100), dPrice = reg * (1 - dRate / 100);
+  const buy = isDaeran || last.base >= dRate;
+  const tag = isDaeran ? '대란 중' : diff >= 1 ? '평소보다 좋음' : diff <= -1 ? '평소보다 낮음' : '평소 수준';
+  const when = sureNext ? `${+sureNext.date.slice(8, 10)}일 대란` : '다음 대란';
   const left = sureNext ? daysBetween(last.date, sureNext.date) : null;
-  const advice = isDaeran ? '지금이 대란입니다. 필요한 만큼 사 두십시오.'
-    : last.base >= dRate ? `지난 대란 평균 ${dRate}%와 같거나 높습니다. 지금 사도 됩니다.`
-    : sureNext ? `급하지 않으면 ${left > 0 ? `${left}일 뒤 ` : ''}${kdate(sureNext.date)} 대란까지 기다리는 게 낫습니다.`
-    : '급하지 않으면 다음 대란까지 기다리는 게 낫습니다.';
-  const src = rows.at(-1).source === 'manual' ? '장바구니 실측' : '자동 확인';
-  const edgeL = x(last.base) > 14, edgeR = x(last.base) < 86;
-  return `<div class="lowG">
-<p class="lgTop"><span class="lgLab">오늘 마이프로틴 할인율</span><span class="lgBadge ${tier[0]}">${tier[1]}</span></p>
-<p class="lgNow"><b>${last.base}%</b><span>${cmp}</span></p>
-<div class="lgBar" role="img" aria-label="오늘 할인코드 ${last.base}퍼센트. ${winLabel} 평소 범위 ${cMin}~${cMax}퍼센트, 평균 ${avg}퍼센트. 대란 기준 ${TH}퍼센트, 지난 대란 평균 ${dRate}퍼센트">
-  <i class="tr"></i>
-  <i class="calm" style="left:${x(cMin)}%;width:${Math.max(1.5, x(cMax) - x(cMin))}%"></i>
-  <i class="hot" style="left:${x(TH)}%"></i>
-  <i class="th" style="left:${x(TH)}%"></i><em class="thL" style="left:${x(TH)}%">대란 기준 ${TH}</em>
-  <i class="dr" style="left:${x(dRate)}%"></i>
-  <i class="now${isDaeran ? ' on' : ''}" style="left:${x(last.base)}%"></i><em class="nowL" style="left:${x(last.base)}%">오늘 ${last.base}</em>
-  ${edgeL ? `<em class="ax" style="left:0">${lo}%</em>` : ''}${edgeR ? `<em class="ax r">${hi}%</em>` : ''}
-</div>
-<p class="lgKey"><span><i class="k calm"></i>평소 범위 ${cMin === cMax ? `${cMin}%` : `${cMin}~${cMax}%`}</span><span><i class="k hot"></i>대란 구간</span><span><i class="k dr"></i>지난 대란 평균 ${dRate}%</span></p>
-${reg != null ? `<dl class="lgPrice">
-  <div><dt>${esc(key.replace('프로틴 ', ''))} 오늘</dt><dd>${won(now)}</dd></div>
-  ${isDaeran ? '' : `<div><dt>${dLabel} ${dRate}%면</dt><dd class="hot">${won(dPrice)}${now > dPrice ? ` <small>(${won(now - dPrice)} 더 쌈)</small>` : ''}</dd></div>`}
-</dl>` : ''}
-<p class="lgNote">${advice} ${kdate(last.date)} ${src} 기준이고, 대란 할인율은 지난 대란들의 평균입니다.</p>
+  const head = buy ? '지금 사세요' : '기다리세요';
+  const sub = isDaeran ? `지금이 대란입니다. ${name}가 정가보다 <b>${won(reg - now)}</b> 쌉니다.`
+    : buy ? `지난 대란 평균(${dRate}%)만큼 할인 중입니다.`
+    : `${when}${left > 0 ? `(${left}일 뒤)` : ''}에 사면 ${name}가 <b>${won(now - dPrice)}</b> 더 쌉니다.`;
+  const right = isDaeran ? ['코드 없이', null, reg] : buy ? null : [when, dRate, dPrice];
+  const cell = (label, rate, price, hot) => `<div class="lgC${hot ? ' hot' : ''}"><span>${label}${rate != null ? ` <b>${rate}%</b>` : ''}</span><strong>${won(price)}</strong></div>`;
+  return `<div class="lowG${buy ? ' buy' : ''}">
+<p class="lgTag">${tag}</p>
+<p class="lgHead">${head}</p>
+<p class="lgSub">${sub}</p>
+<div class="lgVs">${isDaeran ? cell(right[0], null, right[2]) + '<i>→</i>' + cell('오늘', last.base, now, true) : cell('오늘', last.base, now, buy) + (right ? '<i>→</i>' + cell(right[0], right[1], right[2], true) : '')}</div>
+<p class="lgNote">${kdate(last.date)} 확인${isDaeran || buy ? '' : ' · 대란 할인율은 지난 대란 평균'}</p>
 </div>`;
 }
 
@@ -577,27 +557,16 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .pchart figcaption{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center;font-size:12px;color:var(--muted);margin-top:6px}
 .pchart .k{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:-8px}
 .pchart .k-reg{background:var(--faint)}.pchart .k-live{background:var(--brand)}.pchart .k-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
-.lowG{background:var(--surface);border-radius:var(--r);padding:18px 18px 16px;margin:4px 0 12px}
-.lgTop{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}.lgLab{font-size:13px;color:var(--muted)}
-.lgBadge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
-.lgBadge.hot{background:var(--accent);color:#fff}.lgBadge.good{background:var(--mint-soft);color:#0B5A3A}.lgBadge.mid{background:#FAEEDA;color:#633806}.lgBadge.low{background:var(--surface-2);color:var(--ink-2)}
-.lgNow{margin:4px 0 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}.lgNow b{font-size:34px;line-height:1.2;letter-spacing:-.02em}.lgNow span{font-size:14px;color:var(--muted)}
-.lgBar{position:relative;height:76px;margin:12px 6px 2px}
-.lgBar i,.lgBar em{position:absolute;display:block;font-style:normal}
-.lgBar .tr{left:0;right:0;top:30px;height:10px;border-radius:5px;background:var(--track)}
-.lgBar .calm{top:30px;height:10px;background:#C9C7C0}
-.lgBar .hot{right:0;top:30px;height:10px;border-radius:0 5px 5px 0;background:var(--track-hot)}
-.lgBar .th{top:18px;height:34px;border-left:2px dashed var(--accent);margin-left:-1px}
-.lgBar .thL{top:0;font-size:12px;color:var(--accent);transform:translateX(-50%);white-space:nowrap}
-.lgBar .dr{top:27px;width:16px;height:16px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);transform:translateX(-50%)}
-.lgBar .now{top:22px;width:26px;height:26px;border-radius:50%;background:var(--brand);border:3px solid var(--bg);transform:translateX(-50%);box-shadow:0 0 0 1px var(--line)}.lgBar .now.on{background:var(--accent)}
-.lgBar .nowL{top:56px;font-size:12px;font-weight:700;transform:translateX(-50%);white-space:nowrap}
-.lgBar .ax{top:56px;font-size:12px;color:var(--faint)}.lgBar .ax.r{right:0}
-.lgKey{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 12px;font-size:12px;color:var(--muted)}
-.lgKey .k{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}.lgKey .k.calm{background:#C9C7C0}.lgKey .k.hot{background:var(--track-hot)}.lgKey .k.dr{border-radius:50%;border:2px solid var(--accent)}
-.lgPrice{margin:0;border-top:1px solid var(--line);padding-top:10px;font-variant-numeric:tabular-nums}
-.lgPrice div{display:flex;justify-content:space-between;gap:12px;padding:3px 0}.lgPrice dt{color:var(--muted);font-size:14px}.lgPrice dd{margin:0;font-weight:700;text-align:right}.lgPrice dd.hot{color:var(--accent)}.lgPrice small{font-weight:400}
-.lgNote{margin:8px 0 0;font-size:13px;color:var(--muted)}
+.lowG{background:var(--surface);border-radius:var(--r);padding:22px 20px 16px;margin:4px 0 12px;text-align:center}
+.lgTag{display:inline-block;margin:0;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--surface-2);color:var(--ink-2)}
+.lowG.buy .lgTag{background:var(--accent);color:#fff}
+.lgHead{margin:8px 0 2px;font-size:32px;font-weight:800;letter-spacing:-.02em;line-height:1.2;color:var(--brand)}.lowG.buy .lgHead{color:var(--accent)}
+.lgSub{margin:0 0 16px;font-size:15px;color:var(--ink-2)}.lgSub b{color:var(--accent)}
+.lgVs{display:flex;align-items:stretch;gap:8px;font-variant-numeric:tabular-nums}.lgVs>i{align-self:center;font-style:normal;color:var(--faint);font-size:18px}
+.lgC{flex:1;background:var(--bg);border-radius:var(--r-sm);padding:12px 8px;display:flex;flex-direction:column;gap:2px}
+.lgC span{font-size:13px;color:var(--muted)}.lgC span b{color:var(--ink)}.lgC strong{font-size:19px;letter-spacing:-.01em}
+.lgC.hot{background:var(--accent-soft)}.lgC.hot span b,.lgC.hot strong{color:var(--accent)}
+.lgNote{margin:10px 0 0;font-size:12px;color:var(--faint)}
 .pgauge{background:var(--surface);border-radius:var(--r);padding:18px 18px 6px;margin:4px 0 8px}
 .pgHead{margin:0 0 4px;font-size:15px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}.pgHead b{font-size:20px}.pgHead small{color:var(--muted);font-size:12px}
 .badge{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;align-self:center}
@@ -1215,8 +1184,7 @@ ${evBanner}
 ${priceGauge() ? `<section class="full">
 <h2>지금 사도 될까</h2>
 ${lowGauge()}
-${priceChart()}
-${priceChartNote(CHART_KEY)}
+<a class="cta ghost" href="./price.html">가격 흐름 그래프와 제품별 대란 가격 보기</a>
 </section>` : ''}
 ${calcWidget ? `<section>
 <h2>내 장바구니는 얼마에 살까</h2>
