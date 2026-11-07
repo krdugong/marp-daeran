@@ -577,6 +577,11 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta:hover{background:var(--brand-700)}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
+/* 링크만 있는 섹션(관련 페이지 등): 전체 폭, 링크는 카드 격자로 */
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta){display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;grid-column:1 / -1}
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta) > :not(a.cta){grid-column:1 / -1;margin-bottom:4px}
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta) > a.cta{margin:0;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;border-radius:var(--r-sm);padding:14px 18px;font-size:15px}
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta) > a.cta::after{content:"→";color:var(--faint);font-weight:400}
 .cta:active{transform:scale(.985)}
 .stats{margin:20px 0;background:var(--surface);border-radius:var(--r);padding:2px 18px}
 .stats div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
@@ -1271,7 +1276,7 @@ ${dealLine}
 ${otherCodesBox}
 </div>`,
   restHtml: `
-<section>
+<section class="full">
 <h2>마이프로틴 할인코드 적용 방법</h2>
 <ol class="steps">
   <li>위 버튼을 누릅니다. 코드가 복사되고 마이프로틴이 열립니다.</li>
@@ -1289,7 +1294,7 @@ ${db.referral ? `<section>
 <a class="cta ghost" href="./referral.html">추천인 코드 입력 방법과 혜택 자세히</a>
 </section>` : ''}
 
-<section>
+<section class="full">
 <h2>마이프로틴 쇼핑지원금 신청 방법</h2>
 <p class="lede">쇼핑지원금은 앱에서 신청하는 선착순 이벤트로, 대란 전후에 열립니다. 신청해 두면 기준 금액 이상 결제할 때 정액으로 빠지고, 할인코드·이달의 트렌드와 중복됩니다.</p>
 <ol class="steps">
@@ -1348,7 +1353,7 @@ ${calcWidget}
 ${otherCodesBox}
 </div>`,
   restHtml: `
-<section>
+<section class="full">
 <h2>계산 방법</h2>
 <ol class="steps">
   <li>장바구니 금액에 할인코드(${primary ? `${nameOf(primary)} ${primary.rate}%` : '%'})를 적용합니다.</li>
@@ -2898,7 +2903,7 @@ ${heroCta}
 <p class="lede">일정은 해마다 조금씩 다릅니다. 확정되는 대로 여기와 <a href="./${novFile}">11월 대란</a> 페이지에 날짜별로 기록합니다.</p>
 </section>
 
-<section>
+<section class="full">
 <h2>블프 전에 해 둘 것</h2>
 <ol class="steps">
   <li><b>앱 설치와 가입</b> 쇼핑지원금 같은 앱 전용 이벤트가 블프 전후에 열립니다.${db.referral ? ` 처음이면 <a href="./referral.html">추천인 코드 ${esc(db.referral)}</a>를 넣고 가입하면 ${esc(REF_BENEFIT)}도 받습니다.` : ''}</li>
@@ -2915,7 +2920,7 @@ ${ratePriceRows(KEY_PRODUCTS, bfPeak ?? peak, bfPeak != null ? '블프가' : '�
 <a class="cta ghost" href="./price.html">평소 가격과 비교하기</a>
 </section>` : ''}
 
-<section>
+<section class="full">
 <h2>올해 대란은 어땠나</h2>
 <p class="lede">${events.length ? `${Y(firstYm)}년 ${M(firstYm)}월부터 대란 ${events.length}회, 히든코드 ${knownRange || '영상 참고'}, 평균 ${cycle ?? '-'}일 간격이었습니다. 블프는 이 범위보다 높게 나올 수 있지만 확인된 값만 올립니다.` : '아직 기록된 대란이 없습니다.'}</p>
 ${recent.length ? eventTable(recent.slice(0, 4)) : ''}

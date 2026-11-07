@@ -131,6 +131,11 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta:hover{background:var(--brand-700)}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
+/* 링크만 있는 섹션(관련 페이지 등): 전체 폭, 링크는 카드 격자로 */
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta){display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;grid-column:1 / -1}
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta) > :not(a.cta){grid-column:1 / -1;margin-bottom:4px}
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta) > a.cta{margin:0;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;border-radius:var(--r-sm);padding:14px 18px;font-size:15px}
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta) > a.cta::after{content:"→";color:var(--faint);font-weight:400}
 .cta:active{transform:scale(.985)}
 .stats{margin:20px 0;background:var(--surface);border-radius:var(--r);padding:2px 18px}
 .stats div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
@@ -526,7 +531,7 @@ body.hasSticky{padding-bottom:0}
 </div>
 <div class="cols">
 
-<section>
+<section class="full">
 <h2>계산 방법</h2>
 <ol class="steps">
   <li>장바구니 금액에 할인코드(히든코드 37%)를 적용합니다.</li>

@@ -131,6 +131,11 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta:hover{background:var(--brand-700)}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
+/* 링크만 있는 섹션(관련 페이지 등): 전체 폭, 링크는 카드 격자로 */
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta){display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;grid-column:1 / -1}
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta) > :not(a.cta){grid-column:1 / -1;margin-bottom:4px}
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta) > a.cta{margin:0;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;border-radius:var(--r-sm);padding:14px 18px;font-size:15px}
+.wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta) > a.cta::after{content:"→";color:var(--faint);font-weight:400}
 .cta:active{transform:scale(.985)}
 .stats{margin:20px 0;background:var(--surface);border-radius:var(--r);padding:2px 18px}
 .stats div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}
@@ -520,7 +525,7 @@ body.hasSticky{padding-bottom:0}
 <p class="lede">일정은 해마다 조금씩 다릅니다. 확정되는 대로 여기와 <a href="./daeran-2026-11.html">11월 대란</a> 페이지에 날짜별로 기록합니다.</p>
 </section>
 
-<section>
+<section class="full">
 <h2>블프 전에 해 둘 것</h2>
 <ol class="steps">
   <li><b>앱 설치와 가입</b> 쇼핑지원금 같은 앱 전용 이벤트가 블프 전후에 열립니다. 처음이면 <a href="./referral.html">추천인 코드 NED6-R3</a>를 넣고 가입하면 첫 구매 적립금도 받습니다.</li>
@@ -540,7 +545,7 @@ body.hasSticky{padding-bottom:0}
 <a class="cta ghost" href="./price.html">평소 가격과 비교하기</a>
 </section>
 
-<section>
+<section class="full">
 <h2>올해 대란은 어땠나</h2>
 <p class="lede">2026년 3월부터 대란 12회, 히든코드 39~43%, 평균 22일 간격이었습니다. 블프는 이 범위보다 높게 나올 수 있지만 확인된 값만 올립니다.</p>
 <table>
