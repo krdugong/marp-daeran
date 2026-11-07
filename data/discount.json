@@ -469,6 +469,13 @@
       "official": 35,
       "officialCode": "SUPER35",
       "source": "auto"
+    },
+    {
+      "date": "2026-11-08",
+      "base": 37,
+      "official": 35,
+      "officialCode": "SUPER35",
+      "source": "auto"
     }
   ]
 }
