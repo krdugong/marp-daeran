@@ -1789,6 +1789,8 @@ if (ALT && altMp) {
   const mpRef = all.find(r => r.mp && r.product === `${altMp.p.name} ${altMp.p.size}`) || all[0];
   const mpDaeranPg = altMp.p.price * (1 - dRate / 100) / (altMp.m.grams * altMp.m.protein / altMp.m.serving);
   const daeranNote = !isDaeran && dRate !== last.base ? ` 대란 평균 ${dRate}%면 마이프로틴은 ${won(mpDaeranPg)}까지 내려갑니다.` : '';
+  // 대란가가 할인 중인 다른 브랜드보다 비싸면 '대란이면 마이프로틴이 가장 쌈' 같은 문장을 쓰지 않습니다
+  const mpCheap = !bestAlt || mpDaeranPg <= bestAlt.pg;
   const p1 = PRODUCTS.find(p => p.name === altMp.p.name && p.size === '1kg');
   const altCount = others.length;
 
@@ -1805,13 +1807,13 @@ if (ALT && altMp) {
 
   const verdict = bestAlt
     ? (mpRef.pg <= bestAlt.pg
-      ? `지금 표에서는 마이프로틴 ${esc(altMp.p.name)} ${esc(altMp.p.size)}(오늘 코드 ${last.base}%)가 단백질 1g당 ${won(mpRef.pg)}으로 가장 쌉니다. 그다음이 ${esc(bestAlt.brand)} ${esc(bestAlt.product)}(${won(bestAlt.pg)})입니다.${daeranNote}`
-      : `지금 표에서는 ${esc(bestAlt.brand)} ${esc(bestAlt.product)}가 단백질 1g당 ${won(bestAlt.pg)}으로 가장 싸고, 마이프로틴 ${esc(altMp.p.name)} ${esc(altMp.p.size)}(오늘 코드 ${last.base}%)는 ${won(mpRef.pg)}입니다.${daeranNote}`)
+      ? `단백질 1g당 가장 싼 건 마이프로틴 ${esc(altMp.p.name)} ${esc(altMp.p.size)}(오늘 코드 ${last.base}%, ${won(mpRef.pg)})입니다. 그다음은 ${esc(bestAlt.brand)} ${esc(bestAlt.product)}(${won(bestAlt.pg)})입니다.${daeranNote}`
+      : `단백질 1g당 가장 싼 건 ${esc(bestAlt.brand)} ${esc(bestAlt.product)}(${won(bestAlt.pg)})입니다. 마이프로틴 ${esc(altMp.p.name)} ${esc(altMp.p.size)}은 오늘 코드 ${last.base}%로 ${won(mpRef.pg)}입니다.${daeranNote}`)
     : `다른 브랜드 가격은 확인하는 대로 채웁니다. 마이프로틴 ${esc(altMp.p.name)} ${esc(altMp.p.size)}는 오늘 코드 ${last.base}% 기준 1kg당 ${won(mpRef.kg)}, 단백질 1g당 ${won(mpRef.pg)}입니다.${daeranNote}`;
 
   const ALT_FAQ = [
     ['마이프로틴 대안 있나요?',
-     `있습니다. 한국에서 직구로 많이 사는 건 옵티멈뉴트리션 골드 스탠다드, 룰원 R1, 다이마타이즈 ISO100 정도이고, 아이허브나 쿠팡 로켓직구에서 삽니다. 다만 마이프로틴도 대란 때 코드를 쓰면 ${altMp.p.name} ${altMp.p.size}이 1kg당 ${won(altMp.kg)}이라 여전히 싼 편입니다. 대란이 아닐 때 급하게 사야 하면 표에서 단백질 1g당 가격이 낮은 쪽을 고르면 됩니다.`],
+     `있습니다. 한국에서 직구로 많이 사는 건 옵티멈뉴트리션 골드 스탠다드, 룰원 R1, 다이마타이즈 ISO100 정도이고, 아이허브나 쿠팡 로켓직구에서 삽니다. 다만 마이프로틴도 대란 때 코드를 쓰면 ${altMp.p.name} ${altMp.p.size}이 1kg당 ${won(altMp.kg)}${mpCheap ? '이라 여전히 싼 편입니다' : `이고 단백질 1g당 ${won(mpDaeranPg)}이라, 할인 중인 ${bestAlt.brand}(${won(bestAlt.pg)})와 비슷한 수준입니다`}. 대란이 아닐 때 급하게 사야 하면 표에서 단백질 1g당 가격이 낮은 쪽을 고르면 됩니다.`],
     ['마이프로틴이 왜 이렇게 비싸졌나요?',
      p1 ? `정가가 올랐습니다. ${p1.name} 1kg 정가가 ${won(p1.rrp)}이라 코드 없이 보면 비싸 보입니다. 마이프로틴은 늘 코드를 전제로 한 가격이라 코드 ${last.base}%를 넣으면 ${won(p1.price * (1 - last.base / 100))}, 대란 ${dRate}%면 ${won(p1.price * (1 - dRate / 100))}입니다. 그리고 1kg보다 2.5kg이 1kg당 가격이 훨씬 내려가니, 비교할 때는 큰 용량끼리 보는 게 맞습니다.`
         : `정가가 올랐습니다. 마이프로틴은 늘 코드를 전제로 한 가격이라 코드 없이 정가만 보면 비싸 보입니다. 2.5kg 이상 큰 용량일수록 1kg당 가격이 많이 내려갑니다.`],
@@ -1834,13 +1836,13 @@ if (ALT && altMp) {
 <div class="heroMain">
 <h1>마이프로틴 대안<br>단백질 보충제 가성비 비교</h1>
 <p class="updated">${dot(db.priceDate || last.date)} 기준 · 마이프로틴 가격은 코드 할인율에 맞춰 매일 갱신</p>
-<p class="lede">"마이프로틴 너무 비싸졌는데 대안 없나요?"에 대한 답입니다. 대란 때는 <b>${esc(altMp.p.name)} ${esc(altMp.p.size)}이 1kg당 ${won(altMp.kg)}</b>이라 여전히 싼 편이고, 평소 가격이라면 아래 제품들과 <b>단백질 1g당 가격</b>으로 비교해 보고 고르면 됩니다.</p>
+<p class="lede">"마이프로틴 너무 비싸졌는데 대안 없나요?"에 대한 답입니다. 대란 때는 <b>${esc(altMp.p.name)} ${esc(altMp.p.size)}이 1kg당 ${won(altMp.kg)}</b>${mpCheap ? '이라 여전히 싼 편이고' : `으로 할인 중인 다른 브랜드와 비슷하고`}, 평소 가격이라면 아래 제품들과 <b>단백질 1g당 가격</b>으로 비교해 보고 고르면 됩니다.</p>
 ${heroCta}
 </div>
 <div class="heroSide">
 <dl class="stats">
-  <div><dt>마이프로틴 대란가</dt><dd>1kg당 ${won(altMp.kg)}</dd></div>
-  <div><dt>가장 싼 다른 브랜드</dt><dd>${bestAlt ? `1kg당 ${won(bestAlt.kg)}` : '확인 중'}</dd></div>
+  <div><dt>마이프로틴 대란가</dt><dd>단백질 1g당 ${won(mpDaeranPg)}<small>${esc(altMp.p.name)} ${esc(altMp.p.size)} · 코드 ${dRate}%</small></dd></div>
+  <div><dt>가장 싼 다른 브랜드</dt><dd>${bestAlt ? `단백질 1g당 ${won(bestAlt.pg)}<small>${esc(bestAlt.brand)} · ${esc(bestAlt.shop)}</small>` : '확인 중'}</dd></div>
   <div><dt>비교 제품</dt><dd>${altCount + mpRows.length}개</dd></div>
 </dl>
 </div>
@@ -1856,9 +1858,10 @@ ${altTable}
 <section class="full">
 <h2>어디서 사는 게 좋을까</h2>
 <ul class="shops">
-  <li><b>마이프로틴</b><span>할인코드를 넣어야 제값입니다. 대란(코드 ${TH}% 이상)이면 고민할 것 없이 마이프로틴이 가장 쌉니다. ${won(SHOP.freeShipping)} 이상 무료배송, 영국에서 옵니다.</span></li>
-  <li><b>쿠팡 로켓직구</b><span>옵티멈뉴트리션, 룰원, 다이마타이즈가 빠르면 다음 날 옵니다. 급할 때 가장 편하고, 가격은 아이허브보다 조금 비쌀 때가 많습니다.</span></li>
-  <li><b>아이허브</b><span>한국어와 원화로 결제하는 직구 사이트입니다. 자체 브랜드(캘리포니아 골드 뉴트리션)가 보통 가장 싸고, 세일이 자주 바뀝니다.</span></li>
+  <li><b>마이프로틴</b><span>할인코드를 넣어야 제값입니다. ${mpCheap ? `대란(코드 ${TH}% 이상)이면 고민할 것 없이 마이프로틴이 가장 쌉니다.` : `대란 평균 ${dRate}%면 단백질 1g당 ${won(mpDaeranPg)}으로, 다른 브랜드가 크게 할인 중일 때와 비슷합니다.`} ${won(SHOP.freeShipping)} 이상 무료배송, 영국에서 옵니다.</span></li>
+  <li><b>쿠팡 로켓직구</b><span>옵티멈뉴트리션, 다이마타이즈가 빠르면 다음 날 옵니다. 급할 때 가장 편하고, 제품에 따라 아이허브보다 훨씬 쌀 때도 있습니다. 와우 회원가는 이 표에 넣지 않았습니다.</span></li>
+  <li><b>네이버 공식 브랜드스토어</b><span>옵티멈뉴트리션처럼 한국 공식 스토어가 있는 브랜드는 즉시할인이 크게 붙어 가장 쌀 때가 있습니다. 쿠폰 할인은 이 표에 넣지 않았습니다.</span></li>
+  <li><b>아이허브</b><span>한국어와 원화로 결제하는 직구 사이트입니다. 4만원 이상 무료배송이고, 정기배송을 걸면 더 싸지지만 이 표는 1회 구매가로 비교했습니다. 세일이 자주 바뀝니다.</span></li>
 </ul>
 <p class="hint">어디서 사든 한 번에 ${SHOP.customsUsd}달러를 넘으면 관세가 붙으니 나눠서 주문하십시오.</p>
 </section>

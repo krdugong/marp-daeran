@@ -1,16 +1,368 @@
 {
-  "_readme": "보충제 성분 비교 페이지 데이터입니다. public 이 false 면 slug 이름의 비공개 주소(예: /lab-7hq3zp.html)로만 만들어지고 검색엔진·사이트맵·메뉴에 안 들어갑니다(주소를 아는 사람은 볼 수 있고, 저장소가 공개라 이 파일 자체는 누구나 볼 수 있습니다). public 을 true 로 바꾸면 nutrition.html 로 공개됩니다. items: 1회분(serving g) 기준 영양성분. protein·carb·sugar·fat·satfat 은 g, sodium 은 mg(소금 g 표기면 ×400), kcal 은 열량. flavor 는 수치의 기준 맛, proteinSource 는 단백질 원료 요약, sweeteners 는 감미료 목록, ingredients 는 원재료 전문. 값이 없으면 null 로 두면 '미수집'으로 표시됩니다. reviews: 디시·네이버 등 커뮤니티 반응 [{brand, product, source(사이트 이름), url, date, sentiment(긍정/부정/중립), topic(맛/용해도/소화/가격/배송 등), quote(짧게 요약, 닉네임 등 개인정보 제외)}].",
-  "public": false,
-  "slug": "lab-7hq3zp",
-  "items": [
-    { "brand": "마이프로틴", "product": "임팩트웨이 프로틴", "type": "WPC", "flavor": "초콜릿 브라우니 (페이지 표: 무맛 기준일 수 있음)", "serving": 30, "kcal": 112, "protein": 21, "carb": 2.2, "sugar": 1.4, "fat": 2.0, "satfat": 1.2, "sodium": 130, "sweeteners": ["수크랄로스"], "proteinSource": "농축유청단백 89%", "ingredients": "농축유청단백질(우유)(89%)[유화제: 대두 레시틴, 해바라기 레시틴], 저지방 코코아 파우더, 향료, 감미료(수크랄로스)", "source": "https://www.myprotein.co.kr/p/sports-nutrition/impact-whey-protein-powder/10530943/", "checked": "2026-10-31", "note": "" },
-    { "brand": "마이프로틴", "product": "임팩트웨이 아이솔레이트", "type": "WPI", "flavor": "무맛 기준 (선택 맛: 내추럴 초콜릿)", "serving": 30, "kcal": 106, "protein": 24, "carb": 1.2, "sugar": 0.5, "fat": 0.5, "satfat": 0.3, "sodium": 190, "sweeteners": ["수크랄로스"], "proteinSource": "분리유청단백 90%", "ingredients": "분리유청단백(우유)(90%)[유화제: 대두 레시틴, 해바라기 레시틴], 저지방 코코아 파우더(8%), 천연향료, 감미료(수크랄로스)", "source": "https://www.myprotein.co.kr/p/sports-nutrition/impact-whey-isolate/10530911/", "checked": "2026-10-31", "note": "당류는 '0.5g 미만' 표기" },
-    { "brand": "벌크", "product": "퓨어 웨이 프로틴", "type": "WPC", "flavor": "대표값 (맛 미지정)", "serving": 32, "kcal": 121, "protein": 23, "carb": 4.8, "sugar": 3.8, "fat": 1.1, "satfat": 0.6, "sodium": 128, "sweeteners": ["수크랄로스"], "proteinSource": "농축유청단백", "ingredients": "농축유청단백(우유), 유화제(해바라기 레시틴), 향료, 증점제(잔탄검), 감미료(수크랄로스)", "source": "https://www.bulk.com/uk/products/pure-whey-protein/bpb-wpc8-0000", "checked": "2026-10-31", "note": "소금 0.32g 표기를 나트륨 128mg 으로 환산. 영국 사이트라 한국 배송 미확인" },
-    { "brand": "옵티멈뉴트리션", "product": "골드 스탠다드 100% 웨이", "type": "WPC+WPI", "flavor": null, "serving": null, "kcal": null, "protein": null, "carb": null, "sugar": null, "fat": null, "satfat": null, "sodium": null, "sweeteners": [], "proteinSource": null, "ingredients": null, "source": "https://www.optimumnutrition.com/ko-kr/products/gold-standard-100-whey-protein-powder", "checked": null, "note": "공식몰이 자동 수집을 막아(429) 미수집" },
-    { "brand": "룰원", "product": "R1 프로틴", "type": "WPI", "flavor": null, "serving": null, "kcal": null, "protein": null, "carb": null, "sugar": null, "fat": null, "satfat": null, "sodium": null, "sweeteners": [], "proteinSource": null, "ingredients": null, "source": "https://www.rule1proteins.com/products/r1-protein", "checked": null, "note": "공식 사이트 접속 실패로 미수집" },
-    { "brand": "다이마타이즈", "product": "ISO100", "type": "WPI", "flavor": null, "serving": null, "kcal": null, "protein": null, "carb": null, "sugar": null, "fat": null, "satfat": null, "sodium": null, "sweeteners": [], "proteinSource": null, "ingredients": null, "source": "https://www.dymatize.com/", "checked": null, "note": "제품 페이지 주소 미확인" },
-    { "brand": "머슬텍", "product": "나이트로텍 100% 웨이 골드", "type": "WPC+WPI", "flavor": null, "serving": null, "kcal": null, "protein": null, "carb": null, "sugar": null, "fat": null, "satfat": null, "sodium": null, "sweeteners": [], "proteinSource": null, "ingredients": null, "source": "https://www.muscletech.com/", "checked": null, "note": "공식 사이트가 자동 수집을 막아(429) 미수집" },
-    { "brand": "캘리포니아 골드 뉴트리션", "product": "SPORT 웨이 프로틴 아이솔레이트", "type": "WPI", "flavor": null, "serving": null, "kcal": null, "protein": null, "carb": null, "sugar": null, "fat": null, "satfat": null, "sodium": null, "sweeteners": [], "proteinSource": null, "ingredients": null, "source": "https://kr.iherb.com/", "checked": null, "note": "아이허브가 자동 수집을 막아(403) 미수집" }
-  ],
-  "reviews": []
+ "_readme": "보충제 성분 비교 페이지 데이터입니다. public 이 false 면 slug 이름의 비공개 주소(예: /lab-7hq3zp.html)로만 만들어지고 검색엔진·사이트맵·메뉴에 안 들어갑니다(주소를 아는 사람은 볼 수 있고, 저장소가 공개라 이 파일 자체는 누구나 볼 수 있습니다). public 을 true 로 바꾸면 nutrition.html 로 공개됩니다. items: 1회분(serving g) 기준 영양성분. protein·carb·sugar·fat·satfat 은 g, sodium 은 mg(소금 g 표기면 ×400), kcal 은 열량. flavor 는 수치의 기준 맛, proteinSource 는 단백질 원료 요약, sweeteners 는 감미료 목록, ingredients 는 원재료 전문. 값이 없으면 null 로 두면 '미수집'으로 표시됩니다. reviews: 디시·네이버 등 커뮤니티 반응 [{brand, product, source(사이트 이름), url, date, sentiment(긍정/부정/중립), topic(맛/용해도/소화/가격/배송 등), quote(짧게 요약, 닉네임 등 개인정보 제외)}].",
+ "public": false,
+ "slug": "lab-7hq3zp",
+ "items": [
+  {
+   "brand": "마이프로틴",
+   "product": "임팩트웨이 프로틴",
+   "type": "WPC",
+   "flavor": "초콜릿 브라우니 (페이지 표: 무맛 기준일 수 있음)",
+   "serving": 30,
+   "kcal": 112,
+   "protein": 21,
+   "carb": 2.2,
+   "sugar": 1.4,
+   "fat": 2.0,
+   "satfat": 1.2,
+   "sodium": 130,
+   "sweeteners": [
+    "수크랄로스"
+   ],
+   "proteinSource": "농축유청단백 89%",
+   "ingredients": "농축유청단백질(우유)(89%)[유화제: 대두 레시틴, 해바라기 레시틴], 저지방 코코아 파우더, 향료, 감미료(수크랄로스)",
+   "source": "https://www.myprotein.co.kr/p/sports-nutrition/impact-whey-protein-powder/10530943/",
+   "checked": "2026-10-31",
+   "note": ""
+  },
+  {
+   "brand": "마이프로틴",
+   "product": "임팩트웨이 아이솔레이트",
+   "type": "WPI",
+   "flavor": "무맛 기준 (선택 맛: 내추럴 초콜릿)",
+   "serving": 30,
+   "kcal": 106,
+   "protein": 24,
+   "carb": 1.2,
+   "sugar": 0.5,
+   "fat": 0.5,
+   "satfat": 0.3,
+   "sodium": 190,
+   "sweeteners": [
+    "수크랄로스"
+   ],
+   "proteinSource": "분리유청단백 90%",
+   "ingredients": "분리유청단백(우유)(90%)[유화제: 대두 레시틴, 해바라기 레시틴], 저지방 코코아 파우더(8%), 천연향료, 감미료(수크랄로스)",
+   "source": "https://www.myprotein.co.kr/p/sports-nutrition/impact-whey-isolate/10530911/",
+   "checked": "2026-10-31",
+   "note": "당류는 '0.5g 미만' 표기"
+  },
+  {
+   "brand": "벌크",
+   "product": "퓨어 웨이 프로틴",
+   "type": "WPC",
+   "flavor": "Chocolate",
+   "serving": 35,
+   "kcal": 120,
+   "protein": 22,
+   "carb": 4.9,
+   "sugar": 4.6,
+   "fat": 1.4,
+   "satfat": 0.8,
+   "sodium": 108,
+   "sweeteners": [
+    "수크랄로스"
+   ],
+   "proteinSource": "농축유청단백",
+   "ingredients": "Whey Protein Concentrate (Milk), Reduced Fat Cocoa Powder, Flavourings, Emulsifier (Sunflower Lecithin), Thickener (Xanthan Gum), Sweetener (Sucralose).",
+   "source": "https://www.bulk.com/uk/products/pure-whey-protein/bpb-wpc8-0000",
+   "note": "한국 판매 페이지(쿠팡 해외배송)에는 한글 영양성분 표가 없어 bulk.com 영국 페이지의 Chocolate 영양표 사용. 나트륨은 소금 0.27g × 400 = 108mg으로 환산. 식이섬유 0.8g. 쿠팡 한글 원재료 표기는 '농축유청단백질(우유), 저지방 코코아 파우더, 향료, 증점제(잔탄검), 해바라기 레시틴, 감미료(수크랄로스)'로 순서가 조금 다름.",
+   "checked": "2026-11-07"
+  },
+  {
+   "brand": "옵티멈뉴트리션",
+   "product": "골드 스탠다드 100% 웨이",
+   "type": "WPC+WPI",
+   "flavor": "더블 리치 초콜릿",
+   "serving": 31,
+   "kcal": 120,
+   "protein": 24,
+   "carb": 3,
+   "sugar": 1,
+   "fat": 1.5,
+   "satfat": 1,
+   "sodium": 130,
+   "sweeteners": [
+    "아세설팜칼륨"
+   ],
+   "proteinSource": "분리유청단백, 농축유청단백, 가수분해유청단백",
+   "ingredients": "단백질 혼합물(분리 유청 단백질, 농축유청단백질, 가수분해 유청 단백질), 코코아가루(알칼리처리), 해바라기 및/또는 대두레시틴, 천연/인공향료, 아세설팜칼륨. 함유 성분: 우유, 대두.",
+   "source": "https://kr.iherb.com/pr/optimum-nutrition-gold-standard-100-whey-protein-double-rich-chocolate-5-05-lb-2-29-kg/27509",
+   "note": "아이허브 한국 2.29kg(74회분) 상세페이지 영양성분 표 기준. 네이버 공식스토어·쿠팡 페이지는 영양정보가 이미지로만 있어 텍스트 표가 있는 아이허브를 사용.",
+   "checked": "2026-11-07"
+  },
+  {
+   "brand": "룰원",
+   "product": "R1 프로틴",
+   "type": "WPI",
+   "flavor": "초콜릿 퍼지",
+   "serving": 32,
+   "kcal": 120,
+   "protein": 25,
+   "carb": 3,
+   "sugar": 0,
+   "fat": 0.5,
+   "satfat": 0,
+   "sodium": 60,
+   "sweeteners": [
+    "수크랄로스",
+    "아세설팜칼륨"
+   ],
+   "proteinSource": "분리유청단백, 가수분해 분리유청단백",
+   "ingredients": "단백질혼합물(분리유청단백질, 가수분해 분리 유청 단백질), 코코아(알칼리처리), 2% 미만 함유 성분: 천연 및 인공 향료, 수크랄로오스, 소금, 아세설팜칼륨, 대두레시틴, 해바라기레시틴. 함유 성분: 우유 및 대두.",
+   "source": "https://kr.iherb.com/pr/rule-one-proteins-r1-protein-whey-isolate-chocolate-fudge-5-01-lb-2-27-kg/125708",
+   "note": "아이허브 한국 상세페이지 영양성분 표 기준(71회분). 첨가당 0g, 식이섬유 1g.",
+   "checked": "2026-11-07"
+  },
+  {
+   "brand": "다이마타이즈",
+   "product": "ISO100",
+   "type": "WPI",
+   "flavor": "고메 초콜릿",
+   "serving": 32,
+   "kcal": 120,
+   "protein": 25,
+   "carb": 2,
+   "sugar": 1,
+   "fat": 1,
+   "satfat": 0,
+   "sodium": 180,
+   "sweeteners": [
+    "수크랄로스",
+    "스테비올배당체(스테비아)"
+   ],
+   "proteinSource": "가수분해 분리유청단백, 분리유청단백",
+   "ingredients": "가수분해 분리유청단백질, 분리유청단백질, 코코아 분말(알칼리 처리). 2% 미만의 소금, 대두 레시틴, 천연 및 인공 향료, 염화칼륨, 수크랄로오스, 스테비올 글리코사이드(스테비아). 함유 성분: 우유 및 대두.",
+   "source": "https://kr.iherb.com/pr/dymatize-iso100-hydrolyzed-100-whey-protein-isolate-gourmet-chocolate-5-lb-2-3-kg/66690",
+   "note": "아이허브 한국 2.3kg(약 71회분) 영양성분 표 기준. 가격 출처인 쿠팡 로켓직구 페이지는 원재료·영양정보가 '컨텐츠 참조'(이미지)라 아이허브 사용.",
+   "checked": "2026-11-07"
+  },
+  {
+   "brand": "머슬텍",
+   "product": "나이트로텍 100% 웨이 골드",
+   "type": "WPC+WPI",
+   "flavor": "더블 리치 초콜릿",
+   "serving": 34,
+   "kcal": 130,
+   "protein": 24,
+   "carb": 3,
+   "sugar": 2,
+   "fat": 2.5,
+   "satfat": 1.5,
+   "sodium": 240,
+   "sweeteners": [
+    "수크랄로스",
+    "스테비올배당체(스테비아)"
+   ],
+   "proteinSource": "농축유청단백, 분리유청단백, 가수분해유청단백",
+   "ingredients": "유청단백질혼합물(유청단백질농축물, 분리유청단백질, 가수분해 유청 단백질), 코코아(알칼리 처리), 소금, 대두 및/또는 해바라기레시틴, 천연/인공향료, 수크랄로오스, 검혼합물(구아검, 아카시아검, 잔탄검), 스테비올글루코사이드. 우유와 대두 성분 함유.",
+   "source": "https://kr.iherb.com/pr/muscletech-nitro-tech-whey-gold-gourmet-whey-protein-double-rich-chocolate-5-lbs-2-27-kg/77943",
+   "note": "아이허브 한국 2.27kg(약 67회분) 영양성분 표 기준.",
+   "checked": "2026-11-07"
+  },
+  {
+   "brand": "캘리포니아 골드 뉴트리션",
+   "product": "SPORT 웨이 프로틴 아이솔레이트",
+   "type": "WPI",
+   "flavor": "다크 초콜릿",
+   "serving": 40,
+   "kcal": 150,
+   "protein": 27,
+   "carb": 8,
+   "sugar": 6,
+   "fat": 0.5,
+   "satfat": 0,
+   "sodium": 180,
+   "sweeteners": [
+    "스테비아잎추출물"
+   ],
+   "proteinSource": "분리유청단백",
+   "ingredients": "분리유청단백질(소의 우유에서 추출), 유기농사탕수수설탕, 코코아분말(비알칼리화), 천연 향료, 바다 소금, 잔탄검, 해바라기 레시틴, 스테비아잎추출물. 함유 성분: 우유.",
+   "source": "https://kr.iherb.com/pr/california-gold-nutrition-sport-whey-protein-isolate-dark-chocolate-5-lb-2-27-kg/84571",
+   "note": "아이허브 한국 2.27kg(약 57회분) 영양성분 표 기준. 인공감미료 없이 유기농 사탕수수설탕(첨가당 5g)과 스테비아로 단맛을 냄. 1회 제공량이 40g으로 다른 제품보다 큼.",
+   "checked": "2026-11-07"
+  }
+ ],
+ "reviews": [
+  {
+   "brand": "옵티멈뉴트리션",
+   "product": "골드 스탠다드 100% 웨이",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=52502",
+   "date": "2026-01-18",
+   "sentiment": "긍정",
+   "topic": "맛",
+   "quote": "더블리치초콜릿은 우유에 타면 시판 초코 밀크쉐이크 같아 놀랄 만큼 맛있음"
+  },
+  {
+   "brand": "옵티멈뉴트리션",
+   "product": "골드 스탠다드 100% 웨이",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=138443",
+   "date": "2026-11-06",
+   "sentiment": "부정",
+   "topic": "가격",
+   "quote": "7월에 사서 재구매하려니 10lb 기준 10만원이나 올라 너무 비싸짐"
+  },
+  {
+   "brand": "옵티멈뉴트리션",
+   "product": "골드 스탠다드 100% 웨이",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=99022",
+   "date": "2026-09-05",
+   "sentiment": "긍정",
+   "topic": "소화",
+   "quote": "유당불내증이 있는데도 먹을 만하고 속이 편안한 편"
+  },
+  {
+   "brand": "옵티멈뉴트리션",
+   "product": "골드 스탠다드 100% 웨이",
+   "source": "네이버 블로그",
+   "url": "https://m.blog.naver.com/pooplog/224371103615",
+   "date": "2026-08-07",
+   "sentiment": "부정",
+   "topic": "용해도",
+   "quote": "쿠키앤크림은 쿠키 입자가 물에 잘 안 섞이고 바닥에 가라앉음"
+  },
+  {
+   "brand": "룰원",
+   "product": "R1 프로틴",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=88431",
+   "date": "2026-08-17",
+   "sentiment": "긍정",
+   "topic": "맛",
+   "quote": "피스타치오맛이 호두마루와 비슷하고 다이마 WPC 바닐라보다 훨씬 나음"
+  },
+  {
+   "brand": "룰원",
+   "product": "R1 프로틴",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=117231",
+   "date": "2026-10-07",
+   "sentiment": "중립",
+   "topic": "맛",
+   "quote": "맛이 밍밍하긴 한데 그냥저냥 먹을 만한 수준"
+  },
+  {
+   "brand": "룰원",
+   "product": "R1 프로틴",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=139458",
+   "date": "2026-11-07",
+   "sentiment": "부정",
+   "topic": "용해도",
+   "quote": "두 스쿱 넣으면 코코볼처럼 동그랗게 심하게 뭉쳐서 한 스쿱만 먹음"
+  },
+  {
+   "brand": "다이마타이즈",
+   "product": "ISO100",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=109429",
+   "date": "2026-09-24",
+   "sentiment": "긍정",
+   "topic": "맛",
+   "quote": "퍼지브라우니를 우유에 타면 브라우니 갈아 넣은 맛, 인생 최고 프로틴"
+  },
+  {
+   "brand": "다이마타이즈",
+   "product": "ISO100",
+   "source": "네이버 블로그",
+   "url": "https://m.blog.naver.com/u_clarity/224396565904",
+   "date": "2026-08-31",
+   "sentiment": "긍정",
+   "topic": "용해도",
+   "quote": "고메 초콜릿이 문구대로 정말 잘 섞이고 물에 타도 초코우유 맛"
+  },
+  {
+   "brand": "다이마타이즈",
+   "product": "ISO100",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=51116",
+   "date": "2026-01-01",
+   "sentiment": "부정",
+   "topic": "가격",
+   "quote": "BPI보다 잘 풀리지만 5만원 더 비싸 두 배 값어치까진 아니라고 봄"
+  },
+  {
+   "brand": "다이마타이즈",
+   "product": "ISO100",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=89169",
+   "date": "2026-08-19",
+   "sentiment": "부정",
+   "topic": "소화",
+   "quote": "먹고 나면 가스가 너무 많이 차서 락토프리 제품으로 바꿀지 고민"
+  },
+  {
+   "brand": "머슬텍",
+   "product": "나이트로텍 100% 웨이 골드",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=88391",
+   "date": "2026-08-17",
+   "sentiment": "긍정",
+   "topic": "맛",
+   "quote": "연한 초코향에 부드러운 우유 느낌, 초코 좋아하면 만족할 맛"
+  },
+  {
+   "brand": "머슬텍",
+   "product": "나이트로텍 100% 웨이 골드",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=88393",
+   "date": "2026-08-17",
+   "sentiment": "긍정",
+   "topic": "용해도",
+   "quote": "풀림 꽤 좋고 거품은 먹어본 것 중 가장 적음, 다만 맛은 연한 편"
+  },
+  {
+   "brand": "머슬텍",
+   "product": "나이트로텍 100% 웨이 골드",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=129549",
+   "date": "2026-10-23",
+   "sentiment": "긍정",
+   "topic": "맛",
+   "quote": "더블리치초코 무난하고 맛있음, 옵골 밀크초코 느낌에 별도 단점 없음"
+  },
+  {
+   "brand": "캘리포니아 골드 뉴트리션",
+   "product": "SPORT 웨이 프로틴 아이솔레이트",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=45351",
+   "date": "2025-08-30",
+   "sentiment": "중립",
+   "topic": "용해도",
+   "quote": "무맛 비교 댓글: 풀림·거품은 나우가 낫고 특유의 맛은 캘골이 덜함"
+  },
+  {
+   "brand": "캘리포니아 골드 뉴트리션",
+   "product": "SPORT 웨이 프로틴 아이솔레이트",
+   "source": "디시 보충제갤",
+   "url": "https://gall.dcinside.com/mgallery/board/view/?id=nutrient&no=37481",
+   "date": "2025-02-01",
+   "sentiment": "부정",
+   "topic": "가격",
+   "quote": "캘골 가격이 너무 올라 무맛 프로틴을 나우로 갈아탈지 고민"
+  },
+  {
+   "brand": "캘리포니아 골드 뉴트리션",
+   "product": "SPORT 웨이 프로틴 아이솔레이트",
+   "source": "네이버 블로그",
+   "url": "https://blog.naver.com/jmbloger/223162454351",
+   "date": "2023-07-21",
+   "sentiment": "긍정",
+   "topic": "배송",
+   "quote": "아이허브 주문 후 평균 4~5일이면 도착, 주말이 껴도 비슷"
+  },
+  {
+   "brand": "캘리포니아 골드 뉴트리션",
+   "product": "SPORT 웨이 프로틴 아이솔레이트",
+   "source": "네이버 블로그",
+   "url": "https://blog.naver.com/drum_n_jiujitsu/223560950371",
+   "date": "2024-10-16",
+   "sentiment": "긍정",
+   "topic": "맛",
+   "quote": "다크초코를 우유·두유에 타면 꾸덕한 초코우유 맛, 질리지 않아 재구매"
+  }
+ ]
 }
