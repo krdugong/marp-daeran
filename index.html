@@ -111,6 +111,27 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .pchart figcaption{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center;font-size:12px;color:var(--muted);margin-top:6px}
 .pchart .k{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:-8px}
 .pchart .k-reg{background:var(--faint)}.pchart .k-live{background:var(--brand)}.pchart .k-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.lowG{background:var(--surface);border-radius:var(--r);padding:18px 18px 16px;margin:4px 0 12px}
+.lgTop{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}.lgLab{font-size:13px;color:var(--muted)}
+.lgBadge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px}
+.lgBadge.hot{background:var(--accent);color:#fff}.lgBadge.good{background:var(--mint-soft);color:#0B5A3A}.lgBadge.mid{background:#FAEEDA;color:#633806}.lgBadge.low{background:var(--surface-2);color:var(--ink-2)}
+.lgNow{margin:4px 0 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px}.lgNow b{font-size:34px;line-height:1.2;letter-spacing:-.02em}.lgNow span{font-size:14px;color:var(--muted)}
+.lgBar{position:relative;height:76px;margin:12px 6px 2px}
+.lgBar i,.lgBar em{position:absolute;display:block;font-style:normal}
+.lgBar .tr{left:0;right:0;top:30px;height:10px;border-radius:5px;background:var(--track)}
+.lgBar .calm{top:30px;height:10px;background:#C9C7C0}
+.lgBar .hot{right:0;top:30px;height:10px;border-radius:0 5px 5px 0;background:var(--track-hot)}
+.lgBar .th{top:18px;height:34px;border-left:2px dashed var(--accent);margin-left:-1px}
+.lgBar .thL{top:0;font-size:12px;color:var(--accent);transform:translateX(-50%);white-space:nowrap}
+.lgBar .dr{top:27px;width:16px;height:16px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);transform:translateX(-50%)}
+.lgBar .now{top:22px;width:26px;height:26px;border-radius:50%;background:var(--brand);border:3px solid var(--bg);transform:translateX(-50%);box-shadow:0 0 0 1px var(--line)}.lgBar .now.on{background:var(--accent)}
+.lgBar .nowL{top:56px;font-size:12px;font-weight:700;transform:translateX(-50%);white-space:nowrap}
+.lgBar .ax{top:56px;font-size:12px;color:var(--faint)}.lgBar .ax.r{right:0}
+.lgKey{display:flex;flex-wrap:wrap;gap:4px 14px;margin:0 0 12px;font-size:12px;color:var(--muted)}
+.lgKey .k{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}.lgKey .k.calm{background:#C9C7C0}.lgKey .k.hot{background:var(--track-hot)}.lgKey .k.dr{border-radius:50%;border:2px solid var(--accent)}
+.lgPrice{margin:0;border-top:1px solid var(--line);padding-top:10px;font-variant-numeric:tabular-nums}
+.lgPrice div{display:flex;justify-content:space-between;gap:12px;padding:3px 0}.lgPrice dt{color:var(--muted);font-size:14px}.lgPrice dd{margin:0;font-weight:700;text-align:right}.lgPrice dd.hot{color:var(--accent)}.lgPrice small{font-weight:400}
+.lgNote{margin:8px 0 0;font-size:13px;color:var(--muted)}
 .pgauge{background:var(--surface);border-radius:var(--r);padding:18px 18px 6px;margin:4px 0 8px}
 .pgHead{margin:0 0 4px;font-size:15px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}.pgHead b{font-size:20px}.pgHead small{color:var(--muted);font-size:12px}
 .badge{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;align-self:center}
@@ -506,18 +527,24 @@ body.hasSticky{padding-bottom:0}
 </section>
 <section class="full">
 <h2>지금 사도 될까</h2>
-<div class="pgauge">
-<p class="pgHead"><span class="badge near">대란 근처</span> 오늘 임팩트웨이 프로틴 1kg <b>69,867원</b><small>코드 37% 적용</small></p>
-<svg viewBox="0 0 640 122" role="img" aria-label="오늘 코드 적용가 69,867원. 역대 최저 대란가 63,213원, 대란 기준 가격 67,649원, 코드 없이 110,900원">
-  <text x="89.8" y="20" class="g-lab" fill="var(--accent)">대란 기준 39% · 67,649원</text>
-  <rect x="14" y="40" width="89.8" height="12" rx="6" fill="var(--track-hot)"/>
-  <rect x="103.8" y="40" width="522.2" height="12" rx="6" fill="var(--track)"/>
-  <line x1="103.8" y1="22" x2="103.8" y2="60" stroke="var(--accent)" stroke-width="2" stroke-dasharray="3 3"/>
-  <circle cx="130.6" cy="46" r="9" fill="var(--brand)" stroke="#fff" stroke-width="3"/>
-  <text x="16" y="88" class="g-tick">역대 대란 43%</text><text x="16" y="116" class="g-val" fill="var(--accent)">63,213원</text>
-  <text x="626" y="88" class="g-tick" text-anchor="end">코드 없이</text><text x="626" y="116" class="g-val" text-anchor="end">110,900원</text>
-</svg>
-<p class="lede">대란 기준 가격보다 <b>2,218원</b>, 역대 최저 대란가보다 6,654원 비쌉니다. 급하지 않으면 11월 11일 슈퍼세일까지 기다리는 편이 낫습니다.</p>
+<div class="lowG">
+<p class="lgTop"><span class="lgLab">오늘 마이프로틴 할인율</span><span class="lgBadge mid">평소 수준 · 기다리면 더 쌈</span></p>
+<p class="lgNow"><b>37%</b><span>최근 11일 평소 평균 36.3%보다 0.7%p 높음</span></p>
+<div class="lgBar" role="img" aria-label="오늘 할인코드 37퍼센트. 최근 11일 평소 범위 36~37퍼센트, 평균 36.3퍼센트. 대란 기준 39퍼센트, 지난 대란 평균 41퍼센트">
+  <i class="tr"></i>
+  <i class="calm" style="left:25%;width:12.5%"></i>
+  <i class="hot" style="left:62.5%"></i>
+  <i class="th" style="left:62.5%"></i><em class="thL" style="left:62.5%">대란 기준 39</em>
+  <i class="dr" style="left:87.5%"></i>
+  <i class="now" style="left:37.5%"></i><em class="nowL" style="left:37.5%">오늘 37</em>
+  <em class="ax" style="left:0">34%</em><em class="ax r">42%</em>
+</div>
+<p class="lgKey"><span><i class="k calm"></i>평소 범위 36~37%</span><span><i class="k hot"></i>대란 구간</span><span><i class="k dr"></i>지난 대란 평균 41%</span></p>
+<dl class="lgPrice">
+  <div><dt>임팩트웨이 2.5kg 오늘</dt><dd>142,317원</dd></div>
+  <div><dt>11일 대란 41%면</dt><dd class="hot">133,281원 <small>(9,036원 더 쌈)</small></dd></div>
+</dl>
+<p class="lgNote">급하지 않으면 4일 뒤 11월 11일 대란까지 기다리는 게 낫습니다. 11월 7일 자동 확인 기준이고, 대란 할인율은 지난 대란들의 평균입니다.</p>
 </div>
 <figure class="pchart">
 <svg viewBox="0 0 640 270" role="img" aria-label="임팩트웨이 프로틴 1kg 가격 흐름. 오늘 정상가 110,900원, 할인코드 적용가 69,867원, 기록 시작 전 대란가 3월 18일 64,322원, 4월 4일 64,322원, 4월 23일 64,322원, 5월 3일 63,213원, 5월 27일 67,649원, 6월 5일 66,540원, 7월 6일 66,540원, 8월 14일 65,431원">
