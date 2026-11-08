@@ -1,155 +1,1402 @@
 {
-  "_readme": "아이허브 키워드 페이지 데이터입니다 (네이버 자동완성: 아이허브 추천템·추천·유산균·오메가3·마그네슘·블프·11월). guides 하나가 페이지 하나(file)입니다. products 의 kw 는 아이허브 검색어라 제휴 링크(iherb.json 의 affiliate)로 자동으로 바뀝니다. best 는 아이허브 베스트셀러 목록(kr.iherb.com/catalog/topsellers)을 확인한 날짜와 내용입니다. 베스트셀러가 바뀌면 best.checked 와 groups 를 고치면 됩니다. blackfriday.codes 에 코드가 생기면 {code, label, rate, until} 형식으로 넣으세요. 제품 설명에는 라벨이나 제품명에 적힌 사실만 쓰고, 효능을 단정하지 마세요.",
-  "best": {
-    "checked": "2026-11-03",
-    "groups": [
-      {
-        "name": "영양제",
-        "guide": null,
-        "items": [
-          { "name": "캘리포니아 골드 뉴트리션 LactoBif 30 프로바이오틱 300억 CFU, 120정", "kw": "California Gold Nutrition LactoBif 30", "note": "아이허브 자체 브랜드 유산균. 리뷰가 17만 개가 넘습니다.", "guide": "iherb-probiotics.html" },
-          { "name": "닥터스베스트 고흡수 마그네슘 리시네이트 글리시네이트, 240정", "kw": "Doctor's Best High Absorption Magnesium", "note": "킬레이트 형태 마그네슘. 1정에 100mg입니다.", "guide": "iherb-magnesium.html" },
-          { "name": "캘리포니아 골드 뉴트리션 오메가 800, 30정", "kw": "California Gold Nutrition Omega 800", "note": "고함량 오메가3. 피쉬 젤라틴 캡슐입니다.", "guide": "iherb-omega3.html" },
-          { "name": "나우푸드 마그네슘 글리시네이트, 180정", "kw": "NOW Foods Magnesium Glycinate", "note": "글리시네이트 형태. 1정에 100mg입니다.", "guide": "iherb-magnesium.html" },
-          { "name": "캘리포니아 골드 뉴트리션 Gold C 비타민C 1,000mg, 240정", "kw": "California Gold Nutrition Gold C 1000", "note": "자체 브랜드 비타민C. 240정 대용량입니다." },
-          { "name": "쏜리서치 기본 B 복합체, 60정", "kw": "Thorne Basic B Complex", "note": "비타민B 복합제. 쏜리서치는 가격대가 높은 편입니다." },
-          { "name": "라이프익스텐션 투 퍼 데이 종합비타민, 120정", "kw": "Life Extension Two-Per-Day", "note": "하루 2정 종합비타민. 60정짜리도 같이 많이 팔립니다." },
-          { "name": "닥터스베스트 고흡수 CoQ10 100mg, 120정", "kw": "Doctor's Best CoQ10 100 mg", "note": "코큐텐(코엔자임Q10) 100mg 소프트젤입니다." },
-          { "name": "캘리포니아 골드 뉴트리션 오메가3 프리미엄 피쉬 오일, 100정", "kw": "California Gold Nutrition Omega-3 Premium Fish Oil", "note": "자체 브랜드 일반 함량 오메가3입니다.", "guide": "iherb-omega3.html" }
-        ]
-      },
-      {
-        "name": "운동 보충제",
-        "items": [
-          { "name": "캘리포니아 골드 뉴트리션 크레아틴 일수화물, 454g", "kw": "California Gold Nutrition Creatine Monohydrate", "note": "무맛 크레아틴 가루. 자체 브랜드라 쌉니다." },
-          { "name": "옵티멈뉴트리션 미분화 크레아틴 파우더, 600g", "kw": "Optimum Nutrition Micronized Creatine", "note": "입자가 고운 크레아틴입니다." },
-          { "name": "쏜리서치 크레아틴, 450g", "kw": "Thorne Creatine", "note": "크레아틴 중 비싼 편입니다." },
-          { "name": "라이프익스텐션 크레아틴 캡슐, 120정", "kw": "Life Extension Creatine Capsules", "note": "가루가 싫으면 캡슐로 먹습니다." },
-          { "name": "캘리포니아 골드 뉴트리션 분리유청단백질 무맛, 454g", "kw": "California Gold Nutrition Whey Protein Isolate", "note": "무맛 WPI 소용량입니다. 대용량 가격 비교는 대안 페이지에 있습니다.", "guide": "alternatives.html" },
-          { "name": "가든오브라이프 무가공 유기농 단백질, 560g", "kw": "Garden of Life Raw Organic Protein", "note": "식물성(완두 등) 단백질입니다." },
-          { "name": "스포츠리서치 알래스칸 오메가3, 90정", "kw": "Sports Research Alaskan Omega-3", "note": "스포츠리서치 오메가3는 트리플 스트렝스 180정도 많이 팔립니다.", "guide": "iherb-omega3.html" },
-          { "name": "스포츠리서치 D3 + K2, 60정", "kw": "Sports Research D3 K2", "note": "비타민D3 125mcg(5,000IU)와 K2 100mcg. 식물성 소프트젤입니다." }
-        ]
-      },
-      {
-        "name": "뷰티",
-        "items": [
-          { "name": "어드밴스드 클리니컬스 세럼 (비타민C·레티놀·히알루론산·나이아신아마이드), 52ml", "kw": "Advanced Clinicals serum", "note": "네 종류가 베스트셀러에 같이 올라 있습니다." },
-          { "name": "스트라이덱스 맥시멈 여드름 패드, 90매", "kw": "Stridex Maximum", "note": "알코올 없는 각질·여드름 패드입니다." },
-          { "name": "파녹실 아크네 포밍 워시, 156g", "kw": "PanOxyl Acne Foaming Wash", "note": "벤조일퍼옥사이드 세안제입니다. 옷과 수건이 탈색될 수 있습니다." },
-          { "name": "퓨라도르 20% 비타민C 세럼, 118ml", "kw": "Pura D'or Vitamin C Serum", "note": "118ml 대용량 비타민C 세럼입니다." },
-          { "name": "유세린 Q10 리바이탈라이즈 데일리 크림, 48g", "kw": "Eucerin Q10", "note": "향료 없는 페이스 크림입니다." },
-          { "name": "마일드바이네이처 비오틴 샴푸, 473ml", "kw": "Mild By Nature Biotin Shampoo", "note": "아이허브 자체 브랜드 샴푸입니다." }
-        ]
-      },
-      {
-        "name": "식품·생활",
-        "items": [
-          { "name": "브래그 유기농 애플 사이다 식초, 473ml", "kw": "Bragg Apple Cider Vinegar", "note": "초모(mother)가 든 사과식초입니다." },
-          { "name": "와일드 플래닛 자연산 정어리, 125g", "kw": "Wild Planet Sardines", "note": "소금 무첨가 정어리 통조림입니다." },
-          { "name": "피넛버터앤코 올드 패션드 크런치, 454g", "kw": "Peanut Butter & Co Old Fashioned Crunchy", "note": "땅콩과 소금만 들어간 땅콩버터입니다." },
-          { "name": "초코러브 다크 초콜릿 (아몬드 55%·익스트림 88%), 90g", "kw": "Chocolove dark chocolate", "note": "다크 초콜릿 두 종이 같이 올라 있습니다." },
-          { "name": "바이오가이아 프로덴티스 구강 유산균, 30정", "kw": "BioGaia Prodentis", "note": "입에서 녹여 먹는 구강용 유산균입니다.", "guide": "iherb-probiotics.html" },
-          { "name": "나우푸드 자일리화이트 치약, 181g", "kw": "NOW Foods XyliWhite", "note": "자일리톨 젤 치약입니다." }
-        ]
-      }
+ "_readme": "아이허브 키워드 페이지 데이터입니다 (네이버 자동완성: 아이허브 추천템·추천·유산균·오메가3·마그네슘·블프·11월). guides 하나가 페이지 하나(file)입니다. products 의 kw 는 아이허브 검색어라 제휴 링크(iherb.json 의 affiliate)로 자동으로 바뀝니다. best 는 아이허브 베스트셀러 목록(kr.iherb.com/catalog/topsellers)을 확인한 날짜와 내용입니다. 베스트셀러가 바뀌면 best.checked 와 groups 를 고치면 됩니다. blackfriday.codes 에 코드가 생기면 {code, label, rate, until} 형식으로 넣으세요. 제품 설명에는 라벨이나 제품명에 적힌 사실만 쓰고, 효능을 단정하지 마세요. compare 는 제품 비교표(어사이드 조사: docs/iherb-research). items 의 price 는 1회 구매가(원), count 는 한 통 정 수, perServing 은 1회 정 수. amt 필드(오메가3 epa+dha mg, 마그네슘 elemental mg, 유산균 cfu 억)로 1회분 함량을, per 단위로 함량당 가격을 계산합니다. alt 는 \"추천 형태 중 가장 싼 것\"을 따로 짚는 조건. reviews 는 그 카테고리 후기 요약.",
+ "best": {
+  "checked": "2026-11-03",
+  "groups": [
+   {
+    "name": "영양제",
+    "guide": null,
+    "items": [
+     {
+      "name": "캘리포니아 골드 뉴트리션 LactoBif 30 프로바이오틱 300억 CFU, 120정",
+      "kw": "California Gold Nutrition LactoBif 30",
+      "note": "아이허브 자체 브랜드 유산균. 리뷰가 17만 개가 넘습니다.",
+      "guide": "iherb-probiotics.html"
+     },
+     {
+      "name": "닥터스베스트 고흡수 마그네슘 리시네이트 글리시네이트, 240정",
+      "kw": "Doctor's Best High Absorption Magnesium",
+      "note": "킬레이트 형태 마그네슘. 1정에 100mg입니다.",
+      "guide": "iherb-magnesium.html"
+     },
+     {
+      "name": "캘리포니아 골드 뉴트리션 오메가 800, 30정",
+      "kw": "California Gold Nutrition Omega 800",
+      "note": "고함량 오메가3. 피쉬 젤라틴 캡슐입니다.",
+      "guide": "iherb-omega3.html"
+     },
+     {
+      "name": "나우푸드 마그네슘 글리시네이트, 180정",
+      "kw": "NOW Foods Magnesium Glycinate",
+      "note": "글리시네이트 형태. 1정에 100mg입니다.",
+      "guide": "iherb-magnesium.html"
+     },
+     {
+      "name": "캘리포니아 골드 뉴트리션 Gold C 비타민C 1,000mg, 240정",
+      "kw": "California Gold Nutrition Gold C 1000",
+      "note": "자체 브랜드 비타민C. 240정 대용량입니다."
+     },
+     {
+      "name": "쏜리서치 기본 B 복합체, 60정",
+      "kw": "Thorne Basic B Complex",
+      "note": "비타민B 복합제. 쏜리서치는 가격대가 높은 편입니다."
+     },
+     {
+      "name": "라이프익스텐션 투 퍼 데이 종합비타민, 120정",
+      "kw": "Life Extension Two-Per-Day",
+      "note": "하루 2정 종합비타민. 60정짜리도 같이 많이 팔립니다."
+     },
+     {
+      "name": "닥터스베스트 고흡수 CoQ10 100mg, 120정",
+      "kw": "Doctor's Best CoQ10 100 mg",
+      "note": "코큐텐(코엔자임Q10) 100mg 소프트젤입니다."
+     },
+     {
+      "name": "캘리포니아 골드 뉴트리션 오메가3 프리미엄 피쉬 오일, 100정",
+      "kw": "California Gold Nutrition Omega-3 Premium Fish Oil",
+      "note": "자체 브랜드 일반 함량 오메가3입니다.",
+      "guide": "iherb-omega3.html"
+     }
     ]
-  },
-  "guides": [
+   },
+   {
+    "name": "운동 보충제",
+    "items": [
+     {
+      "name": "캘리포니아 골드 뉴트리션 크레아틴 일수화물, 454g",
+      "kw": "California Gold Nutrition Creatine Monohydrate",
+      "note": "무맛 크레아틴 가루. 자체 브랜드라 쌉니다."
+     },
+     {
+      "name": "옵티멈뉴트리션 미분화 크레아틴 파우더, 600g",
+      "kw": "Optimum Nutrition Micronized Creatine",
+      "note": "입자가 고운 크레아틴입니다."
+     },
+     {
+      "name": "쏜리서치 크레아틴, 450g",
+      "kw": "Thorne Creatine",
+      "note": "크레아틴 중 비싼 편입니다."
+     },
+     {
+      "name": "라이프익스텐션 크레아틴 캡슐, 120정",
+      "kw": "Life Extension Creatine Capsules",
+      "note": "가루가 싫으면 캡슐로 먹습니다."
+     },
+     {
+      "name": "캘리포니아 골드 뉴트리션 분리유청단백질 무맛, 454g",
+      "kw": "California Gold Nutrition Whey Protein Isolate",
+      "note": "무맛 WPI 소용량입니다. 대용량 가격 비교는 대안 페이지에 있습니다.",
+      "guide": "alternatives.html"
+     },
+     {
+      "name": "가든오브라이프 무가공 유기농 단백질, 560g",
+      "kw": "Garden of Life Raw Organic Protein",
+      "note": "식물성(완두 등) 단백질입니다."
+     },
+     {
+      "name": "스포츠리서치 알래스칸 오메가3, 90정",
+      "kw": "Sports Research Alaskan Omega-3",
+      "note": "스포츠리서치 오메가3는 트리플 스트렝스 180정도 많이 팔립니다.",
+      "guide": "iherb-omega3.html"
+     },
+     {
+      "name": "스포츠리서치 D3 + K2, 60정",
+      "kw": "Sports Research D3 K2",
+      "note": "비타민D3 125mcg(5,000IU)와 K2 100mcg. 식물성 소프트젤입니다."
+     }
+    ]
+   },
+   {
+    "name": "뷰티",
+    "items": [
+     {
+      "name": "어드밴스드 클리니컬스 세럼 (비타민C·레티놀·히알루론산·나이아신아마이드), 52ml",
+      "kw": "Advanced Clinicals serum",
+      "note": "네 종류가 베스트셀러에 같이 올라 있습니다."
+     },
+     {
+      "name": "스트라이덱스 맥시멈 여드름 패드, 90매",
+      "kw": "Stridex Maximum",
+      "note": "알코올 없는 각질·여드름 패드입니다."
+     },
+     {
+      "name": "파녹실 아크네 포밍 워시, 156g",
+      "kw": "PanOxyl Acne Foaming Wash",
+      "note": "벤조일퍼옥사이드 세안제입니다. 옷과 수건이 탈색될 수 있습니다."
+     },
+     {
+      "name": "퓨라도르 20% 비타민C 세럼, 118ml",
+      "kw": "Pura D'or Vitamin C Serum",
+      "note": "118ml 대용량 비타민C 세럼입니다."
+     },
+     {
+      "name": "유세린 Q10 리바이탈라이즈 데일리 크림, 48g",
+      "kw": "Eucerin Q10",
+      "note": "향료 없는 페이스 크림입니다."
+     },
+     {
+      "name": "마일드바이네이처 비오틴 샴푸, 473ml",
+      "kw": "Mild By Nature Biotin Shampoo",
+      "note": "아이허브 자체 브랜드 샴푸입니다."
+     }
+    ]
+   },
+   {
+    "name": "식품·생활",
+    "items": [
+     {
+      "name": "브래그 유기농 애플 사이다 식초, 473ml",
+      "kw": "Bragg Apple Cider Vinegar",
+      "note": "초모(mother)가 든 사과식초입니다."
+     },
+     {
+      "name": "와일드 플래닛 자연산 정어리, 125g",
+      "kw": "Wild Planet Sardines",
+      "note": "소금 무첨가 정어리 통조림입니다."
+     },
+     {
+      "name": "피넛버터앤코 올드 패션드 크런치, 454g",
+      "kw": "Peanut Butter & Co Old Fashioned Crunchy",
+      "note": "땅콩과 소금만 들어간 땅콩버터입니다."
+     },
+     {
+      "name": "초코러브 다크 초콜릿 (아몬드 55%·익스트림 88%), 90g",
+      "kw": "Chocolove dark chocolate",
+      "note": "다크 초콜릿 두 종이 같이 올라 있습니다."
+     },
+     {
+      "name": "바이오가이아 프로덴티스 구강 유산균, 30정",
+      "kw": "BioGaia Prodentis",
+      "note": "입에서 녹여 먹는 구강용 유산균입니다.",
+      "guide": "iherb-probiotics.html"
+     },
+     {
+      "name": "나우푸드 자일리화이트 치약, 181g",
+      "kw": "NOW Foods XyliWhite",
+      "note": "자일리톨 젤 치약입니다."
+     }
+    ]
+   }
+  ]
+ },
+ "guides": [
+  {
+   "file": "iherb-probiotics.html",
+   "cat": "유산균",
+   "kw": "아이허브 유산균",
+   "title": "아이허브 유산균 추천 ({y}) | 10개 균 수·가격 비교 · 300억·1000억 · 보관",
+   "h1": "아이허브 유산균<br>고르는 기준과 베스트셀러",
+   "answer": "아이허브 유산균은 <b>유통기한까지 보장되는 균 수</b>, <b>균주 이름</b>, <b>실온 보관 여부</b> 세 가지를 보고 고르면 됩니다. 베스트셀러 1위는 자체 브랜드인 캘리포니아 골드 뉴트리션 LactoBif입니다.",
+   "keywords": [
+    "아이허브 유산균",
+    "아이허브 유산균 추천",
+    "아이허브 프로바이오틱스",
+    "락토비프",
+    "LactoBif",
+    "아이허브 구강 유산균",
+    "아이허브 유산균 300억",
+    "아이허브 유산균 1000억",
+    "아이허브 유산균 비교",
+    "락토비프 300억",
+    "자로우 유산균",
+    "아이허브 유산균 보관방법"
+   ],
+   "products": [
     {
-      "file": "iherb-probiotics.html",
-      "cat": "유산균",
-      "kw": "아이허브 유산균",
-      "title": "아이허브 유산균 추천 ({y}) | 베스트셀러 순위 · 고르는 기준 · 직구 보관",
-      "h1": "아이허브 유산균<br>고르는 기준과 베스트셀러",
-      "answer": "아이허브 유산균은 <b>유통기한까지 보장되는 균 수</b>, <b>균주 이름</b>, <b>실온 보관 여부</b> 세 가지를 보고 고르면 됩니다. 베스트셀러 1위는 자체 브랜드인 캘리포니아 골드 뉴트리션 LactoBif입니다.",
-      "keywords": ["아이허브 유산균", "아이허브 유산균 추천", "아이허브 프로바이오틱스", "락토비프", "LactoBif", "아이허브 구강 유산균"],
-      "products": [
-        { "name": "캘리포니아 골드 뉴트리션 LactoBif 30 프로바이오틱 300억 CFU, 120정", "kw": "California Gold Nutrition LactoBif 30", "tag": "베스트셀러 1위", "points": ["아이허브 자체 브랜드라 같은 균 수에서 가격이 낮은 편입니다.", "리뷰가 17만 개가 넘습니다 (11월 3일 기준).", "50억·1000억 CFU 등 균 수만 다른 제품이 여러 개라 라벨의 CFU 숫자를 보고 고르세요."] },
-        { "name": "바이오가이아 프로덴티스 구강 유산균, 민트 30정", "kw": "BioGaia Prodentis", "tag": "구강용", "points": ["장이 아니라 입안(잇몸·치아)용으로 나온, 입에서 녹여 먹는 정제입니다.", "삼키는 유산균과 목적이 달라 같이 먹는 사람이 많습니다."] },
-        { "name": "나우푸드 OralBiotic 구강 유산균, 60정", "kw": "NOW Foods OralBiotic", "tag": "구강용", "points": ["입에서 녹여 먹는 구강용 유산균입니다.", "프로덴티스보다 싼 편이라 비교해 보고 고르세요."] }
-      ],
-      "checks": [
-        "CFU(균 수)가 '유통기한까지 보장'인지 보세요. 제조 시 기준만 적힌 제품은 도착했을 때 줄어 있을 수 있어요.",
-        "균주 이름이 끝까지 적힌 제품(예: Lactobacillus rhamnosus GG)이 믿을 만해요.",
-        "직구는 상온으로 오니까 실온 보관(shelf-stable) 제품을 고르세요. 냉장 제품은 여름엔 피하세요.",
-        "균 수가 클수록 좋은 건 아니에요. 처음이면 중간 균 수로 시작해서 속이 편한지 보세요."
-      ],
-      "faq": [
-        ["아이허브 유산균은 냉장 보관해야 하나요?", "라벨에 실온 보관(shelf-stable)이라고 적힌 제품은 상온에 두어도 됩니다. 냉장 보관이 필요한 제품은 직구 배송 중에 상온을 거치니, 직구로는 실온 보관 제품을 고르는 편이 낫습니다. 받은 뒤에는 서늘하고 건조한 곳에 두십시오."],
-        ["아이허브 유산균 한 번에 몇 통까지 살 수 있나요?", "건강기능식품은 한 번에 6병까지 개인 사용으로 통관됩니다. 유산균만이 아니라 다른 영양제와 합쳐서 6병이니 주문을 나누십시오."],
-        ["LactoBif는 몇 억 짜리를 사야 하나요?", "같은 이름으로 균 수만 다른 제품이 여러 개입니다. 처음 먹는다면 낮은 균 수부터 먹어 보고 속이 편한지 확인한 뒤 올리는 사람이 많습니다. 균 수가 높다고 더 좋은 것은 아닙니다."],
-        ["구강 유산균은 일반 유산균과 다른가요?", "프로덴티스나 OralBiotic 같은 구강용은 입안에서 녹이거나 씹어 먹도록 만든 제품입니다. 장용 캡슐과 목적이 달라서 서로 대신하지는 않습니다."]
-      ]
+     "name": "캘리포니아 골드 뉴트리션 LactoBif 30 프로바이오틱 300억 CFU, 120정",
+     "kw": "California Gold Nutrition LactoBif 30",
+     "tag": "베스트셀러 1위",
+     "points": [
+      "아이허브 자체 브랜드라 같은 균 수에서 가격이 낮은 편입니다.",
+      "리뷰가 17만 개가 넘습니다 (11월 3일 기준).",
+      "50억·1000억 CFU 등 균 수만 다른 제품이 여러 개라 라벨의 CFU 숫자를 보고 고르세요."
+     ]
     },
     {
-      "file": "iherb-omega3.html",
-      "cat": "오메가3",
-      "kw": "아이허브 오메가3",
-      "title": "아이허브 오메가3 추천 ({y}) | EPA·DHA 함량 보는 법 · 베스트셀러",
-      "h1": "아이허브 오메가3<br>EPA·DHA로 고르는 법",
-      "answer": "아이허브 오메가3는 캡슐 무게가 아니라 <b>EPA+DHA 합계</b>로 비교하면 됩니다. 베스트셀러는 캘리포니아 골드 뉴트리션 오메가 800과 스포츠리서치 제품입니다.",
-      "keywords": ["아이허브 오메가3", "아이허브 오메가3 추천", "오메가 800", "스포츠리서치 오메가3", "아이허브 피쉬오일", "rTG 오메가3"],
-      "products": [
-        { "name": "캘리포니아 골드 뉴트리션 오메가 800, 피쉬 젤라틴 소프트젤 30정", "kw": "California Gold Nutrition Omega 800", "tag": "고함량", "points": ["이름의 800은 1,000mg 캡슐 하나에 든 EPA+DHA 양입니다. 그래서 하루 캡슐 수가 적습니다.", "캡슐이 소가 아닌 생선 젤라틴입니다.", "30정 단위라 산패 걱정이 적습니다. 대신 큰 통보다 개당 가격이 비쌀 수 있어요."] },
-        { "name": "캘리포니아 골드 뉴트리션 오메가3 프리미엄 피쉬 오일, 100정", "kw": "California Gold Nutrition Omega-3 Premium Fish Oil", "tag": "일반 함량", "points": ["가격이 싼 일반 함량 제품입니다.", "같은 EPA+DHA를 먹으려면 캡슐을 더 먹어야 하니 라벨의 1회분 기준을 보세요."] },
-        { "name": "스포츠리서치 오메가3 피쉬 오일 트리플 스트렝스, 180정", "kw": "Sports Research Triple Strength Omega-3", "tag": "대용량", "points": ["180정 대용량이라 개당 가격이 낮은 편입니다.", "큰 통은 다 먹기 전에 산패될 수 있으니 서늘한 곳에 두세요."] },
-        { "name": "스포츠리서치 알래스칸 오메가3, 90정", "kw": "Sports Research Alaskan Omega-3", "tag": "베스트셀러", "points": ["알래스카산 생선 기름이라고 적힌 제품입니다.", "트리플 스트렝스와 함량이 다르니 EPA+DHA 합계로 비교하세요."] }
-      ],
-      "checks": [
-        "캡슐 무게가 아니라 EPA+DHA 합계 mg을 보세요. 1,000mg 캡슐인데 EPA+DHA는 300mg뿐인 제품이 많아요.",
-        "1회분이 캡슐 몇 개 기준인지 보세요. 2캡슐 기준으로 적어 두고 크게 보이게 한 제품이 있어요.",
-        "rTG 형태 표기와 IFOS 같은 제3자 인증이 있으면 좋아요.",
-        "산패되기 쉬우니 큰 통 하나보다 두세 달치로 사고, 도착하면 서늘한 곳에 두세요."
-      ],
-      "faq": [
-        ["아이허브 오메가3 하루에 얼마나 먹어야 하나요?", "제품 라벨의 1회 섭취량을 따르십시오. 한국 건강기능식품 기준으로 EPA와 DHA 합계 하루 0.5~2g이 표시 범위입니다. 피를 묽게 하는 약을 먹고 있다면 의사와 먼저 상의하십시오."],
-        ["오메가 800은 왜 비싼가요?", "캡슐 하나에 EPA+DHA가 많이 들어 있어서 통당 가격은 비싸 보입니다. EPA+DHA 1g당 가격으로 바꿔 보면 일반 함량 제품과 차이가 줄어듭니다."],
-        ["피쉬 젤라틴이 뭔가요?", "캡슐 껍질을 소나 돼지 대신 생선에서 얻은 젤라틴으로 만들었다는 뜻입니다. 종교나 식단 때문에 소·돼지를 피하는 사람이 많이 고릅니다."],
-        ["비린내가 나요. 상한 건가요?", "트림할 때 약간의 생선 냄새는 흔합니다. 캡슐을 잘랐을 때 기름에서 시큼하거나 역한 냄새가 나면 산패된 것일 수 있으니 먹지 말고 고객센터에 문의하십시오."]
-      ]
+     "name": "바이오가이아 프로덴티스 구강 유산균, 민트 30정",
+     "kw": "BioGaia Prodentis",
+     "tag": "구강용",
+     "points": [
+      "장이 아니라 입안(잇몸·치아)용으로 나온, 입에서 녹여 먹는 정제입니다.",
+      "삼키는 유산균과 목적이 달라 같이 먹는 사람이 많습니다."
+     ]
     },
     {
-      "file": "iherb-magnesium.html",
-      "cat": "마그네슘",
-      "kw": "아이허브 마그네슘",
-      "title": "아이허브 마그네슘 추천 ({y}) | 글리시네이트·시트레이트 차이 · 베스트셀러",
-      "h1": "아이허브 마그네슘<br>형태부터 고르는 법",
-      "answer": "아이허브 마그네슘은 <b>형태(글리시네이트·시트레이트·옥사이드)</b>와 <b>원소 마그네슘 mg</b>을 보고 고르면 됩니다. 베스트셀러는 닥터스베스트와 나우푸드의 글리시네이트 제품입니다.",
-      "keywords": ["아이허브 마그네슘", "아이허브 마그네슘 추천", "마그네슘 글리시네이트", "닥터스베스트 마그네슘", "나우푸드 마그네슘", "마그네슘 시트레이트"],
-      "products": [
-        { "name": "닥터스베스트 고흡수 마그네슘 리시네이트 글리시네이트, 240정", "kw": "Doctor's Best High Absorption Magnesium", "tag": "베스트셀러", "points": ["알비온(Albion) TRAACS 킬레이트 원료를 썼다고 적혀 있습니다.", "1정에 원소 마그네슘 100mg이라 양을 나눠 먹기 쉽습니다.", "240정이라 오래 먹습니다."] },
-        { "name": "나우푸드 마그네슘 글리시네이트, 180정", "kw": "NOW Foods Magnesium Glycinate", "tag": "글리시네이트", "points": ["1정에 100mg입니다.", "닥터스베스트와 같은 형태라 세일하는 쪽을 사면 됩니다."] }
-      ],
-      "table": {
-        "head": ["형태", "특징", "이럴 때"],
-        "rows": [
-          ["글리시네이트", "속이 편한 편이고 변이 묽어지는 일이 적어요", "처음 먹을 때, 저녁에 먹을 때"],
-          ["시트레이트", "흡수가 괜찮고 값이 싸요. 변이 묽어질 수 있어요", "변비가 있을 때"],
-          ["옥사이드", "가장 싸고 함량이 커 보이지만 흡수율이 낮아요", "가격만 볼 때"],
-          ["L-트레온산", "비싸요. 마그테인(Magtein)이라는 이름으로 팔려요", "비싸도 괜찮을 때"]
-        ]
-      },
-      "checks": [
-        "형태를 먼저 보세요. 글리시네이트는 속이 편하고, 시트레이트는 변이 묽어질 수 있고, 옥사이드는 싸지만 흡수가 낮아요.",
-        "'원소 마그네슘(elemental)' 기준 mg을 보세요. 화합물 무게로 크게 적어 둔 제품이 있어요.",
-        "보충제로 먹는 마그네슘은 성인 하루 350mg이 상한이에요. 종합비타민에 든 양도 더해서 계산하세요.",
-        "신장 질환이 있거나 약을 먹고 있으면 의사와 먼저 상의하세요."
-      ],
-      "faq": [
-        ["마그네슘 글리시네이트와 시트레이트 중 뭐가 낫나요?", "속이 예민하거나 처음 먹는다면 글리시네이트가 무난합니다. 시트레이트는 값이 싸고 흡수도 괜찮지만 변이 묽어질 수 있습니다. 변비가 있는 사람은 일부러 시트레이트를 고르기도 합니다."],
-        ["마그네슘은 언제 먹나요?", "정해진 시간은 없습니다. 속이 불편하면 식사와 함께 먹고, 글리시네이트는 저녁에 먹는 사람이 많습니다. 칼슘이나 아연과 한꺼번에 많이 먹기보다 나눠 먹는 편이 낫습니다."],
-        ["하루에 몇 정 먹어야 하나요?", "라벨의 1회 섭취량을 따르십시오. 보충제로 먹는 마그네슘은 성인 하루 350mg이 상한입니다. 닥터스베스트와 나우푸드는 1정에 100mg이라 2정이면 200mg입니다."],
-        ["설사를 해요.", "마그네슘을 많이 먹으면 변이 묽어질 수 있습니다. 양을 줄이거나 글리시네이트처럼 속이 편한 형태로 바꿔 보고, 계속되면 그만 먹으십시오."]
-      ]
+     "name": "나우푸드 OralBiotic 구강 유산균, 60정",
+     "kw": "NOW Foods OralBiotic",
+     "tag": "구강용",
+     "points": [
+      "입에서 녹여 먹는 구강용 유산균입니다.",
+      "프로덴티스보다 싼 편이라 비교해 보고 고르세요."
+     ]
     }
-  ],
-  "blackfriday": {
-    "codes": [],
-    "history": [
-      { "year": 2024, "text": "블랙프라이데이·사이버먼데이 전체 할인코드 BFCM24 25%" },
-      { "year": 2025, "text": "아이허브 자체 브랜드 최대 70% 세일 주간, 12월에 HBKR25 25% 코드" }
+   ],
+   "checks": [
+    "CFU(균 수)가 '유통기한까지 보장'인지 보세요. 제조 시 기준만 적힌 제품은 도착했을 때 줄어 있을 수 있어요.",
+    "균주 이름이 끝까지 적힌 제품(예: Lactobacillus rhamnosus GG)이 믿을 만해요.",
+    "직구는 상온으로 오니까 실온 보관(shelf-stable) 제품을 고르세요. 냉장 제품은 여름엔 피하세요.",
+    "균 수가 클수록 좋은 건 아니에요. 처음이면 중간 균 수로 시작해서 속이 편한지 보세요."
+   ],
+   "faq": [
+    [
+     "아이허브 유산균은 냉장 보관해야 하나요?",
+     "라벨에 실온 보관(shelf-stable)이라고 적힌 제품은 상온에 두어도 됩니다. 냉장 보관이 필요한 제품은 직구 배송 중에 상온을 거치니, 직구로는 실온 보관 제품을 고르는 편이 낫습니다. 받은 뒤에는 서늘하고 건조한 곳에 두십시오."
     ],
-    "historySource": "https://benefitshub.co.kr/iherb-promo-code-2024/"
+    [
+     "아이허브 유산균 한 번에 몇 통까지 살 수 있나요?",
+     "건강기능식품은 한 번에 6병까지 개인 사용으로 통관됩니다. 유산균만이 아니라 다른 영양제와 합쳐서 6병이니 주문을 나누십시오."
+    ],
+    [
+     "LactoBif는 몇 억 짜리를 사야 하나요?",
+     "같은 이름으로 균 수만 다른 제품이 여러 개입니다. 처음 먹는다면 낮은 균 수부터 먹어 보고 속이 편한지 확인한 뒤 올리는 사람이 많습니다. 균 수가 높다고 더 좋은 것은 아닙니다."
+    ],
+    [
+     "구강 유산균은 일반 유산균과 다른가요?",
+     "프로덴티스나 OralBiotic 같은 구강용은 입안에서 녹이거나 씹어 먹도록 만든 제품입니다. 장용 캡슐과 목적이 달라서 서로 대신하지는 않습니다."
+    ]
+   ],
+   "compare": {
+    "checked": "2026-11-08",
+    "amt": [
+     "cfu"
+    ],
+    "amtLabel": "균 수",
+    "amtUnit": "억",
+    "per": 100,
+    "perLabel": "100억 CFU당",
+    "alt": {
+     "field": "guarantee",
+     "value": "유통기한까지",
+     "label": "유통기한까지 보장하는 제품 중"
+    },
+    "items": [
+     {
+      "brand": "캘리포니아 골드 뉴트리션",
+      "short": "락토비프 30 (300억) 60정",
+      "name": "California Gold Nutrition (캘리포니아골드뉴트리션), LactoBif® 30 Probiotics, 베지 캡슐 60정",
+      "url": "https://kr.iherb.com/pr/california-gold-nutrition-lactobif-30-probiotics-60-veggie-capsules/64009",
+      "kw": "California Gold Nutrition LactoBif 30 Probiotics 60 Veggie Capsules",
+      "count": 60,
+      "perServing": 1,
+      "price": 25093,
+      "autoship": 25093,
+      "rating": 4.7,
+      "reviews": 172514,
+      "inStock": true,
+      "cfu": 300,
+      "guarantee": "유통기한까지",
+      "strains": 8,
+      "storage": "실온",
+      "lgg": false,
+      "note": "목록가 ₩32,170에서 22% 할인 표시된 가격. 25℃ 이하 보관 시 유통기한까지 보장, 냉장은 권장(필수 아님). 블리스터 개별 포장. 람노서스 표기는 있으나 GG 균주 표기 없음. 120정 용량도 있음."
+     },
+     {
+      "brand": "캘리포니아 골드 뉴트리션",
+      "short": "락토비프 5 (50억) 60정",
+      "name": "California Gold Nutrition (캘리포니아골드뉴트리션), LactoBif® 5 프로바이오틱, 50억CFU, 베지 캡슐 60정",
+      "url": "https://kr.iherb.com/pr/california-gold-nutrition-lactobif-5-probiotics-5-billion-cfu-60-veggie-capsules/64006",
+      "kw": "California Gold Nutrition LactoBif 5 Probiotics 5 Billion CFU 60 Veggie Capsules",
+      "count": 60,
+      "perServing": 1,
+      "price": 10421,
+      "autoship": 10421,
+      "rating": 4.7,
+      "reviews": 114797,
+      "inStock": true,
+      "cfu": 50,
+      "guarantee": "유통기한까지",
+      "strains": 8,
+      "storage": "실온",
+      "lgg": false,
+      "note": "목록가 ₩13,360에서 22% 할인 표시된 가격. 냉장 권장(필수 아님). 람노서스 GG 표기 없음. 120정 용량도 있음."
+     },
+     {
+      "brand": "가든오브라이프",
+      "short": "닥터 포뮬레이티드 여성용 (500억) 30정",
+      "name": "Garden of Life (가든오브라이프), Dr. Formulated Probiotics, 하루 1정 여성용, 베지 캡슐 30정",
+      "url": "https://kr.iherb.com/pr/garden-of-life-dr-formulated-probiotics-once-daily-women-s-50-billion-30-vegetarian-capsules/64442",
+      "kw": "Garden of Life Dr. Formulated Probiotics Once Daily Women's 50 Billion 30 Vegetarian Capsules",
+      "count": 30,
+      "perServing": 1,
+      "price": 42881,
+      "autoship": 38593,
+      "rating": 4.7,
+      "reviews": 26599,
+      "inStock": true,
+      "cfu": 500,
+      "guarantee": "유통기한까지",
+      "strains": 16,
+      "storage": "실온",
+      "lgg": false,
+      "note": "여성용. 프리바이오틱 섬유 317mg 함유. 람노서스 GG 표기 없음."
+     },
+     {
+      "brand": "21세기 센트리",
+      "short": "크랜베리 플러스 프로바이오틱 60정",
+      "name": "21st Century (21세기 센트리), 크랜베리 플러스 프로바이오틱, 60정",
+      "url": "https://kr.iherb.com/pr/21st-century-cranberry-plus-probiotic-60-tablets/69338",
+      "kw": "21st Century Cranberry Plus Probiotic 60 Tablets",
+      "count": 60,
+      "perServing": 2,
+      "price": 9750,
+      "autoship": 9263,
+      "rating": 4.7,
+      "reviews": 32474,
+      "inStock": true,
+      "cfu": 3,
+      "guarantee": "제조 시",
+      "strains": 4,
+      "storage": "실온",
+      "lgg": false,
+      "note": "크랜베리 분말 500mg 위주 제품, 유산균은 1회 3억(제조 시점). 1회 2정 기준."
+     },
+     {
+      "brand": "나우푸드",
+      "short": "프로바이오틱-10 (250억) 100정",
+      "name": "NOW Foods (나우푸드), Probiotic-10™, 베지 캡슐 100정",
+      "url": "https://kr.iherb.com/pr/now-foods-probiotic-10-100-veg-capsules/64505",
+      "kw": "NOW Foods Probiotic-10 25 Billion 100 Veg Capsules",
+      "count": 100,
+      "perServing": 1,
+      "price": 38838,
+      "autoship": 36897,
+      "rating": 4.7,
+      "reviews": 41884,
+      "inStock": true,
+      "cfu": 250,
+      "guarantee": "유통기한까지",
+      "strains": 10,
+      "storage": "실온",
+      "lgg": false,
+      "note": "보관은 '서늘하고 건조한 곳' 표기. 람노서스는 Lr-32 균주(GG 아님). 50정 단위 제품도 따로 있음."
+     },
+     {
+      "brand": "캘리포니아 골드 뉴트리션",
+      "short": "락토비프 100 (1,000억) 60정",
+      "name": "California Gold Nutrition (캘리포니아골드뉴트리션), LactoBif® 100 프로바이오틱, 1,000억CFU, 베지 캡슐 60정",
+      "url": "https://kr.iherb.com/pr/california-gold-nutrition-lactobif-100-probiotics-100-billion-cfu-60-veggie-capsules/143854",
+      "kw": "California Gold Nutrition LactoBif 100 Probiotics 100 Billion CFU 60 Veggie Capsules",
+      "count": 60,
+      "perServing": 1,
+      "price": 56018,
+      "autoship": 56018,
+      "rating": 4.7,
+      "reviews": 28167,
+      "inStock": true,
+      "cfu": 1000,
+      "guarantee": "유통기한까지",
+      "strains": 8,
+      "storage": "실온",
+      "lgg": false,
+      "note": "목록가 ₩71,817에서 22% 할인 표시된 가격. 냉장 권장(필수 아님). 30정 용량도 있음."
+     },
+     {
+      "brand": "자로우포뮬러스",
+      "short": "펨 도필러스 60정",
+      "name": "Jarrow Formulas (자로우포뮬러스), Fem Dophilus®, 10억 CFU, 베지 캡슐 60정",
+      "url": "https://kr.iherb.com/pr/jarrow-formulas-fem-dophilus-1-billion-cfu-60-veggie-capsules/68259",
+      "kw": "Jarrow Formulas Fem Dophilus 1 Billion CFU 60 Veggie Capsules",
+      "count": 60,
+      "perServing": 1,
+      "price": 45278,
+      "autoship": 40751,
+      "rating": 4.7,
+      "reviews": 16364,
+      "inStock": true,
+      "cfu": 10,
+      "guarantee": "유통기한까지",
+      "strains": 2,
+      "storage": "실온",
+      "lgg": false,
+      "note": "여성용 GR-1·RC-14 균주(GG 아님). 25℃ 넘는 곳 보관 금지."
+     },
+     {
+      "brand": "캘리포니아 골드 뉴트리션",
+      "short": "락토비프 65 (650억) 30정",
+      "name": "California Gold Nutrition (캘리포니아골드뉴트리션), LactoBif® 65 프로바이오틱, 베지 캡슐 30정",
+      "url": "https://kr.iherb.com/pr/california-gold-nutrition-lactobif-65-probiotics-30-veggie-capsules/103277",
+      "kw": "California Gold Nutrition LactoBif 65 Probiotics 30 Veggie Capsules",
+      "count": 30,
+      "perServing": 1,
+      "price": 26688,
+      "autoship": 26688,
+      "rating": 4.7,
+      "reviews": 13324,
+      "inStock": true,
+      "cfu": 650,
+      "guarantee": "유통기한까지",
+      "strains": 20,
+      "storage": "실온",
+      "lgg": true,
+      "note": "목록가 ₩34,215에서 22% 할인 표시된 가격. 라벨에 락토바실러스 람노서스 GG 표기. 냉장 권장(필수 아님)."
+     },
+     {
+      "brand": "자로우포뮬러스",
+      "short": "자로-도필러스 EPS 120정",
+      "name": "Jarrow Formulas (자로우포뮬러스), Jarro-Dophilus® EPS, 베지 캡슐 120정(캡슐당 100억CFU)",
+      "url": "https://kr.iherb.com/pr/jarrow-formulas-jarro-dophilus-eps-120-veggie-caps-5-billion-cfu-per-capsule/7006",
+      "kw": "Jarrow Formulas Jarro-Dophilus EPS 120 Veggie Capsules",
+      "count": 120,
+      "perServing": 2,
+      "price": 52079,
+      "autoship": 46872,
+      "rating": 4.5,
+      "reviews": 19872,
+      "inStock": true,
+      "cfu": 100,
+      "guarantee": "유통기한까지",
+      "strains": 8,
+      "storage": "실온",
+      "lgg": false,
+      "note": "영양성분표는 2정에 100억인데 한글 제품명은 '캡슐당 100억CFU'로 적혀 있어 서로 다름(영양성분표 기준으로 입력). 람노서스 R0011(GG 아님)."
+     },
+     {
+      "brand": "21세기 센트리",
+      "short": "애시도필러스 혼합물 150정",
+      "name": "21st Century (21세기 센트리), 애시도필러스 프로바이오틱 혼합물, 캡슐 150정",
+      "url": "https://kr.iherb.com/pr/21st-century-acidophilus-probiotic-blend-150-capsules/12535",
+      "kw": "21st Century Acidophilus Probiotic Blend 150 Capsules",
+      "count": 150,
+      "perServing": 1,
+      "price": 12217,
+      "autoship": 11607,
+      "rating": 4.7,
+      "reviews": 46822,
+      "inStock": true,
+      "cfu": 10,
+      "guarantee": "제조 시",
+      "strains": 4,
+      "storage": "냉장",
+      "lgg": false,
+      "note": "개봉 후 냉장 보관 표기. 기타 성분에 유청·젤라틴 들어 있음."
+     }
+    ],
+    "head": [
+     "100억당",
+     "CFU"
+    ]
+   },
+   "reviews": [
+    {
+     "product": "캘리포니아 골드 뉴트리션 락토비프 30",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/california-gold-nutrition-lactobif-30-probiotics-60-veggie-capsules/64009",
+     "date": "2026-05-23",
+     "sentiment": "중립",
+     "topic": "효과체감",
+     "quote": "다른 제품과 비교해 효과가 드라마틱하게 느껴지진 않았다는 후기"
+    },
+    {
+     "product": "캘리포니아 골드 뉴트리션 락토비프 30",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/california-gold-nutrition-lactobif-30-probiotics-60-veggie-capsules/64009",
+     "date": "2026-04-29",
+     "sentiment": "긍정",
+     "topic": "목넘김",
+     "quote": "알약이 작아 목넘김이 편하고 낱개 포장이라 좋다는 후기"
+    },
+    {
+     "product": "가든오브라이프 닥터 포뮬레이티드 여성용",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/garden-of-life-dr-formulated-probiotics-once-daily-women-s-50-billion-30-vegetarian-capsules/64442",
+     "date": "2026-07-17",
+     "sentiment": "긍정",
+     "topic": "효과체감",
+     "quote": "복용 한 달이 안 됐지만 화장실은 잘 가게 됐다고 느낀 후기"
+    },
+    {
+     "product": "가든오브라이프 닥터 포뮬레이티드 여성용",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/garden-of-life-dr-formulated-probiotics-once-daily-women-s-50-billion-30-vegetarian-capsules/64442",
+     "date": "2025-06-15",
+     "sentiment": "중립",
+     "topic": "효과체감",
+     "quote": "먹은 지 보름이라 아직 체감은 모르겠다는 후기"
+    },
+    {
+     "product": "나우푸드 프로바이오틱-10",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/now-foods-probiotic-10-100-veg-capsules/64505",
+     "date": "2026-07-01",
+     "sentiment": "부정",
+     "topic": "효과체감",
+     "quote": "개인적으로는 먹고 나서 효과를 못 느꼈다는 후기"
+    },
+    {
+     "product": "나우푸드 프로바이오틱-10",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/now-foods-probiotic-10-100-veg-capsules/64505",
+     "date": "2026-01-08",
+     "sentiment": "긍정",
+     "topic": "소화",
+     "quote": "더부룩함과 가스가 줄었다고 느꼈고 속 불편은 없었다는 후기"
+    },
+    {
+     "product": "캘리포니아 골드 뉴트리션 락토비프 100",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/california-gold-nutrition-lactobif-100-probiotics-100-billion-cfu-60-veggie-capsules/143854",
+     "date": "2026-09-28",
+     "sentiment": "긍정",
+     "topic": "가격",
+     "quote": "1,000억인데도 가격이 저렴한 편이고 크기도 적당하다는 후기"
+    },
+    {
+     "product": "캘리포니아 골드 뉴트리션 락토비프 30",
+     "source": "디시 영양제 마이너 갤러리",
+     "url": "https://gall.dcinside.com/mgallery/board/view?id=nutrition&no=462032",
+     "date": "2023-04-21",
+     "sentiment": "중립",
+     "topic": "효과체감",
+     "quote": "괜찮게 먹었는데 별로라는 말을 듣고 대안을 묻는 글"
+    },
+    {
+     "product": "캘리포니아 골드 뉴트리션 락토비프 5",
+     "source": "네이버 블로그",
+     "url": "https://m.blog.naver.com/kiddy28/220927215900",
+     "date": "2017-02-04",
+     "sentiment": "중립",
+     "topic": "소화",
+     "quote": "4주 복용, 눈에 띄는 변화는 없고 화장실을 자주 가게 됐다는 글"
+    }
+   ]
+  },
+  {
+   "file": "iherb-omega3.html",
+   "cat": "오메가3",
+   "kw": "아이허브 오메가3",
+   "title": "아이허브 오메가3 추천 ({y}) | 10개 EPA·DHA 함량·가격 비교 · rTG·IFOS",
+   "h1": "아이허브 오메가3<br>EPA·DHA로 고르는 법",
+   "answer": "아이허브 오메가3는 캡슐 무게가 아니라 <b>EPA+DHA 합계</b>로 비교하면 됩니다. 베스트셀러는 캘리포니아 골드 뉴트리션 오메가 800과 스포츠리서치 제품입니다.",
+   "keywords": [
+    "아이허브 오메가3",
+    "아이허브 오메가3 추천",
+    "오메가 800",
+    "스포츠리서치 오메가3",
+    "아이허브 피쉬오일",
+    "rTG 오메가3",
+    "아이허브 오메가3 비교",
+    "아이허브 오메가3 rtg",
+    "아이허브 오메가3 800",
+    "아이허브 오메가3 산패",
+    "노르딕 오메가3",
+    "나우푸드 오메가3",
+    "알티지 오메가3"
+   ],
+   "products": [
+    {
+     "name": "캘리포니아 골드 뉴트리션 오메가 800, 피쉬 젤라틴 소프트젤 30정",
+     "kw": "California Gold Nutrition Omega 800",
+     "tag": "고함량",
+     "points": [
+      "이름의 800은 1,000mg 캡슐 하나에 든 EPA+DHA 양입니다. 그래서 하루 캡슐 수가 적습니다.",
+      "캡슐이 소가 아닌 생선 젤라틴입니다.",
+      "30정 단위라 산패 걱정이 적습니다. 대신 큰 통보다 개당 가격이 비쌀 수 있어요."
+     ]
+    },
+    {
+     "name": "캘리포니아 골드 뉴트리션 오메가3 프리미엄 피쉬 오일, 100정",
+     "kw": "California Gold Nutrition Omega-3 Premium Fish Oil",
+     "tag": "일반 함량",
+     "points": [
+      "가격이 싼 일반 함량 제품입니다.",
+      "같은 EPA+DHA를 먹으려면 캡슐을 더 먹어야 하니 라벨의 1회분 기준을 보세요."
+     ]
+    },
+    {
+     "name": "스포츠리서치 오메가3 피쉬 오일 트리플 스트렝스, 180정",
+     "kw": "Sports Research Triple Strength Omega-3",
+     "tag": "대용량",
+     "points": [
+      "180정 대용량이라 개당 가격이 낮은 편입니다.",
+      "큰 통은 다 먹기 전에 산패될 수 있으니 서늘한 곳에 두세요."
+     ]
+    },
+    {
+     "name": "스포츠리서치 알래스칸 오메가3, 90정",
+     "kw": "Sports Research Alaskan Omega-3",
+     "tag": "베스트셀러",
+     "points": [
+      "알래스카산 생선 기름이라고 적힌 제품입니다.",
+      "트리플 스트렝스와 함량이 다르니 EPA+DHA 합계로 비교하세요."
+     ]
+    }
+   ],
+   "checks": [
+    "캡슐 무게가 아니라 EPA+DHA 합계 mg을 보세요. 1,000mg 캡슐인데 EPA+DHA는 300mg뿐인 제품이 많아요.",
+    "1회분이 캡슐 몇 개 기준인지 보세요. 2캡슐 기준으로 적어 두고 크게 보이게 한 제품이 있어요.",
+    "rTG 형태 표기와 IFOS 같은 제3자 인증이 있으면 좋아요.",
+    "산패되기 쉬우니 큰 통 하나보다 두세 달치로 사고, 도착하면 서늘한 곳에 두세요."
+   ],
+   "faq": [
+    [
+     "아이허브 오메가3 하루에 얼마나 먹어야 하나요?",
+     "제품 라벨의 1회 섭취량을 따르십시오. 한국 건강기능식품 기준으로 EPA와 DHA 합계 하루 0.5~2g이 표시 범위입니다. 피를 묽게 하는 약을 먹고 있다면 의사와 먼저 상의하십시오."
+    ],
+    [
+     "오메가 800은 왜 비싼가요?",
+     "캡슐 하나에 EPA+DHA가 많이 들어 있어서 통당 가격은 비싸 보입니다. EPA+DHA 1g당 가격으로 바꿔 보면 일반 함량 제품과 차이가 줄어듭니다."
+    ],
+    [
+     "피쉬 젤라틴이 뭔가요?",
+     "캡슐 껍질을 소나 돼지 대신 생선에서 얻은 젤라틴으로 만들었다는 뜻입니다. 종교나 식단 때문에 소·돼지를 피하는 사람이 많이 고릅니다."
+    ],
+    [
+     "비린내가 나요. 상한 건가요?",
+     "트림할 때 약간의 생선 냄새는 흔합니다. 캡슐을 잘랐을 때 기름에서 시큼하거나 역한 냄새가 나면 산패된 것일 수 있으니 먹지 말고 고객센터에 문의하십시오."
+    ]
+   ],
+   "compare": {
+    "checked": "2026-11-08",
+    "amt": [
+     "epa",
+     "dha"
+    ],
+    "amtLabel": "EPA+DHA",
+    "amtUnit": "mg",
+    "per": 1000,
+    "perLabel": "EPA+DHA 1g당",
+    "alt": {
+     "field": "form",
+     "value": "rTG",
+     "label": "rTG 형태 중"
+    },
+    "items": [
+     {
+      "brand": "캘리포니아 골드 뉴트리션",
+      "short": "오메가3 프리미엄 피쉬 오일 100정",
+      "name": "California Gold Nutrition (캘리포니아골드뉴트리션), 오메가3 프리미엄 피쉬 오일, 피쉬 젤라틴 소프트젤 100정(소프트젤당 1,100mg)",
+      "url": "https://kr.iherb.com/pr/california-gold-nutrition-omega-3-premium-fish-oil-100-fish-gelatin-softgels-1-100-mg-per-softgel/62118",
+      "kw": "California Gold Nutrition Omega-3 Premium Fish Oil 100 Fish Gelatin Softgels",
+      "count": 100,
+      "perServing": 2,
+      "price": 16722,
+      "autoship": 13378,
+      "rating": 4.8,
+      "reviews": 492950,
+      "inStock": true,
+      "epa": 360,
+      "dha": 240,
+      "form": "TG",
+      "cert": null,
+      "capsule": "생선 젤라틴",
+      "note": "1회 2정 기준(1정당 EPA 180·DHA 120mg)이라 크게 보임. iTested 인증 보고서는 '곧 제공' 표기."
+     },
+     {
+      "brand": "캘리포니아 골드 뉴트리션",
+      "short": "오메가 800 30정",
+      "name": "California Gold Nutrition (캘리포니아골드뉴트리션), 오메가 800, 피쉬 젤라틴 소프트젤 30정(소프트젤당 1,000mg)",
+      "url": "https://kr.iherb.com/pr/california-gold-nutrition-omega-800-30-fish-gelatin-softgels-1-000-mg-per-softgel/82845",
+      "kw": "California Gold Nutrition Omega 800 30 Fish Gelatin Softgels",
+      "count": 30,
+      "perServing": 1,
+      "price": 14214,
+      "autoship": 11372,
+      "rating": 4.8,
+      "reviews": 141646,
+      "inStock": true,
+      "epa": 480,
+      "dha": 320,
+      "form": "TG",
+      "cert": "IFOS(KD-Pür 원료 표기), iTested",
+      "capsule": "생선 젤라틴",
+      "note": "1정에 총 오메가3 840mg. 같은 제품 90정(₩36,816)도 판매 중."
+     },
+     {
+      "brand": "스포츠리서치",
+      "short": "알래스칸 오메가3 90정",
+      "name": "Sports Research (스포츠리서치), Alaskan 오메가3 피쉬 오일, 소프트젤 90정",
+      "url": "https://kr.iherb.com/pr/sports-research-alaskan-omega-3-fish-oil-90-softgels/90284",
+      "kw": "Sports Research Alaskan Omega-3 Fish Oil 90 Softgels",
+      "count": 90,
+      "perServing": 1,
+      "price": 49306,
+      "autoship": 44376,
+      "rating": 4.8,
+      "reviews": 52455,
+      "inStock": true,
+      "epa": 690,
+      "dha": 260,
+      "form": "rTG",
+      "cert": "IFOS, MSC",
+      "capsule": "생선 젤라틴",
+      "note": "알래스카 명태 단일 원료. 총 오메가3 1,040mg."
+     },
+     {
+      "brand": "스포츠리서치",
+      "short": "트리플 스트렝스 오메가3 180정",
+      "name": "Sports Research (스포츠리서치), 오메가3 피쉬 오일, 3배 강도, 소프트젤 180정",
+      "url": "https://kr.iherb.com/pr/sports-research-omega-3-fish-oil-180-softgels/113871",
+      "kw": "Sports Research Omega-3 Fish Oil Triple Strength 180 Softgels",
+      "count": 180,
+      "perServing": 1,
+      "price": 75366,
+      "autoship": 67830,
+      "rating": 4.8,
+      "reviews": 48965,
+      "inStock": true,
+      "epa": 690,
+      "dha": 310,
+      "form": "rTG",
+      "cert": "IFOS, Friend of the Sea",
+      "capsule": "생선 젤라틴",
+      "note": "120정·60정 용량도 있음. 판매량 1위인 180정 기준."
+     },
+     {
+      "brand": "노르딕 내추럴스",
+      "short": "얼티밋 오메가 레몬 180정",
+      "name": "Nordic Naturals (노르딕 내추럴스), Ultimate Omega®, 레몬 맛, 소프트젤 180정(소프트젤당 640mg)",
+      "url": "https://kr.iherb.com/pr/nordic-naturals-ultimate-omega-great-lemon-180-soft-gels-640-mg-per-soft-gel/12949",
+      "kw": "Nordic Naturals Ultimate Omega Lemon 180 Soft Gels",
+      "count": 180,
+      "perServing": 2,
+      "price": 86011,
+      "autoship": 77410,
+      "rating": 4.8,
+      "reviews": 25488,
+      "inStock": true,
+      "epa": 650,
+      "dha": 450,
+      "form": "rTG",
+      "cert": "Friend of the Sea(제3기관 순도 검사 완료 표기)",
+      "capsule": "젤라틴(원료 표기 없음)",
+      "note": "1회 2정 기준이라 크게 보임. 레몬 맛."
+     },
+     {
+      "brand": "라이프익스텐션",
+      "short": "슈퍼 오메가3 240정",
+      "name": "Life Extension (라이프익스텐션), 슈퍼 오메가3, 소프트젤 240정",
+      "url": "https://kr.iherb.com/pr/life-extension-super-omega-3-240-softgels/67021",
+      "kw": "Life Extension Super Omega-3 240 Softgels",
+      "count": 240,
+      "perServing": 4,
+      "price": 43176,
+      "autoship": 38859,
+      "rating": 4.8,
+      "reviews": 34841,
+      "inStock": true,
+      "epa": 700,
+      "dha": 500,
+      "form": "표기 없음",
+      "cert": "IFOS 5-star",
+      "capsule": "젤라틴(원료 표기 없음)",
+      "note": "1회 4정 기준(라벨: 하루 2회 2정씩)이라 크게 보임. 올리브 추출물·참깨 리그난 함유."
+     },
+     {
+      "brand": "솔가",
+      "short": "트리플 스트렝스 오메가3 950mg 100정",
+      "name": "Solgar (솔가), 오메가3, EPA & DHA, 3배 강도, 950mg, 소프트젤 100정",
+      "url": "https://kr.iherb.com/pr/solgar-omega-3-epa-dha-triple-strength-950-mg-100-softgels/26738",
+      "kw": "Solgar Omega-3 EPA & DHA Triple Strength 950 mg 100 Softgels",
+      "count": 100,
+      "perServing": 1,
+      "price": 43866,
+      "autoship": 39480,
+      "rating": 4.8,
+      "reviews": 49696,
+      "inStock": true,
+      "epa": 504,
+      "dha": 378,
+      "form": "EE",
+      "cert": null,
+      "capsule": "젤라틴(원료 표기 없음)",
+      "note": "라벨 1회 1정, 사용법은 하루 2회 1정. 950mg은 1정당 총 오메가3."
+     },
+     {
+      "brand": "나우푸드",
+      "short": "울트라 오메가 3-D 180정",
+      "name": "NOW Foods (나우푸드), Ultra Omega 3-D™ 피쉬 오일, 피쉬 소프트젤 180정",
+      "url": "https://kr.iherb.com/pr/now-foods-ultra-omega-3-d-fish-oil-180-fish-softgels/68700",
+      "kw": "NOW Foods Ultra Omega 3-D Fish Oil 180 Fish Softgels",
+      "count": 180,
+      "perServing": 1,
+      "price": 46620,
+      "autoship": 44289,
+      "rating": 4.8,
+      "reviews": 29455,
+      "inStock": true,
+      "epa": 600,
+      "dha": 300,
+      "form": "표기 없음",
+      "cert": null,
+      "capsule": "생선 젤라틴",
+      "note": "비타민D3 1,000IU 함께 들어 있음. GOED 회원사 표기(제3자 인증은 아님)."
+     },
+     {
+      "brand": "라이프익스텐션",
+      "short": "메가 EPA/DHA 120정",
+      "name": "Life Extension (라이프익스텐션), Mega EPA/DHA, 소프트젤 120정",
+      "url": "https://kr.iherb.com/pr/life-extension-mega-epa-dha-120-softgels/68440",
+      "kw": "Life Extension Mega EPA/DHA 120 Softgels",
+      "count": 120,
+      "perServing": 2,
+      "price": 29429,
+      "autoship": 26487,
+      "rating": 4.9,
+      "reviews": 11194,
+      "inStock": true,
+      "epa": 720,
+      "dha": 480,
+      "form": "표기 없음",
+      "cert": null,
+      "capsule": "생선 젤라틴",
+      "note": "1회 2정 기준이라 크게 보임."
+     },
+     {
+      "brand": "나우푸드",
+      "short": "오메가3 1,000mg 200정",
+      "name": "NOW Foods (나우푸드), 오메가3 피쉬 오일, 1,000mg, 피쉬 소프트젤 200정",
+      "url": "https://kr.iherb.com/pr/now-foods-omega-3-fish-oil-1-000-mg-200-fish-softgels/96435",
+      "kw": "NOW Foods Omega-3 Fish Oil 1,000 mg 200 Fish Softgels",
+      "count": 200,
+      "perServing": 2,
+      "price": 20194,
+      "autoship": 19185,
+      "rating": 4.8,
+      "reviews": 77731,
+      "inStock": true,
+      "epa": 360,
+      "dha": 240,
+      "form": "표기 없음",
+      "cert": null,
+      "capsule": "생선 젤라틴",
+      "note": "1회 2정 기준(사용법은 하루 2회 2정). 1,000mg은 1정당 피쉬오일 양."
+     }
+    ],
+    "head": [
+     "1g당",
+     "EPA+DHA"
+    ]
+   },
+   "reviews": [
+    {
+     "product": "캘리포니아 골드 뉴트리션 오메가 800",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/california-gold-nutrition-omega-800-30-fish-gelatin-softgels-1-000-mg-per-softgel/82845",
+     "date": "2026-09-21",
+     "sentiment": "긍정",
+     "topic": "비린내",
+     "quote": "먹고 나서 비린 맛이 많이 올라오지 않았고, 효과는 바로 체감하기 어렵다는 후기"
+    },
+    {
+     "product": "캘리포니아 골드 뉴트리션 오메가3 프리미엄 피쉬 오일",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/california-gold-nutrition-omega-3-premium-fish-oil-100-fish-gelatin-softgels-1-100-mg-per-softgel/62118",
+     "date": "2026-06-11",
+     "sentiment": "긍정",
+     "topic": "목넘김",
+     "quote": "알 크기가 적당하고 목넘김이 좋으며 냄새가 없다는 후기"
+    },
+    {
+     "product": "스포츠리서치 알래스칸 오메가3",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/sports-research-alaskan-omega-3-fish-oil-90-softgels/90284",
+     "date": "2026-07-20",
+     "sentiment": "부정",
+     "topic": "가격",
+     "quote": "오래 먹어 왔지만 가격이 많이 올라 점점 부담된다는 후기"
+    },
+    {
+     "product": "스포츠리서치 알래스칸 오메가3",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/sports-research-alaskan-omega-3-fish-oil-90-softgels/90284",
+     "date": "2026-01-20",
+     "sentiment": "긍정",
+     "topic": "목넘김",
+     "quote": "품절이 잦아 세일 때 샀고, 알은 커도 먹기 괜찮고 비린맛이 덜하다는 후기"
+    },
+    {
+     "product": "스포츠리서치 트리플 스트렝스 오메가3",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/sports-research-omega-3-fish-oil-180-softgels/113871",
+     "date": "2026-11-05",
+     "sentiment": "긍정",
+     "topic": "비린내",
+     "quote": "알은 크지만 냄새가 안 나서 2통째 먹고 있다는 후기"
+    },
+    {
+     "product": "스포츠리서치 트리플 스트렝스 오메가3",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/sports-research-omega-3-fish-oil-180-softgels/113871",
+     "date": "2025-12-02",
+     "sentiment": "중립",
+     "topic": "효과체감",
+     "quote": "6개월째 하루 1알, 눈에 띄는 효과는 없고 냉장 보관을 권한다는 후기"
+    },
+    {
+     "product": "스포츠리서치 트리플 스트렝스 오메가3",
+     "source": "디시 영양제 마이너 갤러리",
+     "url": "https://gall.dcinside.com/mgallery/board/view?id=nutrition&no=361509",
+     "date": "2022-01-18",
+     "sentiment": "긍정",
+     "topic": "비린내",
+     "quote": "깨물어 봤을 때 비린내가 거의 안 났다는 비교 글"
+    },
+    {
+     "product": "나우푸드 오메가3",
+     "source": "디시 영양제 마이너 갤러리",
+     "url": "https://gall.dcinside.com/mgallery/board/view?id=nutrition&no=163977",
+     "date": "2019-12-08",
+     "sentiment": "부정",
+     "topic": "비린내",
+     "quote": "생선 비린내 때문에 먹다 버렸다는 글"
+    },
+    {
+     "product": "라이프익스텐션 슈퍼 오메가3",
+     "source": "디시 영양제 마이너 갤러리",
+     "url": "https://gall.dcinside.com/mgallery/board/view?id=nutrition&no=375781",
+     "date": "2022-03-20",
+     "sentiment": "중립",
+     "topic": "목넘김",
+     "quote": "가성비는 좋지만 알이 크고 여러 알 먹어야 하는 게 단점이라는 글"
+    },
+    {
+     "product": "노르딕 내추럴스 얼티밋 오메가",
+     "source": "네이버 블로그",
+     "url": "https://m.blog.naver.com/naga811/222320551755",
+     "date": "2021-04-23",
+     "sentiment": "부정",
+     "topic": "가격",
+     "quote": "하루 2알이라 한 통이 금방 끝나 스포츠리서치보다 비싸게 느껴졌다는 글"
+    }
+   ]
+  },
+  {
+   "file": "iherb-magnesium.html",
+   "cat": "마그네슘",
+   "kw": "아이허브 마그네슘",
+   "title": "아이허브 마그네슘 추천 ({y}) | 10개 함량·가격 비교 · 글리시네이트·킬레이트",
+   "h1": "아이허브 마그네슘<br>형태부터 고르는 법",
+   "answer": "아이허브 마그네슘은 <b>형태(글리시네이트·시트레이트·옥사이드)</b>와 <b>원소 마그네슘 mg</b>을 보고 고르면 됩니다. 베스트셀러는 닥터스베스트와 나우푸드의 글리시네이트 제품입니다.",
+   "keywords": [
+    "아이허브 마그네슘",
+    "아이허브 마그네슘 추천",
+    "마그네슘 글리시네이트",
+    "닥터스베스트 마그네슘",
+    "나우푸드 마그네슘",
+    "마그네슘 시트레이트",
+    "아이허브 마그네슘 킬레이트",
+    "킬레이트 마그네슘",
+    "트레온산 마그네슘",
+    "아이허브 마그네슘 비교"
+   ],
+   "products": [
+    {
+     "name": "닥터스베스트 고흡수 마그네슘 리시네이트 글리시네이트, 240정",
+     "kw": "Doctor's Best High Absorption Magnesium",
+     "tag": "베스트셀러",
+     "points": [
+      "알비온(Albion) TRAACS 킬레이트 원료를 썼다고 적혀 있습니다.",
+      "1정에 원소 마그네슘 100mg이라 양을 나눠 먹기 쉽습니다.",
+      "240정이라 오래 먹습니다."
+     ]
+    },
+    {
+     "name": "나우푸드 마그네슘 글리시네이트, 180정",
+     "kw": "NOW Foods Magnesium Glycinate",
+     "tag": "글리시네이트",
+     "points": [
+      "1정에 100mg입니다.",
+      "닥터스베스트와 같은 형태라 세일하는 쪽을 사면 됩니다."
+     ]
+    }
+   ],
+   "table": {
+    "head": [
+     "형태",
+     "특징",
+     "이럴 때"
+    ],
+    "rows": [
+     [
+      "글리시네이트",
+      "속이 편한 편이고 변이 묽어지는 일이 적어요",
+      "처음 먹을 때, 저녁에 먹을 때"
+     ],
+     [
+      "시트레이트",
+      "흡수가 괜찮고 값이 싸요. 변이 묽어질 수 있어요",
+      "변비가 있을 때"
+     ],
+     [
+      "옥사이드",
+      "가장 싸고 함량이 커 보이지만 흡수율이 낮아요",
+      "가격만 볼 때"
+     ],
+     [
+      "L-트레온산",
+      "비싸요. 마그테인(Magtein)이라는 이름으로 팔려요",
+      "비싸도 괜찮을 때"
+     ]
+    ]
+   },
+   "checks": [
+    "형태를 먼저 보세요. 글리시네이트는 속이 편하고, 시트레이트는 변이 묽어질 수 있고, 옥사이드는 싸지만 흡수가 낮아요.",
+    "'원소 마그네슘(elemental)' 기준 mg을 보세요. 화합물 무게로 크게 적어 둔 제품이 있어요.",
+    "보충제로 먹는 마그네슘은 성인 하루 350mg이 상한이에요. 종합비타민에 든 양도 더해서 계산하세요.",
+    "신장 질환이 있거나 약을 먹고 있으면 의사와 먼저 상의하세요."
+   ],
+   "faq": [
+    [
+     "마그네슘 글리시네이트와 시트레이트 중 뭐가 낫나요?",
+     "속이 예민하거나 처음 먹는다면 글리시네이트가 무난합니다. 시트레이트는 값이 싸고 흡수도 괜찮지만 변이 묽어질 수 있습니다. 변비가 있는 사람은 일부러 시트레이트를 고르기도 합니다."
+    ],
+    [
+     "마그네슘은 언제 먹나요?",
+     "정해진 시간은 없습니다. 속이 불편하면 식사와 함께 먹고, 글리시네이트는 저녁에 먹는 사람이 많습니다. 칼슘이나 아연과 한꺼번에 많이 먹기보다 나눠 먹는 편이 낫습니다."
+    ],
+    [
+     "하루에 몇 정 먹어야 하나요?",
+     "라벨의 1회 섭취량을 따르십시오. 보충제로 먹는 마그네슘은 성인 하루 350mg이 상한입니다. 닥터스베스트와 나우푸드는 1정에 100mg이라 2정이면 200mg입니다."
+    ],
+    [
+     "설사를 해요.",
+     "마그네슘을 많이 먹으면 변이 묽어질 수 있습니다. 양을 줄이거나 글리시네이트처럼 속이 편한 형태로 바꿔 보고, 계속되면 그만 먹으십시오."
+    ]
+   ],
+   "compare": {
+    "checked": "2026-11-08",
+    "amt": [
+     "elemental"
+    ],
+    "amtLabel": "원소 마그네슘",
+    "amtUnit": "mg",
+    "per": 100,
+    "perLabel": "원소 100mg당",
+    "alt": {
+     "field": "form",
+     "value": "글리시네이트",
+     "label": "속 편한 글리시네이트 중"
+    },
+    "items": [
+     {
+      "brand": "닥터스베스트",
+      "short": "고흡수 마그네슘 240정",
+      "name": "Doctor's Best (닥터스베스트), 고흡수 마그네슘 리시네이트 글리시네이트, 킬레이트화, Albion® TRAACS®, 240정(1정당 100mg)",
+      "url": "https://kr.iherb.com/pr/doctor-s-best-high-absorption-magnesium-lysinate-glycinate-chelated-albion-traacs-240-tablets-100-mg-per-tablet/16567",
+      "kw": "Doctor's Best High Absorption Magnesium Lysinate Glycinate 240 Tablets",
+      "count": 240,
+      "perServing": 2,
+      "price": 27924,
+      "autoship": 25132,
+      "rating": 4.8,
+      "reviews": 218699,
+      "inStock": true,
+      "elemental": 200,
+      "form": "글리시네이트",
+      "type": "정제",
+      "note": "리시네이트 글리시네이트 킬레이트(Albion TRAACS). 1회 2정 기준. 120정 용량도 있음."
+     },
+     {
+      "brand": "나우푸드",
+      "short": "마그네슘 글리시네이트 180정",
+      "name": "NOW Foods (나우푸드), 마그네슘 글리시네이트, 180정(1정당 100mg)",
+      "url": "https://kr.iherb.com/pr/now-foods-magnesium-glycinate-180-tablets-100-mg-per-tablet/88819",
+      "kw": "NOW Foods Magnesium Glycinate 180 Tablets",
+      "count": 180,
+      "perServing": 2,
+      "price": 24855,
+      "autoship": 23613,
+      "rating": 4.8,
+      "reviews": 46659,
+      "inStock": true,
+      "elemental": 200,
+      "form": "글리시네이트",
+      "type": "정제",
+      "note": "비스글리시네이트(TRAACS). 1회 2정 기준."
+     },
+     {
+      "brand": "라이프익스텐션",
+      "short": "뉴로맥 (L-트레온산) 90정",
+      "name": "Life Extension (라이프익스텐션), Neuro-Mag, 마그네슘 L-트레온산, 베지 캡슐 90정(캡슐당 48mg)",
+      "url": "https://kr.iherb.com/pr/life-extension-neuro-mag-magnesium-l-threonate-90-vegetarian-capsules-48-mg-per-capsule/40244",
+      "kw": "Life Extension Neuro-Mag Magnesium L-Threonate 90 Vegetarian Capsules",
+      "count": 90,
+      "perServing": 3,
+      "price": 37752,
+      "autoship": 37752,
+      "rating": 4.8,
+      "reviews": 36724,
+      "inStock": true,
+      "elemental": 144,
+      "form": "L-트레온산(Magtein)",
+      "type": "캡슐",
+      "note": "목록가 ₩44,414에서 15% 할인 표시된 가격. 1회 3정 기준이라 원소 함량이 낮고 1회 단가가 높음."
+     },
+     {
+      "brand": "캘리포니아 골드 뉴트리션",
+      "short": "마그네슘 비스글리시네이트 240정",
+      "name": "California Gold Nutrition (캘리포니아골드뉴트리션), 마그네슘 비스글리시네이트 킬레이트, Albion TRAACS®, 베지 캡슐 240정(캡슐당 100mg)",
+      "url": "https://kr.iherb.com/pr/california-gold-nutrition-magnesium-bisglycinate-chelate-albion-traacs-240-veggie-capsules-100-mg-per-capsule/103274",
+      "kw": "California Gold Nutrition Magnesium Bisglycinate Chelate Albion TRAACS 240 Veggie Capsules",
+      "count": 240,
+      "perServing": 2,
+      "price": 38955,
+      "autoship": 31164,
+      "rating": 4.8,
+      "reviews": 29742,
+      "inStock": true,
+      "elemental": 200,
+      "form": "혼합",
+      "type": "캡슐",
+      "note": "비스글리시네이트 킬레이트 + 산화마그네슘 혼합(제품명엔 비스글리시네이트만 표기). 60정 용량도 있음."
+     },
+     {
+      "brand": "쏜리서치",
+      "short": "마그네슘 글리시네이트 90정",
+      "name": "Thorne (쏜리서치), 마그네슘 글리시네이트, 캡슐 90정(캡슐 1정당 120mg)",
+      "url": "https://kr.iherb.com/pr/thorne-magnesium-glycinate-90-capsules-120-mg-per-capsule/152148",
+      "kw": "Thorne Magnesium Glycinate 90 Capsules",
+      "count": 90,
+      "perServing": 1,
+      "price": 29224,
+      "autoship": 26302,
+      "rating": 4.8,
+      "reviews": 2000,
+      "inStock": true,
+      "elemental": 120,
+      "form": "글리시네이트",
+      "type": "캡슐",
+      "note": "라벨 1회 1정, 사용법은 하루 1~4회."
+     },
+     {
+      "brand": "라이프익스텐션",
+      "short": "마그네슘 캡슐 500mg 100정",
+      "name": "Life Extension (라이프익스텐션), 마그네슘 캡슐, 500 mg, 100 베지 캡슐",
+      "url": "https://kr.iherb.com/pr/life-extension-magnesium-caps-500-mg-100-vegetarian-capsules/48803",
+      "kw": "Life Extension Magnesium Caps 500 mg 100 Vegetarian Capsules",
+      "count": 100,
+      "perServing": 1,
+      "price": 12953,
+      "autoship": 11658,
+      "rating": 4.8,
+      "reviews": 63201,
+      "inStock": true,
+      "elemental": 500,
+      "form": "혼합",
+      "type": "캡슐",
+      "note": "산화마그네슘·시트레이트·숙시네이트 혼합."
+     },
+     {
+      "brand": "솔라레이",
+      "short": "고흡수 마그네슘 글리시네이트 120정",
+      "name": "Solaray (솔라레이), 고흡수 마그네슘글리신산, 베지 캡슐 120정",
+      "url": "https://kr.iherb.com/pr/solaray-high-absorption-magnesium-glycinate-120-vegcaps/112971",
+      "kw": "Solaray High Absorption Magnesium Glycinate 120 VegCaps",
+      "count": 120,
+      "perServing": 4,
+      "price": 18546,
+      "autoship": 16692,
+      "rating": 4.8,
+      "reviews": 63150,
+      "inStock": true,
+      "elemental": 350,
+      "form": "글리시네이트",
+      "type": "캡슐",
+      "note": "1회 4정 기준(통당 30회). BioPerine 5mg 함유. 240정 용량도 있음."
+     },
+     {
+      "brand": "스완슨",
+      "short": "알비온 마그네슘 글리시네이트 90정",
+      "name": "Swanson Vitamins (스완슨 비타민), Albion®, 글리신산 마그네슘, 133mg, 비건 캡슐 90정",
+      "url": "https://kr.iherb.com/pr/swanson-vitamins-albion-magnesium-glycinate-133-mg-90-vegan-capsules/116273",
+      "kw": "Swanson Albion Magnesium Glycinate 133 mg 90 Vegan Capsules",
+      "count": 90,
+      "perServing": 1,
+      "price": 14789,
+      "autoship": 13311,
+      "rating": 4.8,
+      "reviews": 14307,
+      "inStock": true,
+      "elemental": 133,
+      "form": "혼합",
+      "type": "캡슐",
+      "note": "Albion 비스글리시네이트 킬레이트(완충형) + 산화마그네슘. 사용법은 하루 3회 1정."
+     },
+     {
+      "brand": "나우푸드",
+      "short": "마그네슘 시트레이트 120정",
+      "name": "NOW Foods (나우푸드), 마그네슘시트레이트, 베지 캡슐 120정(캡슐 1정당 133mg)",
+      "url": "https://kr.iherb.com/pr/now-foods-magnesium-citrate-120-veg-capsules-133-mg-per-capsule/698",
+      "kw": "NOW Foods Magnesium Citrate 120 Veg Capsules",
+      "count": 120,
+      "perServing": 3,
+      "price": 15526,
+      "autoship": 14750,
+      "rating": 4.8,
+      "reviews": 71117,
+      "inStock": true,
+      "elemental": 400,
+      "form": "시트레이트",
+      "type": "캡슐",
+      "note": "1회 3정 기준이라 크게 보임. 240정 용량도 있음."
+     },
+     {
+      "brand": "21세기 센트리",
+      "short": "마그네슘 250mg 110정",
+      "name": "21st Century (21세기 센트리), 마그네슘, 250mg, 110정",
+      "url": "https://kr.iherb.com/pr/21st-century-magnesium-250-mg-110-tablets/43822",
+      "kw": "21st Century Magnesium 250 mg 110 Tablets",
+      "count": 110,
+      "perServing": 1,
+      "price": 3667,
+      "autoship": 3484,
+      "rating": 4.7,
+      "reviews": 74113,
+      "inStock": true,
+      "elemental": 250,
+      "form": "옥사이드",
+      "type": "정제",
+      "note": "칼슘(탄산칼슘) 65mg 함께 들어 있음."
+     }
+    ],
+    "head": [
+     "100mg당",
+     "원소 마그네슘"
+    ]
+   },
+   "reviews": [
+    {
+     "product": "닥터스베스트 고흡수 마그네슘",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/doctor-s-best-high-absorption-magnesium-lysinate-glycinate-chelated-albion-traacs-240-tablets-100-mg-per-tablet/16567",
+     "date": "2025-12-16",
+     "sentiment": "중립",
+     "topic": "목넘김",
+     "quote": "용량·가격은 좋은데 정제라 가끔 목넘김이 어렵다는 후기"
+    },
+    {
+     "product": "닥터스베스트 고흡수 마그네슘",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/doctor-s-best-high-absorption-magnesium-lysinate-glycinate-chelated-albion-traacs-240-tablets-100-mg-per-tablet/16567",
+     "date": "2026-09-04",
+     "sentiment": "긍정",
+     "topic": "가격",
+     "quote": "먹어 본 마그네슘 중 가성비와 알 크기가 괜찮았다는 후기"
+    },
+    {
+     "product": "나우푸드 마그네슘 글리시네이트",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/now-foods-magnesium-glycinate-180-tablets-100-mg-per-tablet/88819",
+     "date": "2026-10-05",
+     "sentiment": "긍정",
+     "topic": "목넘김",
+     "quote": "알이 클까 걱정했는데 많이 크지 않아 먹기 좋다는 후기"
+    },
+    {
+     "product": "나우푸드 마그네슘 글리시네이트",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/now-foods-magnesium-glycinate-180-tablets-100-mg-per-tablet/88819",
+     "date": "2026-09-09",
+     "sentiment": "중립",
+     "topic": "효과체감",
+     "quote": "정제는 살짝 크고, 체감은 드라마틱하지 않지만 아침이 덜 피곤했다는 후기"
+    },
+    {
+     "product": "캘리포니아 골드 뉴트리션 마그네슘 비스글리시네이트",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/california-gold-nutrition-magnesium-bisglycinate-chelate-albion-traacs-240-veggie-capsules-100-mg-per-capsule/103274",
+     "date": "2026-10-05",
+     "sentiment": "중립",
+     "topic": "소화",
+     "quote": "캡슐이라 넘기기 쉽지만 산화마그네슘이 일부 들어 있어 소화가 안 맞을 수도 있다는 의견"
+    },
+    {
+     "product": "라이프익스텐션 뉴로맥",
+     "source": "아이허브 리뷰",
+     "url": "https://kr.iherb.com/pr/life-extension-neuro-mag-magnesium-l-threonate-90-vegetarian-capsules-48-mg-per-capsule/40244",
+     "date": "2026-08-01",
+     "sentiment": "긍정",
+     "topic": "목넘김",
+     "quote": "캡슐이 크지 않고 향·맛이 거의 없어 먹기 편했다는 후기"
+    },
+    {
+     "product": "나우푸드 마그네슘 시트레이트",
+     "source": "디시 영양제 마이너 갤러리",
+     "url": "https://gall.dcinside.com/mgallery/board/view?id=nutrition&no=538238",
+     "date": "2024-09-26",
+     "sentiment": "부정",
+     "topic": "소화",
+     "quote": "낮에 가스가 차고 화장실을 또 가게 돼 복용 시간을 밤으로 옮겼다는 글"
+    },
+    {
+     "product": "닥터스베스트 고흡수 마그네슘",
+     "source": "디시 영양제 마이너 갤러리",
+     "url": "https://gall.dcinside.com/mgallery/board/view?id=nutrition&no=538238",
+     "date": "2024-09-26",
+     "sentiment": "긍정",
+     "topic": "효과체감",
+     "quote": "여러 제품 비교 중 닥베는 수면과 배변 쪽 체감이 고르게 있었다는 개인 경험"
+    },
+    {
+     "product": "산화마그네슘(제품명 미기재) vs 킬레이트",
+     "source": "디시 영양제 마이너 갤러리",
+     "url": "https://gall.dcinside.com/mgallery/board/view?id=nutrition&no=540310",
+     "date": "2024-10-11",
+     "sentiment": "부정",
+     "topic": "소화",
+     "quote": "산화마그네슘은 복통만 있었고 킬레이트로 바꾼 뒤 눈떨림이 줄었다고 느낀 글"
+    },
+    {
+     "product": "나우푸드 마그네슘 글리시네이트",
+     "source": "네이버 블로그",
+     "url": "https://blog.naver.com/PostView.naver?blogId=elroy07&logNo=223099945019",
+     "date": "2023-05-12",
+     "sentiment": "긍정",
+     "topic": "효과체감",
+     "quote": "몇 년째 먹으며 눈떨림이 없고 잠도 잘 자는 편이라는 개인 경험"
+    }
+   ]
   }
+ ],
+ "blackfriday": {
+  "codes": [
+   {
+    "code": "SING2611",
+    "label": "얼리 블프 위크 전 품목 22% (일부 제외)",
+    "rate": 22,
+    "until": "2026-11-11"
+   }
+  ],
+  "history": [
+   {
+    "year": 2025,
+    "start": "2025-11-12",
+    "end": null,
+    "short": "11월 한 달 블프 먼스, 블프 주간 전 사이트 25%부터",
+    "text": "블랙프라이데이 먼스(11월 한 달). 초반 주요 카테고리 20%부터, 블프·사이버먼데이 주간은 전 사이트 25%부터, 매주 새 카테고리·브랜드 딜",
+    "url": "https://www.newswire.co.kr/newsRead.php?no=1022912"
+   },
+   {
+    "year": 2024,
+    "start": "2024-11-28",
+    "end": "2024-12-02",
+    "short": "전 사이트 25% 이상, 코드 BFCM24",
+    "text": "사이트 전체 25% 이상 할인(블프+사이버먼데이), 코드 BFCM24",
+    "url": "https://www.iherb.com/pressreleases/2024-black-friday-cm/2002"
+   },
+   {
+    "year": 2023,
+    "start": "2023-11-24",
+    "end": "2023-11-26",
+    "short": "8만원 이상 전 품목 25%, 코드 KRBF25",
+    "text": "8만원 이상 주문 시 KRBF25 코드로 전 품목 25% 할인(약 3만 개 제품), 11/26 03:00 종료. 이후 사이버먼데이 22% 세일",
+    "url": "https://www.newsis.com/view/NISX20231124_0002533595?pc_view=1"
+   },
+   {
+    "year": 2022,
+    "start": "2022-11-26",
+    "end": "2022-11-30",
+    "short": "전 품목 25%, 코드 BFCM25 (계정당 1회)",
+    "text": "BFCM25 코드로 전 품목 25% 할인(계정당 1회), 한국 시간 11/30 03:00 종료. 블프·사이버먼데이 통합",
+    "url": "http://tipstorycom.tistory.com/1026"
+   }
+  ],
+  "rateSummary": "2022~2024년에는 블프 주간에 전 품목 25% 코드(BFCM25, KRBF25, BFCM24)가 나왔고, 2025년에는 11월 한 달을 블프 먼스로 열어 블프·사이버먼데이 주간에 전 사이트 25%부터 할인했습니다",
+  "periodSummary": "2022~2024년에는 블랙프라이데이 전후 3~5일(예: 2024년 11월 28일~12월 2일)이었고, 2025년에는 11월 12일부터 한 달 가까이 이어졌습니다. 한국 시간으로는 새벽 3시 전후에 끝나는 해가 많았습니다",
+  "thisYear": {
+   "text": "얼리 블프 위크: 전 품목 22% 할인, 할인코드 SING2611, 행사 종료 한국 11월 11일 23:59(제한 사항 적용). 2026-11-08 기준 본 블프·사이버먼데이 일정은 사이트에 공지 없음",
+   "url": "https://kr.iherb.com/info/sales-and-offers"
+  },
+  "checked": "2026-11-08"
+ }
 }

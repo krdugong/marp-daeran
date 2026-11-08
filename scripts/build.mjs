@@ -577,6 +577,11 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta:hover{background:var(--brand-700)}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
+table.alt .tag.g{background:var(--mint-soft);color:#0B5A3A}
+table.alt td.n .sh{display:block;font-size:11px;color:var(--faint);font-weight:500;margin-top:2px}
+.ihRv{list-style:none;margin:0;padding:0}.ihRv li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.ihRv .s{flex:none;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;height:fit-content;margin-top:2px}.ihRv .s.pos{background:var(--mint-soft);color:#0B5A3A}.ihRv .s.neg{background:var(--accent-soft);color:var(--accent)}.ihRv .s.neu{background:var(--surface-2);color:var(--ink-2)}
+.ihRv b{font-size:14px}.ihRv .tp{font-size:12px;color:var(--muted)}.ihRv p{margin:2px 0;font-size:15px}.ihRv small{font-size:12px;color:var(--faint)}.ihRv small a{color:inherit}
 /* 링크만 있는 섹션(관련 페이지 등): 전체 폭, 링크는 카드 격자로 */
 .wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta){display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;grid-column:1 / -1}
 .wrap section:not(:has(> :not(h2,p,a.cta))):has(> a.cta + a.cta) > :not(a.cta){grid-column:1 / -1;margin-bottom:4px}
@@ -2015,7 +2020,7 @@ ${heroBtn.replace(' heroBtn', '').replace('pubref:pt-iherb-hero', 'pubref:pt-ihe
 
 <section class="full">
 <h2>아이허브 추천템, 고르는 기준</h2>
-<p class="lede">아이허브에서 가장 많이 찾는 영양제 다섯 가지입니다. 제품 이름보다 <b>라벨에서 무엇을 봐야 하는지</b>를 적었습니다. 자체 브랜드 캘리포니아 골드 뉴트리션(CGN)이 보통 가장 쌉니다.</p>
+<p class="lede">아이허브에서 가장 많이 찾는 영양제 다섯 가지입니다. 제품 이름보다 <b>라벨에서 무엇을 봐야 하는지</b>를 적었습니다. 자체 브랜드 캘리포니아 골드 뉴트리션(CGN)은 리뷰가 가장 많은 편이지만 가장 싼 건 카테고리마다 다르니, 아래 고르는 법 페이지의 가격 비교표를 보십시오.</p>
 <ul class="shops picks">
 ${picks.map((p, i) => `<li${p.warn ? ' class="caution"' : ''}><b>${esc(p.cat)}${p.sub ? ` <small>${esc(p.sub)}</small>` : ''}</b><ul class="tips">${(p.check || []).map(t => `<li>${esc(t)}</li>`).join('')}</ul>${p.kw && !p.warn ? `<a class="go" href="${esc(ihSearch(`pt-iherb-pick${i + 1}`, p.kw))}" ${aff}>아이허브에서 ${esc(p.cat)} 보기 →</a>` : ''}</li>`).join('\n')}
 </ul>
@@ -2077,7 +2082,52 @@ ${[['iherb-best.html', '아이허브 추천템 (베스트셀러)'], ...IHG.guide
   // 유산균·오메가3·마그네슘 고르는 법
   for (const g of IHG.guides) {
     const ref = 'pt-' + g.file.replace('.html', '');
-    const faq = [...g.faq, codeFaq(g.kw)];
+    // 비교표: 1회분 함량·1회분 가격·함량당 가격 (compare 가 있으면 베스트셀러 카드 대신 씁니다)
+    const C = g.compare && (g.compare.items || []).length ? g.compare : null;
+    const cmp = C ? C.items.map(p => {
+      const amt = C.amt.reduce((s, k) => s + (p[k] || 0), 0), sv = p.count / p.perServing;
+      return { ...p, amt, sv, one: p.price / sv, unit: amt ? p.price / (sv * amt) * C.per : null };
+    }).filter(p => p.unit).sort((a, b) => a.unit - b.unit) : [];
+    const cheap = cmp[0], altBest = C && C.alt ? cmp.find(p => p[C.alt.field] === C.alt.value) : null;
+    const topSold = [...cmp].sort((a, b) => (b.reviews || 0) - (a.reviews || 0))[0];
+    const amtTxt = p => `${C.amtLabel} ${p.amt.toLocaleString('ko-KR')}${C.amtUnit}`;
+    const revK = n => n >= 10000 ? `${(n / 10000).toFixed(n >= 100000 ? 0 : 1).replace(/\.0$/, '')}만` : n.toLocaleString('ko-KR');
+    const chips = p => [
+      p.perServing > 1 ? `1회 ${p.perServing}정` : '',
+      g.cat === '오메가3' ? [p.form && p.form !== '표기 없음' ? p.form : '', /IFOS/.test(p.cert || '') ? 'IFOS' : ''] : [],
+      g.cat === '마그네슘' ? [p.form, p.type] : [],
+      g.cat === '유산균' ? [p.guarantee === '유통기한까지' ? '유통기한까지 보장' : p.guarantee === '제조 시' ? '제조 시 기준' : '', p.storage === '냉장' ? '냉장' : '', p.lgg ? 'LGG' : '', p.strains ? `${p.strains}종` : ''] : [],
+    ].flat().filter(Boolean);
+    const cmpLead = cheap ? `${C.perLabel} 가장 싼 건 <b>${esc(cheap.brand)} ${esc(cheap.short)}</b>(${won(cheap.unit)})입니다.${altBest && altBest !== cheap ? ` ${esc(C.alt.label)}에서 가장 싼 건 ${esc(altBest.brand)} ${esc(altBest.short)}(${won(altBest.unit)})입니다.` : ''}` : '';
+    const cmpRow = (p, i) => `<tr class="${p === cheap ? 'best' : ''}${p === altBest && p !== cheap ? ' alt2' : ''}">
+<td class="p"><a href="${esc(ihLink(`${ref}-c${i + 1}`, p.url))}" ${aff}><small class="br">${esc(p.brand)}${p === cheap ? '<i class="tag">가장 쌈</i>' : p === altBest ? `<i class="tag g">${esc(C.alt.value)} 최저</i>` : ''}</small>${esc(p.short)}</a><small class="sh">${[...chips(p), p.rating ? `★${p.rating} (${revK(p.reviews || 0)})` : ''].filter(Boolean).map(esc).join(' · ')}</small></td>
+<td class="n">${p.amt.toLocaleString('ko-KR')}${C.amtUnit}</td>
+<td class="n">${won(p.one)}<small class="sh">${won(p.price)}</small></td>
+<td class="n hot">${won(p.unit)}</td></tr>`;
+    const cmpHtml = cheap ? `<section class="full">
+<h2>아이허브 ${esc(g.cat)} ${cmp.length}개 가격 비교</h2>
+<p class="lede">${cmpLead} 리뷰가 가장 많은 건 ${esc(topSold.brand)} ${esc(topSold.short)}(리뷰 ${revK(topSold.reviews)}개)입니다.</p>
+<div class="altWrap"><table class="alt">
+<thead><tr><th>제품</th><th class="n">1회분<br><small>${esc(C.amtLabel)}</small></th><th class="n">1회분 가격<br><small>한 통</small></th><th class="n">${esc((C.head || [C.perLabel])[0])}${C.head ? `<br><small>${esc(C.head[1])}</small>` : ''}</th></tr></thead>
+<tbody>${cmp.map(cmpRow).join('')}</tbody>
+</table></div>
+<p class="hint">${dot(C.checked)} 아이허브 한국 사이트의 1회 구매가(세일가 포함, 정기배송·코드 할인 전)와 라벨 1회 섭취량 기준입니다. 함량당 가격이 싸다고 더 좋은 제품은 아니니 위 형태·보관 표시를 같이 보십시오. 가격은 매주 세일에 따라 바뀝니다.</p>
+</section>` : '';
+    const RV = g.reviews || [];
+    const rvCnt = t => RV.filter(r => r.sentiment === t).length;
+    const rvHtml = RV.length ? `<section class="full">
+<h2>아이허브 ${esc(g.cat)} 후기</h2>
+<p class="lede">아이허브 한국어 리뷰, 디시, 네이버 블로그에서 ${RV.length}개를 골라 요약했습니다. 긍정 ${rvCnt('긍정')} · 중립 ${rvCnt('중립')} · 부정 ${rvCnt('부정')}. 협찬 글은 뺐습니다.</p>
+<ul class="ihRv">${[...RV].sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(r => `<li><span class="s ${r.sentiment === '긍정' ? 'pos' : r.sentiment === '부정' ? 'neg' : 'neu'}">${esc(r.sentiment)}</span><div><b>${esc(r.product)}</b> <span class="tp">${esc(r.topic || '')}</span><p>${esc(r.quote)}</p><small>${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener nofollow">${esc(r.source)}</a>` : esc(r.source)}${r.date ? ` · ${dot(r.date)}` : ''}</small></div></li>`).join('')}</ul>
+<p class="hint">개인 후기라 효과는 사람마다 다릅니다.</p>
+</section>` : '';
+    const autoFaq = cheap ? [
+      [`아이허브 ${g.cat} 가성비 제일 좋은 건 뭐예요?`, `${dot(C.checked)} 기준 ${C.perLabel} 가격으로는 ${cmp.slice(0, 3).map(p => `${p.brand} ${p.short}(${won(p.unit)})`).join(', ')} 순입니다.${altBest && altBest !== cheap ? ` ${C.alt.label}에서 가장 싼 건 ${altBest.brand} ${altBest.short}(${won(altBest.unit)})입니다.` : ''} 세일에 따라 순서가 바뀝니다.`],
+      ...(g.cat === '오메가3' ? [['아이허브 오메가3 rTG는 어떤 게 있나요?', `조사한 ${cmp.length}개 중 라벨에 rTG라고 적힌 건 ${cmp.filter(p => p.form === 'rTG').map(p => `${p.brand} ${p.short}`).join(', ')}입니다. IFOS 인증 표기가 있는 건 ${cmp.filter(p => /IFOS/.test(p.cert || '')).map(p => `${p.brand} ${p.short}`).join(', ')}입니다.`]] : []),
+      ...(g.cat === '마그네슘' ? [['킬레이트(글리시네이트) 마그네슘은 어떤 게 있나요?', `조사한 ${cmp.length}개 중 글리시네이트만 쓴 건 ${cmp.filter(p => p.form === '글리시네이트').map(p => `${p.brand} ${p.short}`).join(', ')}입니다. 캘리포니아 골드 뉴트리션과 스완슨 제품은 이름에 글리시네이트가 있지만 산화마그네슘이 섞여 있습니다.`]] : []),
+      ...(g.cat === '유산균' ? [['아이허브 유산균 300억, 1000억 중 뭘 사요?', `같은 락토비프라도 100억 CFU당 가격은 ${cmp.filter(p => /락토비프/.test(p.short)).map(p => `${p.short.replace(/ \d+정$/, '')} ${won(p.unit)}`).join(', ')}입니다. 균 수가 많을수록 균 수당 가격은 싸지지만, 많다고 더 좋은 것은 아니니 처음이면 낮은 쪽부터 먹어 보십시오.`]] : []),
+    ] : [];
+    const faq = [...autoFaq, ...g.faq, codeFaq(g.kw)];
     const prodHtml = g.products.map((p, i) => `<li><b>${esc(p.name)}${p.tag ? ` <small>${esc(p.tag)}</small>` : ''}</b><ul class="tips">${p.points.map(t => `<li>${esc(t)}</li>`).join('')}</ul><a class="go" href="${esc(ihLink(`${ref}-${i + 1}`, srch(p.kw)))}" ${aff}>아이허브에서 보기 →</a></li>`).join('\n');
     const tableHtml = g.table ? `<section class="full">
 <h2>${esc(g.cat)} 형태별 차이</h2>
@@ -2087,28 +2137,29 @@ ${[['iherb-best.html', '아이허브 추천템 (베스트셀러)'], ...IHG.guide
       file: g.file, priority: 0.8, changefreq: 'weekly', current: g.file, lastmod: asof,
       title: g.title.replace('{y}', y),
       keywords: g.keywords,
-      desc: `${g.answer.replace(/<[^>]+>/g, '')} 고르는 기준 ${g.checks.length}가지와 자주 묻는 질문, ${m}월 아이허브 할인코드까지 정리했습니다. ${dot(asof)} 확인.`,
+      desc: `${cheap ? `아이허브 ${g.cat} ${cmp.length}개 ${C.perLabel} 가격 비교. ${cmpLead.replace(/<[^>]+>/g, '')} ` : g.answer.replace(/<[^>]+>/g, '') + ' '}후기 ${RV.length}개, 고르는 기준, ${m}월 아이허브 할인코드까지. ${dot(asof)} 확인.`,
       ld: [crumbs([['홈', 'index.html'], ['아이허브 할인코드', 'iherb.html'], [`아이허브 ${g.cat}`, g.file]]), faqLd(faq)],
       utilHtml: util,
       stickyHtml: stickyOf(`${ref}-sticky`),
       heroHtml: `
 <div class="hero">
 <div class="heroMain">
-<p class="updated">${dot(asof)} 확인 · 아이허브 베스트셀러 기준</p>
+<p class="updated">${dot(C ? C.checked : asof)} 확인 · ${C ? `아이허브 ${g.cat} ${cmp.length}개 함량·가격 비교` : '아이허브 베스트셀러 기준'}</p>
 <h1>${g.h1}</h1>
-<p class="lede answer">${g.answer}${codeLine}</p>
+<p class="lede answer">${cheap ? `${cmp.length}개를 비교하면 ${cmpLead} ` : ''}${g.answer}${codeLine}</p>
 ${goBtn(`${ref}-hero`, srch(g.cat), `아이허브 ${g.cat} 보기`)}
 ${disclose}
 </div>
 </div>`,
       restHtml: `
-<section class="full">
+${cmpHtml}
+${cheap ? '' : `<section class="full">
 <h2>아이허브 ${esc(g.cat)} 베스트셀러</h2>
 <p class="lede">${dot(best.checked || asof)} 아이허브 베스트셀러에 오른 ${esc(g.cat)} 제품입니다. 가격은 매주 세일에 따라 바뀌어서 적지 않았습니다.</p>
 <ul class="shops picks">
 ${prodHtml}
 </ul>
-</section>
+</section>`}
 
 ${tableHtml}
 
@@ -2117,6 +2168,8 @@ ${tableHtml}
 <ol class="steps">${g.checks.map(t => `<li>${esc(t)}</li>`).join('')}</ol>
 ${notMedicine}
 </section>
+
+${rvHtml}
 
 ${codeSection}
 
@@ -2136,7 +2189,7 @@ ${more(g.file)}
     const nItems = best.groups.reduce((s, g) => s + g.items.length, 0);
     const BEST_FAQ = [
       ['아이허브 추천템은 어떻게 골랐나요?', `${dot(best.checked)}에 아이허브 한국 사이트의 베스트셀러 목록을 보고 영양제, 운동 보충제, 뷰티, 식품으로 나눴습니다. 광고비를 받고 넣은 제품은 없습니다. 아이허브 링크는 제휴 링크라 구매하면 프로티파이에 수수료가 들어오고, 구매 금액은 같습니다.`],
-      ['아이허브 처음 사는데 뭐부터 사면 되나요?', '많이 사는 건 마그네슘, 유산균, 오메가3, 비타민C입니다. 아이허브 자체 브랜드인 캘리포니아 골드 뉴트리션(CGN)이 같은 성분에서 보통 가장 쌉니다. 첫 주문이면 아이허브 화면에 뜨는 신규 고객 할인부터 확인하십시오.'],
+      ['아이허브 처음 사는데 뭐부터 사면 되나요?', '많이 사는 건 마그네슘, 유산균, 오메가3, 비타민C입니다. 자체 브랜드인 캘리포니아 골드 뉴트리션(CGN)이 리뷰가 많고 무난하지만, 함량 대비 가장 싼 제품은 카테고리마다 다릅니다(오메가3·마그네슘·유산균 페이지에 비교표가 있습니다). 첫 주문이면 아이허브 화면에 뜨는 신규 고객 할인부터 확인하십시오.'],
       ['아이허브 무료배송 기준은 얼마인가요?', IH_SHIP.freeShipKrw > 0 ? `${dot(asof)} 기준 ${won(IH_SHIP.freeShipKrw)} 이상 주문하면 무료배송입니다. 장바구니에 무료배송까지 남은 금액이 표시됩니다.` : '기준이 자주 바뀌어서 장바구니에 표시되는 금액으로 확인하십시오.'],
       ['아이허브에서 한 번에 많이 사도 되나요?', `건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지 개인 사용으로 통관되고, ${IH_SHIP.customsUsd}달러(미국 발송도 같음)를 넘으면 관세와 부가세가 붙습니다. 넘을 것 같으면 주문을 나누십시오.`],
       [`아이허브 ${m}월 할인은 어떻게 받나요?`, `이번 주 브랜드 세일을 먼저 보고, 그 위에 할인코드 하나를 넣으면 됩니다.${IH_CODES.length ? ` 지금 쓸 수 있는 코드는 ${IH_CODES.map(c => c.code).join(', ')}입니다.` : ''}${m === 11 ? ` 11월 말에는 블랙프라이데이(${kdate(bfDate)})가 있어서 큰 주문은 그때로 미루는 사람도 많습니다.` : ''}`],
@@ -2203,7 +2256,8 @@ ${more('iherb-best.html')}
       : `<p class="lede">블프 코드는 아직 안 나왔습니다. 아이허브는 보통 시작 직전에 공개하고, 나오면 여기에 바로 올립니다.${IH_CODES.length ? ' 그 전까지는 아래 지금 코드를 쓰면 됩니다.' : ''}</p>${codeList}`;
     const BF_FAQ = [
       [`아이허브 블프 ${bfYear}는 언제인가요?`, `블랙프라이데이는 ${kdate(bfDate)}(${wk(bfDate)}), 사이버먼데이는 ${kdate(cmDate)}(${wk(cmDate)})입니다. 아이허브 행사는 이 주에 열리고 앞뒤로 며칠 늘어나기도 합니다. 정확한 시작일과 코드는 아이허브가 직전에 공개합니다.`],
-      ['아이허브 블프 할인은 얼마나 되나요?', `해마다 다릅니다. 외부 정리 글을 보면 ${(BF.history || []).map(h => `${h.year}년에는 ${h.text}`).join(', ')}이 있었습니다. 올해 코드는 나오는 대로 이 페이지에 올립니다.`],
+      ['아이허브 블프 할인율은 얼마나 되나요?', BF.rateSummary ? `${BF.rateSummary}. 지난 4년 모두 블프 주간 최대 할인은 25% 안팎이었습니다.${bfCodes.length ? ` 올해는 블프 전에 ${bfCodes.map(c => `${c.code}(${c.label}${c.until ? `, ${kdate(c.until)}까지` : ''})`).join(', ')}가 먼저 나왔습니다.` : ''}` : `해마다 다릅니다. ${(BF.history || []).map(h => `${h.year}년에는 ${h.short || h.text}`).join(', ')}.`],
+      ...(BF.periodSummary ? [['아이허브 블프 기간은 보통 언제부터 언제까지예요?', `${BF.periodSummary}. 올해 본 행사 일정은 ${BF.thisYear && /공지 없음/.test(BF.thisYear.text || '') ? `${dot(BF.checked || asof)} 기준 아직 공지되지 않았고, ` : ''}공지되면 이 페이지에 바로 올립니다.`]] : []),
       ['블프 코드와 다른 할인코드 같이 쓸 수 있나요?', '할인코드는 한 주문에 하나만 들어갑니다. 블프 코드와 다른 코드 중 큰 쪽을 쓰고, 세일가와 리워드 적립금은 겹쳐 쓸 수 있습니다.'],
       ['블프 때 많이 사도 관세 안 붙나요?', `영양제는 미국 발송이어도 한 번에 ${IH_SHIP.customsUsd}달러를 넘으면 관세와 부가세가 붙고, 건강기능식품은 ${IH_SHIP.maxBottles}병까지만 개인 사용으로 통관됩니다. 여러 상자가 같은 날 들어오면 합쳐서 과세될 수 있으니 주문 날짜를 나누십시오.`],
       ['블프 때 주문하면 배송이 늦나요?', `평소엔 ${IH_SHIP.deliveryDays} 걸리지만 블랙프라이데이 뒤에는 주문과 통관이 몰려서 더 걸립니다. 급한 건 블프 전에 따로 사십시오.`],
@@ -2211,8 +2265,8 @@ ${more('iherb-best.html')}
     ];
     page({
       file: 'iherb-blackfriday.html', priority: 0.8, changefreq: 'daily', current: 'iherb-blackfriday.html', lastmod: asof,
-      title: `아이허브 블프 ${bfYear} | 블랙프라이데이 날짜·할인코드·미리 담을 것`,
-      keywords: ['아이허브 블프', '아이허브 블랙프라이데이', `아이허브 블프 ${bfYear}`, '아이허브 11월', '아이허브 11월 할인', '아이허브 사이버먼데이', '아이허브 블프 코드'],
+      title: `아이허브 블프 ${bfYear} | 날짜·할인율·기간 (지난 4년 기록) · 얼리 블프 코드`,
+      keywords: ['아이허브 블프', '아이허브 블랙프라이데이', `아이허브 블프 ${bfYear}`, '아이허브 블프 할인율', '아이허브 블프 기간', '아이허브 얼리블프', '아이허브 11월', '아이허브 11월 할인', '아이허브 사이버먼데이', '아이허브 블프 코드'],
       desc: `아이허브 블프 ${bfYear} 정리. 블랙프라이데이 ${kdate(bfDate)}, 사이버먼데이 ${kdate(cmDate)}. ${phase} 지난 블프 할인, 관세·6병 기준, 미리 장바구니에 담을 것, 지금 쓸 수 있는 ${m}월 코드까지.`,
       ld: [crumbs([['홈', 'index.html'], ['아이허브 할인코드', 'iherb.html'], ['아이허브 블프', 'iherb-blackfriday.html']]), faqLd(BF_FAQ)],
       utilHtml: util,
@@ -2222,7 +2276,7 @@ ${more('iherb-best.html')}
 <div class="heroMain">
 <span class="state ${left <= 0 && dayN(cmDate) >= 0 ? 'on' : 'off'}">${phase}</span>
 <h1>아이허브 블프 ${bfYear}<br>${kdate(bfDate)}(${wk(bfDate)}) ~ ${kdate(cmDate)}(${wk(cmDate)})</h1>
-<p class="lede answer">${bfYear}년 블랙프라이데이는 <b>${kdate(bfDate)}</b>, 사이버먼데이는 <b>${kdate(cmDate)}</b>입니다. 아이허브는 이 주에 전체 할인코드나 큰 브랜드 세일을 내는 편이고, 코드는 시작 직전에 나옵니다. 그 전에 장바구니를 채워 두면 됩니다.${codeLine}</p>
+<p class="lede answer">${bfYear}년 블랙프라이데이는 <b>${kdate(bfDate)}</b>, 사이버먼데이는 <b>${kdate(cmDate)}</b>입니다. 아이허브는 지난 4년 모두 이 주에 <b>전 품목 25% 안팎</b> 할인을 했습니다.${bfCodes.length ? ` 올해는 그 전에 <b>${esc(bfCodes[0].code)}</b>(${esc(bfCodes[0].label)}${bfCodes[0].until ? `, ${kdate(bfCodes[0].until)}까지` : ''})가 먼저 나왔습니다.` : ' 코드는 시작 직전에 나옵니다.'} 장바구니를 미리 채워 두면 됩니다.</p>
 ${goBtn(`${ref}-hero`, IH_HOME, '아이허브 장바구니 채우기')}
 ${disclose}
 </div>
@@ -2253,8 +2307,8 @@ ${bfBox}
 
 <section class="full">
 <h2>지난 아이허브 블프</h2>
-<ul class="steps">${(BF.history || []).map(h => `<li><b>${h.year}년</b> ${esc(h.text)}</li>`).join('')}</ul>
-${BF.historySource ? `<p class="hint">외부 할인 정리 글 기준입니다 (<a href="${esc(BF.historySource)}" target="_blank" rel="noopener nofollow">출처</a>). 올해 할인과 다를 수 있습니다.</p>` : ''}
+<div class="altWrap"><table class="alt"><thead><tr><th>연도</th><th>기간</th><th>할인</th></tr></thead><tbody>${(BF.history || []).map(h => `<tr><td class="n"><b>${h.year}</b></td><td class="nw">${h.start ? `${kdate(h.start)}${h.end ? ` ~ ${kdate(h.end)}` : '부터'}` : '-'}</td><td>${esc(h.short || h.text)}${h.url ? ` <a href="${esc(h.url)}" target="_blank" rel="noopener nofollow">출처</a>` : ''}</td></tr>`).join('')}</tbody></table></div>
+<p class="hint">아이허브 보도자료, 기사, 블로그 기준입니다. 날짜는 미국 기준인 해가 있어 한국 시간과 하루쯤 다를 수 있습니다.</p>
 </section>
 
 <section class="full">
