@@ -1040,7 +1040,7 @@ function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.d
   const secNav = IH ? `<nav class="secNav" aria-label="사이트 구분"><a href="./"${sec === 'mp' ? ' aria-current="true"' : ''}>마이프로틴</a><a href="./iherb.html"${sec === 'ih' ? ' aria-current="true"' : ''}>아이허브</a></nav>` : '';
   const subLinks = sec === 'ih'
     ? navLink('iherb.html', '할인코드') + (hasGuides ? navLink('iherb-best.html', '추천템') + navLink('iherb-probiotics.html', '유산균') + navLink('iherb-omega3.html', '오메가3') + navLink('iherb-magnesium.html', '마그네슘') + navLink('iherb-blackfriday.html', '블프') : '')
-    : navLink('', '오늘 할인율') + navLink('code.html', '할인코드') + (calcWidget ? navLink('calc.html', '계산기') : '') + navLink(monthFile(curYm), `${M(curYm)}월 대란`) + (EV_HOME ? navLink(EV_HOME.page, `${+EV_HOME.date.slice(8, 10)}일 대란`) : '') + (fs.existsSync(path.join(ROOT, 'data/taste.json')) ? navLink('taste.html', '맛 추천') + (readJson('data/taste.json').reviews?.length ? navLink('taste-rank.html', '맛 순위') : '') : '') + (PRODUCTS.length ? navLink('wpc-wpi.html', '<span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span>') : '') + (altMp ? navLink('alternatives.html', '가성비 비교') : '');
+    : navLink('', '오늘 할인율') + navLink('code.html', '할인코드') + (calcWidget ? navLink('calc.html', '계산기') : '') + navLink('jikgu.html', '직구 방법') + navLink(monthFile(curYm), `${M(curYm)}월 대란`) + (EV_HOME ? navLink(EV_HOME.page, `${+EV_HOME.date.slice(8, 10)}일 대란`) : '') + (fs.existsSync(path.join(ROOT, 'data/taste.json')) ? navLink('taste.html', '맛 추천') + (readJson('data/taste.json').reviews?.length ? navLink('taste-rank.html', '맛 순위') : '') : '') + (PRODUCTS.length ? navLink('wpc-wpi.html', '<span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span>') : '') + (altMp ? navLink('alternatives.html', '가성비 비교') : '');
   const html = `<!doctype html>
 <html lang="ko">
 <head>
@@ -1095,7 +1095,7 @@ ${restHtml}
   <div class="fBrand"><b>${esc(SITE.brand)}</b>${SITE.brandEn ? `<i aria-hidden="true"></i><span>${esc(SITE.brandEn)}</span>` : ''}</div>
   ${SITE.slogan ? `<p class="fSlogan">${esc(SITE.slogan)}</p>` : ''}
   ${HEADER_LINE ? `<p class="fLine">${esc(HEADER_LINE)}</p>` : ''}
-  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${altMp ? '<a href="./alternatives.html">마이프로틴 대안</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${EVENT_PAGES.map(ev => `<a href="./${ev.page}">${kdate(ev.date)} 대란</a>`).join('')}${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}${IH ? '<a href="./iherb.html">아이허브 할인코드</a>' : ''}${IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? '<a href="./iherb-best.html">아이허브 추천템</a><a href="./iherb-blackfriday.html">아이허브 블프</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
+  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}<a href="./jikgu.html">직구 방법</a>${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${altMp ? '<a href="./alternatives.html">마이프로틴 대안</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${EVENT_PAGES.map(ev => `<a href="./${ev.page}">${kdate(ev.date)} 대란</a>`).join('')}${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}${IH ? '<a href="./iherb.html">아이허브 할인코드</a>' : ''}${IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? '<a href="./iherb-best.html">아이허브 추천템</a><a href="./iherb-blackfriday.html">아이허브 블프</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 쇼핑몰에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표${IH ? ', 아이허브(iHerb)는 iHerb, LLC의 상표' : ''}이며 본 사이트와 무관합니다.</p>
@@ -1261,6 +1261,8 @@ const CODE_FAQ = [
    `세 가지를 보십시오. 이미 세일 중인 상품은 코드가 빠질 수 있고, ${(SHOP.freeShipping / 10000).toLocaleString('ko-KR')}만원 이상이어야 무료배송이며, ${SHOP.customsUsd}달러를 넘으면 관세와 부가세가 붙을 수 있습니다.${last.deals.length ? ` 지금은 ${last.deals.map(d => d.label).join(', ')} 조건도 있으니 장바구니를 담을 때 같이 챙기십시오.` : ''}`],
   ['마이프로틴 배송비는 얼마인가요?',
    `할인이 끝난 결제 금액이 ${SHOP.freeShipping.toLocaleString('ko-KR')}원 이상이면 무료배송이고, 그보다 적으면 배송비가 붙습니다. 할인 계산기에 금액을 넣으면 무료배송까지 얼마 남았는지 알려드립니다.`],
+  ['마이프로틴 배송 기간은 얼마나 걸리나요?',
+   '마이프로틴 공식 안내로는 출고 후 평균 2~6영업일입니다. 통관이나 택배사 사정으로 늦어질 수 있고, 통관이 끝나기 전에는 배송 조회가 안 될 수 있습니다. 주문부터 관세까지는 직구 방법 페이지에 정리했습니다.'],
   ['할인코드가 적용이 안 돼요.',
    '코드 기간이 끝났거나, 이미 세일 중인 상품과 일부 번들 상품이 제외되는 경우가 많습니다. 최소 결제 금액 조건이 있는 코드도 있습니다. 다른 코드로 바꿔 넣어 보고, 그래도 안 되면 단톡방에 물어보십시오.'],
 ];
@@ -1337,7 +1339,7 @@ const CALC_FAQ = [
   ['계산 결과와 실제 결제금액이 다를 수 있나요?',
    '이미 세일 중인 상품이나 일부 번들은 할인코드가 빠질 수 있고, 마이프로틴이 조건을 바꾸면 결과가 달라집니다. 이 계산기는 예상값이니 결제 전에 장바구니에서 최종 금액을 확인하십시오.'],
   ['관세는 얼마부터 붙나요?',
-   `건강기능식품은 보통 ${SHOP.customsUsd}달러를 넘으면 관세와 부가세가 붙습니다. 계산기는 1달러 ${SHOP.usdKrw.toLocaleString('ko-KR')}원으로 어림잡아 넘을 것 같으면 알려드립니다. 넘는다면 나눠서 주문하는 편이 낫습니다.`],
+   `건강기능식품은 보통 ${SHOP.customsUsd}달러를 넘으면 관세와 부가세가 붙습니다. 계산기는 1달러 ${SHOP.usdKrw.toLocaleString('ko-KR')}원으로 어림잡아 넘을 것 같으면 알려드립니다. 넘는다면 날을 달리해 나눠 주문하는 편이 낫습니다. 같은 날 산 걸 나눠 받으면 합쳐서 과세됩니다.`],
 ];
 if (calcWidget) page({
   file: 'calc.html', priority: 0.9, changefreq: 'daily', current: 'calc.html',
@@ -1825,7 +1827,7 @@ if (ALT && altMp) {
     ['단백질 1g당 가격은 어떻게 계산하나요?',
      '가격 ÷ (총 용량 × 한 스쿱 단백질 ÷ 한 스쿱 무게)입니다. 같은 1kg이라도 WPI는 단백질 비율이 높아서 1kg당 가격은 비싸도 단백질 1g당으로 보면 차이가 줄어듭니다. 맛마다 함량이 조금 달라 대표값으로 계산했습니다.'],
     ['직구하면 관세는 언제 붙나요?',
-     `한 번에 ${SHOP.customsUsd}달러(약 ${won(SHOP.customsUsd * SHOP.usdKrw)})를 넘으면 관세와 부가세가 붙습니다. 아이허브와 쿠팡 로켓직구도 같은 기준이고, 마이프로틴은 ${won(SHOP.freeShipping)} 이상이면 무료배송입니다. 넘을 것 같으면 나눠서 주문하십시오.`],
+     `한 번에 ${SHOP.customsUsd}달러(약 ${won(SHOP.customsUsd * SHOP.usdKrw)})를 넘으면 관세와 부가세가 붙습니다. 아이허브와 쿠팡 로켓직구도 같은 기준이고, 마이프로틴은 ${won(SHOP.freeShipping)} 이상이면 무료배송입니다. 넘을 것 같으면 날을 달리해 나눠 주문하십시오. 같은 날 같은 곳에서 산 건 나눠 받아도 합쳐서 과세됩니다.`],
     ['어느 사이트가 제일 싼가요?',
      '제품마다 다릅니다. 같은 제품도 아이허브, 쿠팡 로켓직구, 공식몰 가격이 다르고 환율에 따라 바뀝니다. 그래서 이 표는 확인한 날의 가격을 적고 확인일을 같이 표시합니다. 사기 전에 링크로 들어가 현재 가격을 한 번 더 확인하십시오.'],
   ];
@@ -1868,7 +1870,7 @@ ${altTable}
   <li><b>네이버 공식 브랜드스토어</b><span>옵티멈뉴트리션처럼 한국 공식 스토어가 있는 브랜드는 즉시할인이 크게 붙어 가장 쌀 때가 있습니다. 쿠폰 할인은 이 표에 넣지 않았습니다.</span></li>
   <li><b>아이허브</b><span>한국어와 원화로 결제하는 직구 사이트입니다. 4만원 이상 무료배송이고, 정기배송을 걸면 더 싸지지만 이 표는 1회 구매가로 비교했습니다. 세일이 자주 바뀝니다.</span></li>
 </ul>
-<p class="hint">어디서 사든 한 번에 ${SHOP.customsUsd}달러를 넘으면 관세가 붙으니 나눠서 주문하십시오.</p>
+<p class="hint">어디서 사든 한 번에 ${SHOP.customsUsd}달러를 넘으면 관세가 붙으니 날을 달리해 나눠 주문하십시오.</p>
 </section>
 
 <section class="full">
@@ -1931,7 +1933,7 @@ if (IH) {
     ['아이허브 무료배송 기준은 얼마인가요?',
      freeShip ? `${freeShip}입니다. 장바구니에 무료배송까지 남은 금액이 표시됩니다.` : '기준 금액이 자주 바뀌어서 여기에는 적지 않습니다. 장바구니에 무료배송까지 남은 금액이 바로 표시되니 거기서 확인하십시오.'],
     ['아이허브 관세는 언제 붙나요?',
-     `영양제(건강기능식품)와 식품은 미국에서 발송돼도 물품값이 ${IH_SHIP.customsUsd}달러를 넘으면 관세와 부가세가 붙습니다. 국제 배송비는 빼고 계산하고, 넘으면 초과분이 아니라 전체 금액에 붙습니다. 건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지만 개인 사용으로 통관되니, 넘을 것 같으면 주문을 나누십시오.`],
+     `영양제(건강기능식품)와 식품은 미국에서 발송돼도 물품값이 ${IH_SHIP.customsUsd}달러를 넘으면 관세와 부가세가 붙습니다. 국제 배송비는 빼고 계산하고, 넘으면 초과분이 아니라 전체 금액에 붙습니다. 건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지만 개인 사용으로 통관되니, 넘을 것 같으면 날을 달리해 주문을 나누십시오.`],
     ['미국 발송이면 200달러까지 면세 아닌가요?',
      `200달러는 목록통관이 되는 일반 물품(화장품·생활용품 등)에만 해당합니다. 관세청 고시에서 건강기능식품과 식품류는 목록통관 배제 대상이라 정식 수입신고(일반통관)를 거치고, 이때 면세 한도는 미국 발송이어도 ${IH_SHIP.customsUsd}달러입니다. 아이허브에서 사는 영양제·단백질은 대부분 ${IH_SHIP.customsUsd}달러로 보면 됩니다.`],
     ['아이허브 배송은 얼마나 걸리나요?',
@@ -2191,7 +2193,7 @@ ${more(g.file)}
       ['아이허브 추천템은 어떻게 골랐나요?', `${dot(best.checked)}에 아이허브 한국 사이트의 베스트셀러 목록을 보고 영양제, 운동 보충제, 뷰티, 식품으로 나눴습니다. 광고비를 받고 넣은 제품은 없습니다. 아이허브 링크는 제휴 링크라 구매하면 프로티파이에 수수료가 들어오고, 구매 금액은 같습니다.`],
       ['아이허브 처음 사는데 뭐부터 사면 되나요?', '많이 사는 건 마그네슘, 유산균, 오메가3, 비타민C입니다. 자체 브랜드인 캘리포니아 골드 뉴트리션(CGN)이 리뷰가 많고 무난하지만, 함량 대비 가장 싼 제품은 카테고리마다 다릅니다(오메가3·마그네슘·유산균 페이지에 비교표가 있습니다). 첫 주문이면 아이허브 화면에 뜨는 신규 고객 할인부터 확인하십시오.'],
       ['아이허브 무료배송 기준은 얼마인가요?', IH_SHIP.freeShipKrw > 0 ? `${dot(asof)} 기준 ${won(IH_SHIP.freeShipKrw)} 이상 주문하면 무료배송입니다. 장바구니에 무료배송까지 남은 금액이 표시됩니다.` : '기준이 자주 바뀌어서 장바구니에 표시되는 금액으로 확인하십시오.'],
-      ['아이허브에서 한 번에 많이 사도 되나요?', `건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지 개인 사용으로 통관되고, ${IH_SHIP.customsUsd}달러(미국 발송도 같음)를 넘으면 관세와 부가세가 붙습니다. 넘을 것 같으면 주문을 나누십시오.`],
+      ['아이허브에서 한 번에 많이 사도 되나요?', `건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지 개인 사용으로 통관되고, ${IH_SHIP.customsUsd}달러(미국 발송도 같음)를 넘으면 관세와 부가세가 붙습니다. 넘을 것 같으면 날을 달리해 주문을 나누십시오.`],
       [`아이허브 ${m}월 할인은 어떻게 받나요?`, `이번 주 브랜드 세일을 먼저 보고, 그 위에 할인코드 하나를 넣으면 됩니다.${IH_CODES.length ? ` 지금 쓸 수 있는 코드는 ${IH_CODES.map(c => c.code).join(', ')}입니다.` : ''}${m === 11 ? ` 11월 말에는 블랙프라이데이(${kdate(bfDate)})가 있어서 큰 주문은 그때로 미루는 사람도 많습니다.` : ''}`],
       ['프로틴도 아이허브에서 사나요?', `프로틴 대용량은 대부분 마이프로틴이 쌉니다. 특히 대란(할인코드 ${TH}% 이상) 때는 차이가 큽니다. 아이허브에서는 크레아틴과 소용량, 마이프로틴에 없는 브랜드를 사는 사람이 많습니다.`],
     ];
@@ -2259,7 +2261,7 @@ ${more('iherb-best.html')}
       ['아이허브 블프 할인율은 얼마나 되나요?', BF.rateSummary ? `${BF.rateSummary}. 지난 4년 모두 블프 주간 최대 할인은 25% 안팎이었습니다.${bfCodes.length ? ` 올해는 블프 전에 ${bfCodes.map(c => `${c.code}(${c.label}${c.until ? `, ${kdate(c.until)}까지` : ''})`).join(', ')}가 먼저 나왔습니다.` : ''}` : `해마다 다릅니다. ${(BF.history || []).map(h => `${h.year}년에는 ${h.short || h.text}`).join(', ')}.`],
       ...(BF.periodSummary ? [['아이허브 블프 기간은 보통 언제부터 언제까지예요?', `${BF.periodSummary}. 올해 본 행사 일정은 ${BF.thisYear && /공지 없음/.test(BF.thisYear.text || '') ? `${dot(BF.checked || asof)} 기준 아직 공지되지 않았고, ` : ''}공지되면 이 페이지에 바로 올립니다.`]] : []),
       ['블프 코드와 다른 할인코드 같이 쓸 수 있나요?', '할인코드는 한 주문에 하나만 들어갑니다. 블프 코드와 다른 코드 중 큰 쪽을 쓰고, 세일가와 리워드 적립금은 겹쳐 쓸 수 있습니다.'],
-      ['블프 때 많이 사도 관세 안 붙나요?', `영양제는 미국 발송이어도 한 번에 ${IH_SHIP.customsUsd}달러를 넘으면 관세와 부가세가 붙고, 건강기능식품은 ${IH_SHIP.maxBottles}병까지만 개인 사용으로 통관됩니다. 여러 상자가 같은 날 들어오면 합쳐서 과세될 수 있으니 주문 날짜를 나누십시오.`],
+      ['블프 때 많이 사도 관세 안 붙나요?', `영양제는 미국 발송이어도 한 번에 ${IH_SHIP.customsUsd}달러를 넘으면 관세와 부가세가 붙고, 건강기능식품은 ${IH_SHIP.maxBottles}병까지만 개인 사용으로 통관됩니다. 같은 날 산 걸 여러 상자로 나눠 받으면 합쳐서 과세되니, 나눌 때는 주문 날짜를 달리하십시오.`],
       ['블프 때 주문하면 배송이 늦나요?', `평소엔 ${IH_SHIP.deliveryDays} 걸리지만 블랙프라이데이 뒤에는 주문과 통관이 몰려서 더 걸립니다. 급한 건 블프 전에 따로 사십시오.`],
       [`아이허브 ${m}월 할인코드는 뭔가요?`, IH_CODES.length ? `지금은 ${IH_CODES.map(c => `${c.code}(${c.label || `${c.rate}%`})`).join(', ')}가 있습니다. 블프 코드가 나오면 둘 중 큰 쪽을 쓰면 됩니다.` : `${m}월 코드는 아이허브 할인코드 페이지에 확인되는 대로 올립니다.`],
     ];
@@ -2299,7 +2301,7 @@ ${bfBox}
 <ol class="steps">
   <li><b>장바구니에 미리 담기</b> 블프 첫날 인기 제품은 품절이 잘 납니다. 살 것을 미리 담아 두고 코드가 뜨면 바로 결제하십시오.</li>
   <li><b>계정과 개인통관고유부호 확인</b> 주소와 통관부호가 틀리면 통관에서 멈춥니다. 첫 주문이면 미리 가입해 두십시오.</li>
-  <li><b>${IH_SHIP.maxBottles}병, ${IH_SHIP.customsUsd}달러 나누기</b> 건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지, ${IH_SHIP.customsUsd}달러(미국 발송도 같음)를 넘으면 관세가 붙습니다. 장바구니를 나눠 두십시오.</li>
+  <li><b>${IH_SHIP.maxBottles}병, ${IH_SHIP.customsUsd}달러 나누기</b> 건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지, ${IH_SHIP.customsUsd}달러(미국 발송도 같음)를 넘으면 관세가 붙습니다. 날을 달리해 주문할 수 있게 장바구니를 나눠 두십시오.</li>
   <li><b>오래 먹을 것을 큰 통으로</b> 마그네슘, 비타민C처럼 매일 먹는 영양제는 블프 때 큰 통으로 사 두면 이득입니다. 유산균과 오메가3는 유통기한과 산패 때문에 너무 많이 사지 마십시오.</li>
   <li><b>배송은 늦는다고 생각하기</b> 블프 뒤에는 통관이 몰려서 평소보다 오래 걸립니다.</li>
 </ol>
@@ -2765,6 +2767,114 @@ ${kakaoBox}
   });
 }
 
+// ── 마이프로틴 직구 방법 (키워드: 마이프로틴 직구, 직구 방법, 관세, 배송기간, 통관부호) ──
+{
+  const MP_SRC = {
+    delivery: 'https://www.myprotein.co.kr/c/customer-services/delivery-information/',
+    returns: 'https://www.myprotein.co.kr/c/customer-services/returns-policy/',
+    terms: 'https://www.myprotein.co.kr/c/customer-services/terms-and-conditions/',
+  };
+  const JK_CHECKED = '2026-11-09';
+  const free = won(SHOP.freeShipping), limitKrw = `약 ${Math.round(SHOP.customsUsd * SHOP.usdKrw / 10000)}만원`;
+  const codeTxt = primary ? `${nameOf(primary)} ${primary.rate}%` : '할인코드';
+  const JK_FAQ = [
+    ['마이프로틴 직구 방법이 어렵나요?', `어렵지 않습니다. 한국어 사이트(myprotein.co.kr)에서 원화로 주문하고 결제하는 건 국내 쇼핑몰과 같습니다. 다른 점은 해외에서 오는 물건이라 ${SHOP.customsUsd}달러 관세 기준과 통관을 챙겨야 한다는 것뿐입니다.`],
+    ['마이프로틴 관세는 얼마부터 붙나요?', `물품 가격이 ${SHOP.customsUsd}달러(${limitKrw})를 넘으면 넘은 부분이 아니라 전체 금액에 관세와 부가세가 붙습니다. 미국 발송 물건의 200달러 기준은 목록통관 물품에만 적용되고 식품은 목록통관 대상이 아니라서, 프로틴은 ${SHOP.customsUsd}달러로 보면 됩니다.`],
+    ['마이프로틴 배송 기간은 얼마나 걸리나요?', '마이프로틴 공식 안내로는 출고 후 평균 2~6영업일입니다. 통관이나 택배사 사정으로 늦어질 수 있고, 통관이 끝나기 전에는 배송 조회가 안 될 수 있습니다.'],
+    ['마이프로틴 배송비는 얼마인가요?', `${free} 이상 주문하면 무료배송이고, 그보다 적으면 배송비가 붙습니다. 배송비 금액은 장바구니에서 확인됩니다.`],
+    ['카카오페이나 네이버페이로 결제되나요?', '마이프로틴 약관에 적힌 결제 수단은 신용카드, 직불카드, PayPal입니다. 영국 회사라 카드사에서 해외 결제 수수료를 받을 수 있습니다. 다른 간편결제는 결제 화면에 뜨는지 확인하십시오.'],
+    ['개인통관고유부호가 꼭 필요한가요?', '마이프로틴 안내에는 따로 적혀 있지 않습니다. 다만 해외 직구 식품은 통관 때 받는 사람 확인에 개인통관고유부호를 쓰니, 관세청 유니패스에서 미리 발급받아 두고 주문서에 칸이 있으면 넣으십시오. 이름과 전화번호는 부호에 등록된 것과 같게 적는 게 안전합니다.'],
+    ['나눠서 주문하면 관세를 안 내나요?', '같은 판매처에서 같은 날 산 물건을 여러 상자로 나눠 받으면 합쳐서 과세됩니다. 2022년 11월 17일부터는 입항일이 같다는 이유만으로는 합치지 않아서, 다른 날 주문한 건 같은 날 도착해도 따로 봅니다.'],
+    ['할인코드 두 개를 같이 쓸 수 있나요?', `안 됩니다. 마이프로틴 약관상 할인코드는 한 번에 하나만 들어갑니다. 오늘은 ${codeTxt}가 가장 높습니다. 추천인 코드는 할인코드와 별개로 첫 결제 때 체크아웃 화면에 넣습니다.`],
+    ['반품이나 환불은 어떻게 하나요?', '마이프로틴 반품 안내로는 받은 날부터 14일 안에 뜯지 않은 원래 포장 상태로 반품할 수 있습니다. 잘못 왔거나 파손된 물건은 바로 고객센터에 알리면 되고, 이때는 반품 배송비도 돌려받습니다. 물건이 안 오면 출고 메일을 받은 날부터 21일 안에 알려야 합니다. 환불은 보통 7영업일 안에 처리됩니다.'],
+  ];
+  const step = (t, d) => `<li><b>${t}</b> ${d}</li>`;
+  page({
+    file: 'jikgu.html', priority: 0.8, changefreq: 'monthly', current: 'jikgu.html', lastmod: JK_CHECKED,
+    title: `마이프로틴 직구 방법 ${Y(curYm)} | 주문·관세 ${SHOP.customsUsd}달러·배송기간·통관부호 한 번에`,
+    desc: `마이프로틴 직구 방법을 가입부터 받을 때까지 7단계로 정리했습니다. ${free} 이상 무료배송, ${SHOP.customsUsd}달러(${limitKrw}) 넘으면 전체 금액 과세, 출고 후 평균 2~6영업일 배송, 결제 수단과 반품까지. 마이프로틴 공식 안내와 관세청 기준.`,
+    keywords: ['마이프로틴 직구', '마이프로틴 직구 방법', '마이프로틴 주문 방법', '마이프로틴 구매 방법', '마이프로틴 관세', '마이프로틴 관세 기준', '마이프로틴 배송기간', '마이프로틴 배송비', '마이프로틴 통관', '마이프로틴 개인통관고유부호', '마이프로틴 결제', '마이프로틴 반품', '마이프로틴 합산과세'],
+    ld: [crumbs([['홈', 'index.html'], ['마이프로틴 직구 방법', 'jikgu.html']]), faqLd(JK_FAQ),
+      { '@type': 'HowTo', name: '마이프로틴 직구 방법', totalTime: 'P7D', step: ['회원가입', '장바구니 담기', '할인코드 넣기', '배송지와 통관부호', '결제', '배송 확인', '받은 뒤 확인'].map((n, i) => ({ '@type': 'HowToStep', position: i + 1, name: n })) }],
+    heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<h1>마이프로틴 직구 방법<br>가입부터 관세까지 7단계</h1>
+<p class="updated">${dot(JK_CHECKED)} 마이프로틴 공식 안내 확인</p>
+<p class="lede answer">마이프로틴 직구는 한국어 사이트에서 원화로 주문하는 해외 직구입니다. <b>${free} 이상 무료배송</b>, <b>${SHOP.customsUsd}달러(${limitKrw}) 넘으면 관세</b>, <b>할인코드는 한 번에 하나</b>. 이 세 가지만 기억하면 되고, 출고 뒤 보통 2~6영업일이면 도착합니다.</p>
+${heroCta}
+</div>
+<div class="heroSide">
+<dl class="stats">
+  <div><dt>무료배송</dt><dd>${free}<small>이상 주문 시</small></dd></div>
+  <div><dt>면세 한도</dt><dd>${SHOP.customsUsd}달러<small>${limitKrw} · 넘으면 전체 과세</small></dd></div>
+  <div><dt>배송</dt><dd>2~6영업일<small>출고 후 평균</small></dd></div>
+</dl>
+</div>
+</div>`,
+    restHtml: `
+<section class="full">
+<h2>마이프로틴 직구 순서</h2>
+<ol class="steps">
+  ${step('회원가입', `myprotein.co.kr에서 가입합니다. 만 18세 이상만 가입할 수 있습니다.${db.referral ? ` 처음이면 첫 결제 때 체크아웃 화면에 추천인 코드를 넣어 첫 구매 적립금을 받으십시오. <a href="./referral.html">추천인 코드 보기</a>` : ''}`)}
+  ${step('장바구니 담기', `${free} 미만이면 배송비가 붙습니다. 할인까지 뺀 금액이 ${SHOP.customsUsd}달러(${limitKrw})를 넘지 않게 맞추면 관세가 없습니다. <a href="./calc.html">계산기로 최종 금액 보기</a>`)}
+  ${step('할인코드 넣기', `장바구니의 할인코드 칸에 코드를 넣습니다. 코드는 한 번에 하나만 들어가고, 오늘은 ${esc(codeTxt)}가 가장 높습니다. <a href="./code.html">오늘 할인코드 보기</a>`)}
+  ${step('배송지와 개인통관고유부호', '받는 사람 이름과 전화번호는 개인통관고유부호에 등록된 것과 같게 적습니다. 부호는 관세청 유니패스에서 바로 발급됩니다.')}
+  ${step('결제', '신용카드, 직불카드, PayPal로 결제합니다. 영국 회사라 카드사 해외 결제 수수료가 붙을 수 있습니다.')}
+  ${step('배송 확인', '출고 후 평균 2~6영업일 걸립니다. 통관이 끝나기 전에는 배송 조회가 안 될 수 있습니다.')}
+  ${step('받은 뒤 확인', '파손되거나 잘못 온 물건은 바로 고객센터에 알립니다. 물건이 안 오면 출고 메일을 받은 날부터 21일 안에 알려야 합니다.')}
+</ol>
+</section>
+
+<section class="full">
+<h2>관세, 이것만 보면 됩니다</h2>
+<div class="altWrap"><table class="alt"><thead><tr><th>기준</th><th>내용</th></tr></thead><tbody>
+<tr><td class="nw"><b>면세 한도</b></td><td>물품 가격 ${SHOP.customsUsd}달러(${limitKrw}) 이하. 식품은 목록통관 대상이 아니라 미국 발송 200달러 기준이 적용되지 않습니다.</td></tr>
+<tr><td class="nw"><b>넘으면</b></td><td>넘은 부분이 아니라 <b>전체 금액</b>에 관세와 부가세가 붙습니다.</td></tr>
+<tr><td class="nw"><b>나눠 주문</b></td><td>같은 판매처에서 같은 날 산 걸 나눠 받으면 합쳐서 과세됩니다. 다른 날 주문한 건 같은 날 도착해도 따로 봅니다(2022년 11월 17일부터).</td></tr>
+<tr><td class="nw"><b>건강기능식품</b></td><td>건강기능식품으로 분류되는 제품은 한 번에 6병까지 개인 사용으로 인정됩니다.</td></tr>
+<tr><td class="nw"><b>5kg 이상</b></td><td>마이프로틴 안내로는 건강보조식품을 5kg 이상 주문해 한진택배로 받을 때 개인 소비용이라는 증빙을 요구받을 수 있습니다.</td></tr>
+</tbody></table></div>
+<p class="hint">원화 금액은 1달러 ${SHOP.usdKrw.toLocaleString('ko-KR')}원으로 어림한 값이고, 실제로는 그 주 관세청 고시 환율로 계산합니다. 배송비를 과세 가격에 넣는지는 경우마다 달라서, 기준에 아슬아슬하면 금액을 넉넉히 낮추거나 관세청 고객지원센터(125)에 물어보십시오.</p>
+</section>
+
+<section class="full">
+<h2>대란 때 직구한다면</h2>
+<p class="lede">대란 때는 한 번에 많이 사서 ${SHOP.customsUsd}달러를 넘기기 쉽습니다. 2.5kg 두 통이면 넘는 경우가 많으니, 계산기로 할인 후 금액을 먼저 보고 넘으면 날을 달리해 나눠 주문하십시오.${sureNext ? ` 다음 대란은 ${kdate(sureNext.date)}입니다.` : ''}</p>
+${sureNext && sureNext.page ? `<a class="cta ghost" href="./${sureNext.page}">${kdate(sureNext.date)} 대란 일정과 방법</a>` : '<a class="cta ghost" href="./daeran.html">대란 일정 보기</a>'}
+<a class="cta ghost" href="./calc.html">할인 계산기</a>
+</section>
+
+<section class="full">
+<h2>자주 묻는 질문</h2>
+${faqHtml(JK_FAQ)}
+</section>
+
+<section class="full">
+<h2>확인한 곳</h2>
+<ul class="steps">
+  <li><a href="${MP_SRC.delivery}" target="_blank" rel="noopener nofollow">마이프로틴 배송 안내</a> 무료배송 기준, 배송 기간, 5kg 이상 증빙</li>
+  <li><a href="${MP_SRC.terms}" target="_blank" rel="noopener nofollow">마이프로틴 이용약관</a> 결제 수단, 할인코드 1개, 관세 부담, 가입 나이</li>
+  <li><a href="${MP_SRC.returns}" target="_blank" rel="noopener nofollow">마이프로틴 반품 안내</a> 14일 반품, 파손·미배송 신고, 환불 기간</li>
+  <li><a href="https://www.customs.go.kr/kcs/na/ntt/selectNttInfo.do?mi=2891&nttSn=10069842&nttSnUrl=search" target="_blank" rel="noopener nofollow">관세청 보도자료</a> 입항일이 같아도 합산과세 면제 (2022년 11월 17일부터)</li>
+  <li><a href="https://www.consumer.go.kr/consumer/subIndex/1251.do" target="_blank" rel="noopener nofollow">소비자24</a> 건강기능식품 6병, ${SHOP.customsUsd}달러 면세 기준</li>
+</ul>
+<p class="hint">${dot(JK_CHECKED)}에 확인했습니다. 마이프로틴이나 관세청 기준이 바뀌면 다를 수 있습니다.</p>
+</section>
+
+<section>
+<h2>관련 페이지</h2>
+<a class="cta ghost" href="./code.html">오늘 쓸 수 있는 할인코드</a>
+<a class="cta ghost" href="./calc.html">장바구니 최종 결제금액 계산</a>
+<a class="cta ghost" href="./price.html">평소와 대란 가격 차이</a>
+<a class="cta ghost" href="./taste.html">마이프로틴 맛 추천</a>
+</section>
+
+${kakaoBox}
+`,
+  });
+}
+
 // ── 소개 (운영자·확인 방법·수익 공시. 검색엔진이 사이트를 믿게 하는 페이지) ──
 const firstYm = ymOf(events[0]?.start || rows[0].date);
 const ytUrl = SITE.youtubeChannel ? SITE.youtubeChannel.replace(/\?.*$/, '') : '';
@@ -2965,7 +3075,7 @@ ${heroCta}
 <ol class="steps">
   <li><b>앱 설치와 가입</b> 쇼핑지원금 같은 앱 전용 이벤트가 블프 전후에 열립니다.${db.referral ? ` 처음이면 <a href="./referral.html">추천인 코드 ${esc(db.referral)}</a>를 넣고 가입하면 ${esc(REF_BENEFIT)}도 받습니다.` : ''}</li>
   <li><b>장바구니 미리 담기</b> 블프 당일엔 품절이 빠릅니다. ${TASTE ? '<a href="./taste.html">맛 등급표</a>에서 ' : ''}먹어본 맛 위주로 담아 두십시오.</li>
-  <li><b>금액 나누기</b> 150달러(약 ${won(SHOP.customsUsd * SHOP.usdKrw)})를 넘으면 관세가 붙을 수 있습니다.${calcWidget ? ' <a href="./calc.html">계산기</a>로 최종 금액을 보고 필요하면 주문을 나누십시오.' : ''}</li>
+  <li><b>금액 나누기</b> 150달러(약 ${won(SHOP.customsUsd * SHOP.usdKrw)})를 넘으면 관세가 붙을 수 있습니다.${calcWidget ? ' <a href="./calc.html">계산기</a>로 최종 금액을 보고 필요하면 날을 달리해 주문을 나누십시오.' : ''}</li>
   <li><b>알림 받기</b> 할인율이 바뀌는 즉시 단톡방과 유튜브에 올립니다. 당일 아침보다 전날 저녁에 바뀌는 경우가 많습니다.</li>
 </ol>
 </section>
