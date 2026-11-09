@@ -1058,6 +1058,8 @@ const bfSeason = M(curYm) === 11 || (M(curYm) === 10 && +last.date.slice(8, 10) 
 const built = []; // 사이트맵·RSS용
 
 const BASE_KW = ['마이프로틴', '마프대란', '마이프로틴 할인코드', '마이프로틴 대란', '마이프로틴 히든코드'];
+// 아이허브 페이지에는 마이프로틴 공통 키워드 대신 아이허브 공통 키워드를 깝니다 (본문과 무관한 키워드가 메타에 섞이지 않게)
+const IH_BASE_KW = ['아이허브', '아이허브 할인코드', '아이허브 직구', '아이허브 추천', '프로티파이'];
 // 로고 아래 작은 줄 (site.json headerLine, 없으면 tagline)
 const HEADER_LINE = SITE.headerLine || SITE.tagline || '';
 // WPC·WPI 대표 제품 (월별·블프 가격표용)
@@ -1068,7 +1070,7 @@ const ratePriceRows = (list, rate, label) => `<table class="pt">
 </table>`;
 function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.date, priority = 0.8, changefreq = 'weekly', current, extraScript = '', keywords = [], noindex = false, pageType = 'WebPage', utilHtml = null, stickyHtml = sticky }) {
   const url = urlOf(file);
-  const kw = [...new Set([...keywords, ...BASE_KW])].join(',');
+  const kw = [...new Set([...keywords, ...(/^iherb/.test(file) ? IH_BASE_KW : BASE_KW)])].join(',');
   // 모든 페이지에 사이트·운영자·페이지 정보를 깔고, 페이지별 FAQ·빵부스러기는 그 뒤에 붙입니다
   const graph = [
     { '@type': 'WebSite', '@id': `${SITE.origin}/#website`, name: SITE.brand, alternateName: ['Proteify', '마프대란', '마프대란알리미', '마이프로틴 대란 알리미'], url: `${SITE.origin}/`, inLanguage: 'ko-KR', publisher: { '@id': `${SITE.origin}/#org` } },
@@ -3456,7 +3458,8 @@ ${built.map(b => `<url><loc>${b.url}</loc><lastmod>${b.lastmod}</lastmod><change
 </urlset>
 `);
 
-const rfc822 = s => new Date(s + 'T09:00:00+09:00').toUTCString();
+// 수집 날짜가 자정 넘어 다음 날로 찍히면 RSS 날짜가 미래가 되므로, 지금 시각을 넘지 않게 합니다
+const rfc822 = s => new Date(Math.min(Date.now(), new Date(s + 'T09:00:00+09:00').getTime())).toUTCString();
 write('rss.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
