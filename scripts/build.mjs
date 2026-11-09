@@ -304,6 +304,7 @@ const ihSearch = (ref, kw) => ihLink(ref, `${IH_HOME}search?kw=${encodeURICompon
 const ihToday = kstNow.slice(0, 10);
 // 25일부터는 다음 달 이름을 씁니다 (월말에는 다음 달 코드를 찾는 검색이 많습니다)
 const ihYm = +ihToday.slice(8, 10) >= 25 ? shiftYm(ihToday.slice(0, 7), 1) : ihToday.slice(0, 7);
+const IH_MONTH_CUR = IH?.months ? Object.keys(IH.months).sort().filter(k => k <= ihToday.slice(0, 7)).pop() || null : null;
 const IH_CODES = IH ? (IH.codes || []).filter(c => c.code && (!c.until || c.until >= ihToday)) : [];
 const IH_SHIP = { customsUsd: 150, customsUsdFromUs: 200, maxBottles: 6, // customsUsdFromUs 는 화장품·생활용품 같은 일반 물품만 해당 (영양제·식품은 목록통관 배제라 미국 발송도 150)
   deliveryDays: '일주일 안팎', ...(IH?.ship || {}) };
@@ -620,7 +621,7 @@ td.n{font-weight:700;white-space:nowrap}
 tr.hot td{color:var(--accent)}
 .vlink{font-size:12px;font-weight:700;color:var(--brand);text-decoration:none;white-space:nowrap;margin-left:6px}
 .codes{list-style:none;padding:0;margin:0}
-.codes li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.codes li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.codes li.off{opacity:.55}
 .codes li:last-child{border-bottom:0}
 .codes .name{flex:1;font-size:15px;font-weight:800;letter-spacing:.01em}
 .codes em{display:block;font-style:normal;font-size:13px;color:var(--muted);font-weight:500;margin-top:1px}
@@ -1057,7 +1058,7 @@ function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.d
   const hasGuides = IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json'));
   const secNav = IH ? `<nav class="secNav" aria-label="사이트 구분"><a href="./"${sec === 'mp' ? ' aria-current="true"' : ''}>마이프로틴</a><a href="./iherb.html"${sec === 'ih' ? ' aria-current="true"' : ''}>아이허브</a></nav>` : '';
   const subLinks = sec === 'ih'
-    ? navLink('iherb.html', '할인코드') + (hasGuides ? navLink('iherb-jikgu.html', '직구 방법') + navLink('iherb-best.html', '추천템') + navLink('iherb-probiotics.html', '유산균') + navLink('iherb-omega3.html', '오메가3') + navLink('iherb-magnesium.html', '마그네슘') + navLink('iherb-blackfriday.html', '블프') : '')
+    ? navLink('iherb.html', '할인코드') + (IH_MONTH_CUR ? navLink(`iherb-${IH_MONTH_CUR}.html`, `${M(IH_MONTH_CUR)}월 코드`) : '') + (hasGuides ? navLink('iherb-jikgu.html', '직구 방법') + navLink('iherb-best.html', '추천템') + navLink('iherb-probiotics.html', '유산균') + navLink('iherb-omega3.html', '오메가3') + navLink('iherb-magnesium.html', '마그네슘') + navLink('iherb-blackfriday.html', '블프') : '')
     : navLink('', '오늘 할인율') + navLink('code.html', '할인코드') + (calcWidget ? navLink('calc.html', '계산기') : '') + navLink('jikgu.html', '직구 방법') + navLink(monthFile(curYm), `${M(curYm)}월 대란`) + (EV_HOME ? navLink(EV_HOME.page, `${+EV_HOME.date.slice(8, 10)}일 대란`) : '') + (fs.existsSync(path.join(ROOT, 'data/taste.json')) ? navLink('taste.html', '맛 추천') + (readJson('data/taste.json').reviews?.length ? navLink('taste-rank.html', '맛 순위') : '') : '') + (PRODUCTS.length ? navLink('wpc-wpi.html', '<span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span>') : '') + (altMp ? navLink('alternatives.html', '가성비 비교') : '');
   const html = `<!doctype html>
 <html lang="ko">
@@ -2097,7 +2098,7 @@ ${codeList}
   const more = self => `<section>
 <h2>아이허브 더 보기</h2>
 <a class="cta ghost" href="./iherb.html">아이허브 할인코드 ${m}월</a>
-${[['iherb-jikgu.html', '아이허브 직구 방법'], ['iherb-best.html', '아이허브 추천템 (베스트셀러)'], ...IHG.guides.map(g => [g.file, `아이허브 ${g.cat} 추천`]), ['iherb-blackfriday.html', `아이허브 블프 ${bfYear}`]].filter(([f]) => f !== self).map(([f, t]) => `<a class="cta ghost" href="./${f}">${esc(t)}</a>`).join('\n')}
+${[...(IH_MONTH_CUR ? [[`iherb-${IH_MONTH_CUR}.html`, `아이허브 ${M(IH_MONTH_CUR)}월 할인코드 총정리`]] : []), ['iherb-jikgu.html', '아이허브 직구 방법'], ['iherb-best.html', '아이허브 추천템 (베스트셀러)'], ...IHG.guides.map(g => [g.file, `아이허브 ${g.cat} 추천`]), ['iherb-blackfriday.html', `아이허브 블프 ${bfYear}`]].filter(([f]) => f !== self).map(([f, t]) => `<a class="cta ghost" href="./${f}">${esc(t)}</a>`).join('\n')}
 </section>`;
 
   // 유산균·오메가3·마그네슘 고르는 법
@@ -2457,6 +2458,144 @@ ${faqHtml(IJ_FAQ)}
 </section>
 
 ${more('iherb-jikgu.html')}
+`,
+    });
+  }
+
+  // 아이허브 월별 할인코드 정리 (iherb-YYYY-MM.html). data/iherb.json 의 months
+  for (const [ym, MO] of Object.entries(IH.months || {})) {
+    const file = `iherb-${ym}.html`, mm = M(ym), yy = Y(ym), ref = `pt-iherb-${ym.replace('-', '')}`;
+    const isCur = ym === ihToday.slice(0, 7);
+    const live = c => !c.until || c.until >= ihToday;
+    const codes = (MO.codes || []).map(c => ({ ...c, on: live(c) }));
+    const onCodes = codes.filter(c => c.on);
+    const best = [...onCodes].filter(c => c.who === '전체' && c.min == null).sort((a, b) => (b.rate || 0) - (a.rate || 0))[0] || null;
+    const newbie = onCodes.find(c => c.who === '신규');
+    const gold = onCodes.find(c => c.min);
+    const app = onCodes.find(c => /앱/.test(c.who || ''));
+    const endTxt = c => c.until ? `${kdate(c.until)}${c.untilTime ? ` ${c.untilTime}` : ''}까지` : '종료일 표기 없음';
+    const checked = MO.checked || IH.updated;
+    const inMonth = d => d && d.slice(0, 7) === ym;
+    const copyBest = best ? ` data-copy="${b64(best.code)}" data-label="${esc(best.code)}"` : '';
+    const go = (spot, label) => `<a class="cta hot" href="${esc(ihLink(`${ref}-${spot}`))}" ${aff}${copyBest}>${best ? `${esc(best.code)} 복사하고 ` : ''}${esc(label)}</a>`;
+    const row = c => `<li${c.on ? '' : ' class="off"'}><span class="name">${esc(c.code)}<em>${[c.label.includes(c.who) ? '' : c.who, c.label, c.min && !/이상/.test(c.label) ? `${won(c.min)} 이상` : '', c.on ? endTxt(c) : '종료'].filter(Boolean).map(esc).join(' · ')}</em></span><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span>${c.on ? `<button type="button" data-copy="${b64(c.code)}" data-label="${esc(c.code)}">복사</button>` : '<span class="muted">종료</span>'}</li>`;
+    // 장바구니 10만원 기준 코드별 결제 금액 (세일가 기준, 코드 하나만)
+    const cart = 100000;
+    const calcRows = onCodes.filter(c => c.rate != null).sort((a, b) => b.rate - a.rate).map(c => {
+      const ok = !c.min || cart >= c.min;
+      const off = ok ? Math.min(cart * c.rate / 100, c.code === 'GOLDKR' ? 100 * 1400 : Infinity) : 0;
+      return `<tr${c === best ? ' class="hot"' : ''}><td><b>${esc(c.code)}</b><br><small>${esc(c.who)}</small></td><td class="n">${c.rate}%</td><td class="n">${ok ? `-${won(off)}` : '조건 미달'}</td><td class="n${c === best ? ' hot' : ''}">${ok ? won(cart - off) : '-'}</td></tr>`;
+    }).join('');
+    // 그달 일정: 코드 시작·종료, 코드 없는 행사 종료, 블프·사이버먼데이
+    const tl = [];
+    for (const c of codes) {
+      if (inMonth(c.from)) tl.push([c.from, `${c.code} ${c.rate}% 시작`, c.label]);
+      if (inMonth(c.until)) tl.push([c.until, `${c.code} 끝 (${c.untilTime || '종일'})`, c.label]);
+    }
+    for (const o of MO.offers || []) if (inMonth(o.until)) tl.push([o.until, `${o.label} 끝 (${o.untilTime || '종일'})`, '코드 없이 자동']);
+    if (inMonth(bfDate)) tl.push([bfDate, '블랙프라이데이', '지난 4년 모두 이 주에 전 품목 25% 안팎']);
+    if (inMonth(cmDate)) tl.push([cmDate, '사이버먼데이', '블프 행사 마지막 날로 이어지는 경우가 많음']);
+    tl.sort((a, b) => a[0].localeCompare(b[0]));
+    const wkd = d => '일월화수목금토'[new Date(d + 'T00:00:00Z').getUTCDay()];
+    const tlRows = tl.map(([d, t, s]) => `<tr${d < ihToday ? ' class="muted"' : d === ihToday ? ' class="hot"' : ''}><td>${kdate(d)}(${wkd(d)})</td><td><b>${esc(t)}</b><br><small>${esc(s)}</small></td></tr>`).join('');
+    const shots = (MO.shots || []).filter(f => SHOT_SIZES[f]);
+    const shotCaps = { 'ih-nov-offers.webp': '아이허브 공식 특가 페이지의 행사 카드. 코드와 한국 시각 종료일이 같이 적혀 있습니다.', 'ih-nov-tips.webp': '같은 페이지 아래 알뜰 쇼핑 팁. GOLDKR, 정기배송 10%, 신규 KRNEW20 안내.' };
+    const answer = best
+      ? `${dot(checked)} 아이허브 공식 특가 페이지 기준, ${mm}월 가장 큰 코드는 <b>${esc(best.code)} ${esc(best.label)}</b>입니다. ${best.until ? `<b>${endTxt(best)}</b>(한국 시각)이니 그 전에 쓰십시오.` : ''}${newbie ? ` 처음 사는 사람은 ${esc(newbie.code)}(${newbie.rate}%)도 있지만 ${best.rate > newbie.rate ? `지금은 ${esc(best.code)} 쪽이 더 큽니다.` : '이쪽이 더 큽니다.'}` : ''}${gold ? ` ${esc(best.code)} 행사가 끝나면 ${won(gold.min)} 이상 ${esc(gold.code)} ${gold.rate}%가 남습니다.` : ''}`
+      : `${dot(checked)} 확인 기준 ${mm}월에 쓸 수 있는 전체 코드는 ${onCodes.map(c => `${c.code}(${c.rate}%)`).join(', ') || '없습니다'}.`;
+    const FAQ = [
+      [`아이허브 ${mm}월 할인코드는 뭔가요?`, `${dot(checked)} 공식 특가 페이지에 있는 코드는 ${codes.map(c => `${c.code}(${c.label}${c.on ? '' : ', 종료'})`).join(', ')}입니다. 코드 없이 되는 행사로는 ${(MO.offers || []).map(o => o.label).join(', ')}이 있습니다.`],
+      ...(best ? [[`${best.code} 코드는 언제까지 쓸 수 있나요?`, `${best.until ? `한국 시각 ${kdate(best.until)} ${best.untilTime || ''}까지입니다.` : '공식 페이지에 종료일이 없습니다.'}${best.from ? ` ${kdate(best.from)}부터 열렸습니다.` : ''} 일부 제품은 빠지니 장바구니에서 할인 금액을 꼭 확인하십시오.`]] : []),
+      ['할인코드 여러 개 같이 쓸 수 있나요?', '안 됩니다. 아이허브는 한 주문에 할인코드 하나만 들어가고, 두 번째 코드를 넣으면 앞 코드가 바뀝니다. 대신 상품 자체 세일가 위에는 코드가 겹칩니다. "추천인 코드와 할인코드를 순서대로 넣으면 중복된다"는 글도 있지만, 장바구니에서는 결국 하나만 남으니 할인 금액이 큰 쪽을 남기십시오.'],
+      ...(newbie ? [[`처음 사는데 ${newbie.code}, ${best ? best.code : '다른 코드'} 중 뭘 써요?`, best && best.rate > newbie.rate ? `${best.code} 쪽이 ${best.rate - newbie.rate}%p 더 큽니다. ${best.until ? `${kdate(best.until)}까지는 ${best.code}, 그 뒤에는 ${newbie.code} 코드를 쓰면 됩니다.` : ''} 둘 다 일부 제품은 빠지니 장바구니에서 금액을 비교하십시오.` : `${newbie.code}(${newbie.rate}%) 코드가 가장 큽니다. 신규 고객만 되고 다른 할인과 중복되지 않습니다.`]] : []),
+      ['블로그에 있는 GOLD120, KRNEW25 같은 코드는 뭔가요?', `${dot(checked)} 아이허브 공식 특가 페이지에는 없는 코드입니다. 예전 코드이거나 일부 사람에게만 열린 코드일 수 있고, 블로그마다 할인율도 다르게 적혀 있습니다. 넣어 보고 장바구니에 할인이 안 잡히면 위 공식 코드를 쓰십시오.`],
+      ...(inMonth(bfDate) ? [[`아이허브 ${yy} 블프는 언제예요? 지금 사도 되나요?`, `블랙프라이데이는 ${kdate(bfDate)}, 사이버먼데이는 ${kdate(cmDate)}입니다. 지난 4년 블프 주간 할인은 전 품목 25% 안팎이라${best ? ` 지금 ${best.code} ${best.rate}%와는 몇 %p 차이입니다. 급한 건 지금, 큰 장바구니는 블프 때 사는 편이 낫습니다.` : ' 큰 장바구니는 블프를 기다리는 편이 낫습니다.'} 지난 블프 기록은 아이허브 블프 페이지에 정리했습니다.`]] : []),
+      ['아이허브 관세는 몇 달러부터 붙나요?', `영양제(건강기능식품)는 미국에서 보내도 물품값 ${IH_SHIP.customsUsd}달러를 넘으면 관세와 부가세가 붙습니다. 200달러라고 적힌 글이 많지만 그건 목록통관이 되는 일반 물품 이야기입니다. 건강기능식품은 한 번에 ${IH_SHIP.maxBottles}병까지입니다.`],
+      ['아이허브 무료배송은 얼마부터예요?', IH_SHIP.freeShipKrw > 0 ? `${won(IH_SHIP.freeShipKrw)} 이상이면 무료배송입니다. 할인코드를 넣은 뒤 금액 기준이니, 코드를 넣고 무료배송 문구가 사라지지 않는지 보십시오.` : '장바구니에 무료배송까지 남은 금액이 표시됩니다.'],
+    ];
+    page({
+      file, priority: isCur ? 0.9 : 0.6, changefreq: isCur ? 'daily' : 'monthly', current: file, lastmod: checked,
+      title: isCur
+        ? `아이허브 ${mm}월 할인코드 ${yy} 총정리 | ${best ? `${best.code} ${best.rate}%` : '공식 코드'}${newbie ? ` · 신규 ${newbie.rate}%` : ''}${inMonth(bfDate) ? ' · 블프 일정' : ''} (${+checked.slice(8, 10)}일 확인)`
+        : `아이허브 ${yy}년 ${mm}월 할인코드 기록 | ${codes.map(c => `${c.code} ${c.rate}%`).slice(0, 3).join(' · ')}`,
+      keywords: [`아이허브 ${mm}월 할인코드`, `아이허브 할인코드 ${mm}월`, `아이허브 ${mm}월 쿠폰`, `아이허브 ${mm}월 프로모션`, `iherb ${mm}월 할인코드`, `아이허브 할인코드 ${yy}`, ...codes.map(c => `아이허브 ${c.code}`), '아이허브 첫구매 할인코드', '아이허브 신규 할인코드'],
+      desc: `아이허브 ${mm}월 할인코드 ${yy} 정리. ${best ? `${best.code} ${best.label} ${endTxt(best)}, ` : ''}${newbie ? `신규 ${newbie.code} ${newbie.rate}%, ` : ''}${gold ? `${won(gold.min)} 이상 ${gold.code} ${gold.rate}%, ` : ''}코드 없이 되는 행사, 블로그에 도는 코드 진위, ${mm}월 일정까지. ${dot(checked)} 공식 특가 페이지에서 확인.`,
+      ld: [crumbs([['홈', 'index.html'], ['아이허브 할인코드', 'iherb.html'], [`아이허브 ${mm}월 할인코드`, file]]), faqLd(FAQ)],
+      utilHtml: util,
+      stickyHtml: best ? `<a class="sticky" href="${esc(ihLink(`${ref}-sticky`))}" ${aff}${copyBest}><b>${esc(best.code)}</b> 복사하고 아이허브 가기 →</a>` : '',
+      heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<span class="state ${best ? 'on' : 'off'}">${isCur ? `${dot(checked)} 공식 페이지 확인` : `${yy}년 ${mm}월 기록`}</span>
+<h1>아이허브 ${mm}월 할인코드<br>${yy} 총정리</h1>
+<p class="lede answer">${answer}</p>
+${best ? go('hero', '아이허브 가기') : ''}
+${disclose}
+</div>
+<div class="heroSide">
+<dl class="stats">
+  <div><dt>가장 큰 코드</dt><dd>${best ? `${best.rate}%` : '-'}${best ? `<small>${esc(best.code)} · ${best.until ? `${kdate(best.until)}까지` : '상시'}</small>` : ''}</dd></div>
+  ${newbie ? `<div><dt>첫 주문</dt><dd>${newbie.rate}%<small>${esc(newbie.code)}</small></dd></div>` : ''}
+  ${inMonth(bfDate) ? `<div><dt>블랙프라이데이</dt><dd>${kdate(bfDate)}<small>사이버먼데이 ${kdate(cmDate)}</small></dd></div>` : ''}
+</dl>
+</div>
+</div>`,
+      restHtml: `
+<section class="full">
+<h2>아이허브 ${mm}월 할인코드 (공식 확인)</h2>
+<ul class="codes">${codes.map(row).join('')}</ul>
+<p class="hint">${dot(checked)} <a href="https://kr.iherb.com/info/sales-and-offers" target="_blank" rel="noopener nofollow">아이허브 공식 특가 페이지</a>에서 확인한 코드만 올렸습니다. 종료 시각은 한국 시각입니다. 코드는 한 주문에 하나만 들어갑니다.</p>
+</section>
+
+${calcRows ? `<section class="full">
+<h2>어떤 코드를 넣어야 할까 (장바구니 10만원 예시)</h2>
+<p class="lede">세일가 기준 10만원어치를 담았을 때 코드별 결제 금액입니다. 코드는 하나만 들어가니 가장 싼 줄을 고르면 됩니다.</p>
+<table class="pt"><thead><tr><th>코드</th><th class="n">할인</th><th class="n">빠지는 금액</th><th class="n">결제</th></tr></thead><tbody>${calcRows}</tbody></table>
+<p class="hint">제외 제품이 섞이면 할인 금액이 줄어듭니다. 1달러 1,400원으로 어림한 금액이고, 최종 금액은 장바구니에서 확인하십시오.</p>
+</section>` : ''}
+
+${(MO.offers || []).length ? `<section class="full">
+<h2>코드 없이 되는 ${mm}월 행사</h2>
+<ul class="steps">${MO.offers.map(o => `<li><b>${esc(o.label)}</b> ${esc(o.note || '')}${o.until ? ` · ${kdate(o.until)}${o.untilTime ? ` ${o.untilTime}` : ''}까지` : ''}</li>`).join('')}</ul>
+<p class="hint">자동 할인 행사는 할인코드와 겹치지 않는 경우가 많습니다. 행사 상품이 섞인 장바구니는 코드를 넣고 빼면서 금액을 비교하십시오.</p>
+</section>` : ''}
+
+${shots.length ? `<section class="full">
+<h2>공식 특가 페이지 화면 (${dot(checked)})</h2>
+${shots.map(f => shot(f, `아이허브 ${mm}월 공식 특가 페이지 캡처`, shotCaps[f] || `${dot(checked)} 아이허브 공식 특가 페이지`)).join('\n')}
+</section>` : ''}
+
+${tlRows ? `<section class="full">
+<h2>아이허브 ${mm}월 일정</h2>
+<table class="pt"><tbody>${tlRows}</tbody></table>
+<p class="hint">코드와 행사 날짜는 공식 페이지 기준이고, 블랙프라이데이·사이버먼데이 할인율은 지난 기록입니다. 블프 코드가 나오면 바로 올립니다.</p>
+</section>` : ''}
+
+${(MO.rumors || []).length ? `<section class="full">
+<h2>블로그에 도는 코드, 공식 페이지에는 없습니다</h2>
+<p class="lede">${mm}월 할인코드 글을 여러 개 비교해 보니, 아이허브 공식 특가 페이지에 없는 코드가 섞여 있었습니다. 안 된다는 뜻은 아니지만, 넣어 보고 할인이 안 잡히면 위 공식 코드를 쓰십시오.</p>
+<table class="pt"><thead><tr><th>코드</th><th>블로그 설명</th><th>공식 페이지</th></tr></thead><tbody>${MO.rumors.map(r => `<tr><td><b>${esc(r.code)}</b></td><td>${esc(r.said)}</td><td class="muted">없음</td></tr>`).join('')}</tbody></table>
+<p class="hint">관세 기준을 "미국 발송 200달러"로 적은 글도 있는데, 영양제는 미국 발송이어도 ${IH_SHIP.customsUsd}달러입니다.</p>
+</section>` : ''}
+
+<section class="full">
+<h2>할인코드 넣는 법</h2>
+<ol class="steps">
+  <li>아이허브에 들어가 언어 한국어, 통화 KRW, 배송 국가 대한민국인지 확인합니다.</li>
+  <li>제품을 장바구니에 담습니다. 상품 자체 세일가는 자동으로 들어갑니다.</li>
+  <li>장바구니의 <b>프로모션 코드</b> 칸에 ${best ? `${esc(best.code)} 코드` : '코드'}를 붙여넣고 적용을 누릅니다.</li>
+  <li>할인 금액, 무료배송(${IH_SHIP.freeShipKrw > 0 ? won(IH_SHIP.freeShipKrw) : '기준'} 이상), ${IH_SHIP.customsUsd}달러·${IH_SHIP.maxBottles}병 기준을 보고 결제합니다.</li>
+</ol>
+<p class="hint">처음이면 <a href="./iherb-jikgu.html">아이허브 직구 방법</a>에 가입부터 개인통관고유부호, 결제까지 화면으로 정리했습니다.</p>
+${best ? go('howto', '아이허브에서 코드 넣기') : ''}
+</section>
+
+<section class="full">
+<h2>자주 묻는 질문</h2>
+${faqHtml(FAQ)}
+</section>
+
+${more(file)}
 `,
     });
   }
