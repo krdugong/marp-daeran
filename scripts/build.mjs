@@ -3080,7 +3080,7 @@ ${heroCta}
 <section class="full">
 <h2>마이프로틴 직구 순서</h2>
 <ol class="steps">
-  ${step('회원가입', `myprotein.co.kr에서 가입합니다. 만 18세 이상만 가입할 수 있습니다.${db.referral ? ` 처음이면 가입 화면의 '추천 코드' 칸에 추천인 코드를 넣으십시오. 첫 구매가 12만원 이상이면 추가 할인이나 사은품을 받습니다. <a href="./referral.html">추천인 코드 보기</a>` : ''}`, shot('mp-referral-field.webp', '마이프로틴 회원가입 화면의 추천 코드 칸', '회원가입 화면 아래쪽의 \'추천 코드\' 칸.', 'tall'))}
+  ${step('회원가입', `<a href="${esc(SITE.affiliate.replace(/clickref=[^&]*/, 'clickref=howto'))}" target="_blank" rel="sponsored nofollow noopener">여기</a>를 눌러 가입합니다. 만 18세 이상만 가입할 수 있습니다.${db.referral ? ` 이 링크로 열면 추천인 코드 ${esc(db.referral)}가 들어간 가입 화면이 열리고, 안 들어가 있으면 '추천 코드' 칸에 직접 넣으십시오. 첫 구매가 12만원 이상이면 추가 할인이나 사은품을 받습니다. <a href="./referral.html">추천인 코드 보기</a>` : ''}`, shot('mp-referral-field.webp', '마이프로틴 회원가입 화면의 추천 코드 칸', '회원가입 화면 아래쪽의 \'추천 코드\' 칸.', 'tall'))}
   ${step('장바구니 담기', `${free} 미만이면 배송비가 붙습니다. 할인까지 뺀 금액이 ${SHOP.customsUsd}달러(${limitKrw})를 넘지 않게 맞추면 관세가 없습니다. <a href="./calc.html">계산기로 최종 금액 보기</a>`, shot('mp-customs-modal.webp', '마이프로틴 장바구니의 세관 통관 안내', '장바구니 위 \'세관 통관에 대한 정보\'를 누르면 나오는 안내: 건강보조제품 6개, 150달러.', 'mid'))}
   ${step('할인코드 넣기', `장바구니의 할인코드 칸에 코드를 넣습니다. 코드는 한 번에 하나만 들어가고, 오늘은 ${esc(codeTxt)}가 가장 높습니다. <a href="./code.html">오늘 할인코드 보기</a>`, shot('mp-cart-hidden-code.webp', '마이프로틴 장바구니에 히든코드를 적용한 화면', '11월 9일 90회분 1개에 히든코드를 넣은 장바구니: 37% 할인, 합계 137,317원(앱 쇼핑지원금 5,000원 포함). 코드 이름은 가렸습니다.') + shot('mp-cart-official-code.webp', '마이프로틴 장바구니에 공식 코드를 적용한 화면', '같은 장바구니에 공식 코드(SUPER35, 35%)를 넣으면 141,835원. 히든코드 쪽이 4,518원 쌉니다.'))}
   ${step('배송지와 개인통관고유부호', '받는 사람 이름과 전화번호는 개인통관고유부호에 등록된 것과 같게 적습니다. 부호는 관세청 유니패스에서 바로 발급됩니다.')}
