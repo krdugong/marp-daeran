@@ -11,7 +11,7 @@
   "products": [
     {
       "name": "임팩트웨이 프로틴",
-      "size": "1kg",
+      "size": "30회분",
       "price": 110900,
       "rrp": 119900,
       "url": "https://www.myprotein.co.kr/p/sports-nutrition/impact-whey-protein-powder/10530943/",
@@ -19,14 +19,15 @@
     },
     {
       "name": "임팩트웨이 프로틴",
-      "size": "2.5kg",
+      "size": "90회분",
       "price": 225900,
       "rrp": 239900,
-      "url": "https://www.myprotein.co.kr/p/sports-nutrition/impact-whey-protein-powder/10530943/"
+      "url": "https://www.myprotein.co.kr/p/sports-nutrition/impact-whey-protein-powder/10530943/",
+      "note": "맛에 따라 2.52kg~2.7kg"
     },
     {
       "name": "임팩트웨이 프로틴",
-      "size": "5kg (2.5kg×2)",
+      "size": "166회분 (2.5kg×2)",
       "price": 349500,
       "rrp": 349900,
       "url": "https://www.myprotein.co.kr/p/sports-nutrition/impact-whey-protein-powder/10530943/"
@@ -144,7 +145,7 @@
     }
   ],
   "referral": "NED6-R3",
-  "referralBenefit": "",
+  "referralBenefit": "추가 할인 또는 사은품",
   "calendar": [],
   "announced": [
     {

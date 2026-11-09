@@ -27,6 +27,8 @@ const db = readJson('data/discount.json');
 // 제품 가격 기록(data/prices.json, 자동 수집). 직접 적은 products 가격보다 새 기록이 있으면 그 값을 씁니다.
 // 직접 적은 가격은 그래프에서 기록 시작 전 가격으로 씁니다.
 const PRICE_LOG = fs.existsSync(path.join(ROOT, 'data/prices.json')) ? (readJson('data/prices.json').entries || []).sort((a, b) => a.date.localeCompare(b.date)) : [];
+// 한글 끝 글자 받침에 맞춰 조사를 붙입니다 (josa('90회분', '이', '가') → '90회분이')
+const josa = (w, withB, noB) => { const c = String(w).trim().slice(-1).charCodeAt(0); return w + (c >= 0xAC00 && c <= 0xD7A3 && (c - 0xAC00) % 28 ? withB : noB); };
 const PRICE_BASE = Object.fromEntries((db.products || []).map(p => [`${p.name} ${p.size}`, p.price]));
 {
   const lastLog = PRICE_LOG.at(-1);
@@ -42,6 +44,9 @@ const SITE = { ...cfg, origin: domain ? `https://${domain}` : cfg.githubPagesUrl
 
 // ── 공통 도우미 ──
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+// ── 화면 캡처 (shots/*.webp, 크기는 shots/sizes.json). tall 은 세로로 긴 캡처라 폭을 줄여 보여 줍니다 ──
+const SHOT_SIZES = fs.existsSync(path.join(ROOT, 'shots/sizes.json')) ? readJson('shots/sizes.json') : {};
+const shot = (f, alt, cap, cls = '') => SHOT_SIZES[f] ? `<figure class="shot${cls ? ' ' + cls : ''}"><a href="./shots/${f}" target="_blank" rel="noopener"><img src="./shots/${f}" alt="${esc(alt)}" width="${SHOT_SIZES[f][0]}" height="${SHOT_SIZES[f][1]}" loading="lazy" decoding="async"></a><figcaption>${cap} <span class="zoom">눌러서 크게 보기</span></figcaption></figure>` : '';
 const pct = n => (Number.isInteger(n) ? n : n.toFixed(1)) + '%';
 const pctOr = n => (n == null ? '영상 참고' : pct(n));
 const r1 = n => Math.round(n * 10) / 10;
@@ -358,7 +363,7 @@ function trend(series, endLabel = '오늘') {
 }
 // ── 가격 그래프: 정상가(코드 넣기 전 판매가) vs 할인코드 적용가 ──
 // 매일 기록이 있는 날은 선으로, 기록 시작 전 대란은 그때 할인율로 계산한 점으로 그립니다.
-const CHART_KEY = '임팩트웨이 프로틴 1kg';
+const CHART_KEY = '임팩트웨이 프로틴 30회분';
 const priceOn = (key, date) => {
   let v = null;
   for (const e of PRICE_LOG) { if (e.date > date) break; if (e.prices[key]) v = e.prices[key].price; }
@@ -448,7 +453,7 @@ function lowGauge() {
   const calm = day.filter(d => d.date > from && d.base < TH);
   const avg = calm.length ? calm.reduce((s, d) => s + d.base, 0) / calm.length : last.base;
   const diff = last.base - avg;
-  const key = PRODUCTS.find(p => /임팩트웨이 프로틴/.test(p.name) && p.size === '2.5kg') ? '임팩트웨이 프로틴 2.5kg' : CHART_KEY;
+  const key = PRODUCTS.find(p => /임팩트웨이 프로틴/.test(p.name) && p.size === '90회분') ? '임팩트웨이 프로틴 90회분' : CHART_KEY;
   const reg = priceOn(key, last.date);
   if (reg == null) return '';
   const name = key.replace('프로틴 ', '');
@@ -458,9 +463,9 @@ function lowGauge() {
   const when = sureNext ? `${+sureNext.date.slice(8, 10)}일 대란` : '다음 대란';
   const left = sureNext ? daysBetween(last.date, sureNext.date) : null;
   const head = buy ? '지금 사세요' : '기다리세요';
-  const sub = isDaeran ? `지금이 대란입니다. ${name}가 정가보다 <b>${won(reg - now)}</b> 쌉니다.`
+  const sub = isDaeran ? `지금이 대란입니다. ${josa(name, '이', '가')} 정가보다 <b>${won(reg - now)}</b> 쌉니다.`
     : buy ? `지난 대란 평균(${dRate}%)만큼 할인 중입니다.`
-    : `${when}${left > 0 ? `(${left}일 뒤)` : ''}에 사면 ${name}가 <b>${won(now - dPrice)}</b> 더 쌉니다.`;
+    : `${when}${left > 0 ? `(${left}일 뒤)` : ''}에 사면 ${josa(name, '이', '가')} <b>${won(now - dPrice)}</b> 더 쌉니다.`;
   const right = isDaeran ? ['코드 없이', null, reg] : buy ? null : [when, dRate, dPrice];
   const cell = (label, rate, price, hot) => `<div class="lgC${hot ? ' hot' : ''}"><span>${label}${rate != null ? ` <b>${rate}%</b>` : ''}</span><strong>${won(price)}</strong></div>`;
   return `<div class="lowG${buy ? ' buy' : ''}">
@@ -577,6 +582,8 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta:hover{background:var(--brand-700)}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
+.shot{margin:12px 0 6px}.shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface)}.shot.tall img{max-width:420px}.shot figcaption{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}.shot .zoom{color:var(--faint)}@media(min-width:720px){.shot .zoom{display:none}}
+ol.steps li .shot{margin-bottom:4px}
 table.alt .tag.g{background:var(--mint-soft);color:#0B5A3A}
 table.alt td.n .sh{display:block;font-size:11px;color:var(--faint);font-weight:500;margin-top:2px}
 .ihRv{list-style:none;margin:0;padding:0}.ihRv li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
@@ -934,7 +941,7 @@ body.hasSticky{padding-bottom:0}
 // 메인 버튼은 페이지당 하나. 나머지 코드는 접힌 목록 안에 작은 복사 버튼만 둡니다.
 const codeRow = c => `<li><span class="name">${esc(nameOf(c))}<em>${esc(c.label)}${c.note ? ` · ${esc(c.note)}` : ''}</em></span><span class="crate">${c.rate != null ? `${c.rate}%` : ''}</span><button type="button" data-copy="${b64(c.code)}" data-label="${esc(nameOf(c))}">복사</button></li>`;
 const otherCodes = CODES.filter(c => c !== primary);
-const codeList = `<ul class="codes">${otherCodes.map(codeRow).join('')}${db.referral ? `<li><span class="name">${esc(db.referral)}<em>신규 가입 추천인 코드 · 첫 구매 적립금, 할인코드와 같이 씁니다</em></span><span class="crate"></span><button type="button" data-copy="${b64(db.referral)}">복사</button></li>` : ''}</ul>`;
+const codeList = `<ul class="codes">${otherCodes.map(codeRow).join('')}${db.referral ? `<li><span class="name">${esc(db.referral)}<em>신규 가입 추천인 코드 · 첫 구매 12만원 이상이면 ${esc(db.referralBenefit || '추가 혜택')}, 할인코드와 같이 씁니다</em></span><span class="crate"></span><button type="button" data-copy="${b64(db.referral)}">복사</button></li>` : ''}</ul>`;
 const otherCount = otherCodes.length + (db.referral ? 1 : 0);
 const otherCodesBox = otherCount ? `<details class="more"><summary>다른 코드 보기 (${otherCount}개)</summary>${codeList}</details>` : '';
 
@@ -1039,7 +1046,7 @@ function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.d
   const hasGuides = IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json'));
   const secNav = IH ? `<nav class="secNav" aria-label="사이트 구분"><a href="./"${sec === 'mp' ? ' aria-current="true"' : ''}>마이프로틴</a><a href="./iherb.html"${sec === 'ih' ? ' aria-current="true"' : ''}>아이허브</a></nav>` : '';
   const subLinks = sec === 'ih'
-    ? navLink('iherb.html', '할인코드') + (hasGuides ? navLink('iherb-best.html', '추천템') + navLink('iherb-probiotics.html', '유산균') + navLink('iherb-omega3.html', '오메가3') + navLink('iherb-magnesium.html', '마그네슘') + navLink('iherb-blackfriday.html', '블프') : '')
+    ? navLink('iherb.html', '할인코드') + (hasGuides ? navLink('iherb-jikgu.html', '직구 방법') + navLink('iherb-best.html', '추천템') + navLink('iherb-probiotics.html', '유산균') + navLink('iherb-omega3.html', '오메가3') + navLink('iherb-magnesium.html', '마그네슘') + navLink('iherb-blackfriday.html', '블프') : '')
     : navLink('', '오늘 할인율') + navLink('code.html', '할인코드') + (calcWidget ? navLink('calc.html', '계산기') : '') + navLink('jikgu.html', '직구 방법') + navLink(monthFile(curYm), `${M(curYm)}월 대란`) + (EV_HOME ? navLink(EV_HOME.page, `${+EV_HOME.date.slice(8, 10)}일 대란`) : '') + (fs.existsSync(path.join(ROOT, 'data/taste.json')) ? navLink('taste.html', '맛 추천') + (readJson('data/taste.json').reviews?.length ? navLink('taste-rank.html', '맛 순위') : '') : '') + (PRODUCTS.length ? navLink('wpc-wpi.html', '<span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span>') : '') + (altMp ? navLink('alternatives.html', '가성비 비교') : '');
   const html = `<!doctype html>
 <html lang="ko">
@@ -1081,7 +1088,7 @@ ${hasOg ? `<meta property="og:image" content="${SITE.origin}/og.png">
 <div class="utilBar"><div class="utilInner">
   ${utilHtml ?? `<span>8만원 이상 무료배송</span>
   <span>150달러 이상 관세 발생</span>
-  ${db.referral ? `<span>추천코드 ${esc(db.referral)} 첫 구매 적립금</span>` : ''}`}
+  ${db.referral ? `<span>추천코드 ${esc(db.referral)} 첫 구매 혜택</span>` : ''}`}
 </div></div>
 <main class="wrap">
 ${hasSample ? '<p class="warn">이 페이지는 예시 데이터로 생성되었습니다. data/discount.json 을 실제 값으로 교체한 뒤 배포하십시오.</p>' : ''}
@@ -1095,7 +1102,7 @@ ${restHtml}
   <div class="fBrand"><b>${esc(SITE.brand)}</b>${SITE.brandEn ? `<i aria-hidden="true"></i><span>${esc(SITE.brandEn)}</span>` : ''}</div>
   ${SITE.slogan ? `<p class="fSlogan">${esc(SITE.slogan)}</p>` : ''}
   ${HEADER_LINE ? `<p class="fLine">${esc(HEADER_LINE)}</p>` : ''}
-  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}<a href="./jikgu.html">직구 방법</a>${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${altMp ? '<a href="./alternatives.html">마이프로틴 대안</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${EVENT_PAGES.map(ev => `<a href="./${ev.page}">${kdate(ev.date)} 대란</a>`).join('')}${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}${IH ? '<a href="./iherb.html">아이허브 할인코드</a>' : ''}${IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? '<a href="./iherb-best.html">아이허브 추천템</a><a href="./iherb-blackfriday.html">아이허브 블프</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
+  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}<a href="./jikgu.html">직구 방법</a>${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${altMp ? '<a href="./alternatives.html">마이프로틴 대안</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${EVENT_PAGES.map(ev => `<a href="./${ev.page}">${kdate(ev.date)} 대란</a>`).join('')}${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}${IH ? '<a href="./iherb.html">아이허브 할인코드</a>' : ''}${IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? '<a href="./iherb-jikgu.html">아이허브 직구 방법</a><a href="./iherb-best.html">아이허브 추천템</a><a href="./iherb-blackfriday.html">아이허브 블프</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 쇼핑몰에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표${IH ? ', 아이허브(iHerb)는 iHerb, LLC의 상표' : ''}이며 본 사이트와 무관합니다.</p>
@@ -1256,7 +1263,7 @@ const CODE_FAQ = [
   ['마이프로틴 쇼핑지원금은 어떻게 받나요?',
    '앱에서 신청하는 선착순 이벤트 형식으로 대란 전후에 열립니다. 신청해 두면 일정 금액 이상 결제할 때 정액으로 빠집니다. 열리는 즉시 단톡방과 유튜브로 알려드리고, 이 페이지의 숨은 할인 목록에도 올립니다.'],
   ['추천인 코드는 뭔가요?',
-   `처음 가입할 때 추천인 코드${db.referral ? `(${db.referral})` : ''}를 넣으면 첫 구매 적립금을 받는 방식입니다. 할인코드와는 별개라 같이 쓸 수 있습니다. 이미 가입한 계정에는 적용되지 않습니다.`],
+   `처음 가입할 때 추천인 코드${db.referral ? `(${db.referral})` : ''}를 넣으면 첫 구매가 12만원 이상일 때 추가 할인이나 사은품을 받습니다(마이프로틴 친구 추천 안내 기준). 할인코드와는 별개라 같이 쓸 수 있습니다. 이미 가입한 계정에는 적용되지 않습니다.`],
   ['할인코드 쓰기 전에 확인할 조건이 있나요?',
    `세 가지를 보십시오. 이미 세일 중인 상품은 코드가 빠질 수 있고, ${(SHOP.freeShipping / 10000).toLocaleString('ko-KR')}만원 이상이어야 무료배송이며, ${SHOP.customsUsd}달러를 넘으면 관세와 부가세가 붙을 수 있습니다.${last.deals.length ? ` 지금은 ${last.deals.map(d => d.label).join(', ')} 조건도 있으니 장바구니를 담을 때 같이 챙기십시오.` : ''}`],
   ['마이프로틴 배송비는 얼마인가요?',
@@ -1296,7 +1303,7 @@ ${calcWidget ? '<a class="cta ghost" href="./calc.html">내 장바구니 최종 
 
 ${db.referral ? `<section>
 <h2>마이프로틴 추천인 코드</h2>
-<p class="lede">처음 가입하는 분만 해당합니다. 추천인 코드 <b>${esc(db.referral)}</b>를 넣으면 ${esc(REF_BENEFIT)}을 받고, 할인코드와는 별개라 같이 쓸 수 있습니다. 이미 가입한 계정에는 적용되지 않습니다.</p>
+<p class="lede">처음 가입하는 분만 해당합니다. 추천인 코드 <b>${esc(db.referral)}</b>를 넣으면 첫 구매 12만원 이상일 때 ${esc(REF_BENEFIT)}을 받고, 할인코드와는 별개라 같이 쓸 수 있습니다. 이미 가입한 계정에는 적용되지 않습니다.</p>
 <a class="cta" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(db.referral)}">${esc(db.referral)} 복사하고 가입하기</a>
 <a class="cta ghost" href="./referral.html">추천인 코드 입력 방법과 혜택 자세히</a>
 </section>` : ''}
@@ -1397,7 +1404,7 @@ if (PRODUCTS.length) {
   page({
     file: 'price.html', priority: 0.8, current: 'price.html',
     title: `마이프로틴 대란 가격 비교 | 임팩트웨이 평소 vs 대란 얼마나 싸질까 (${M(curYm)}월 표시가 기준)`,
-    desc: `임팩트웨이 1kg·2.5kg·5kg, 아이솔레이트, 크레아틴의 평소 가격(코드 ${last.base}%)과 대란 가격(코드 ${dRate}%) 비교표. ${ex.name} ${ex.size}는 대란 때 ${won(exA - exB)} 더 쌉니다. ${dot(db.priceDate || last.date)} 표시가 기준.`,
+    desc: `임팩트웨이 30회분·90회분·166회분, 아이솔레이트, 크레아틴의 평소 가격(코드 ${last.base}%)과 대란 가격(코드 ${dRate}%) 비교표. ${josa(`${ex.name} ${ex.size}`, '은', '는')} 대란 때 ${won(exA - exB)} 더 쌉니다. ${dot(db.priceDate || last.date)} 표시가 기준.`,
     keywords: ['마이프로틴 대란 가격', '마이프로틴 대란 가격 차이', '마이프로틴 대란 가격 비교', '마이프로틴 임팩트웨이 가격', '마이프로틴 5kg', '마이프로틴 2.5kg', '마이프로틴 아이솔레이트 가격', '마이프로틴 크레아틴 가격'],
     ld: [crumbs([['홈', 'index.html'], ['대란 가격 비교', 'price.html']]), faqLd(PRICE_FAQ)],
     heroHtml: `
@@ -1423,7 +1430,7 @@ ${priceRows(PRODUCTS)}
 <p class="lede">할인코드만 적용한 금액입니다. 이달의 트렌드 7%나 쇼핑지원금까지 넣은 최종 금액은 <a href="./calc.html?amt=${ex.price}">계산기</a>에서 확인하십시오.</p>
 </section>
 ${priceChart() ? `<section class="full">
-<h2>임팩트웨이 1kg 가격 흐름</h2>
+<h2>임팩트웨이 30회분 가격 흐름</h2>
 ${priceGauge()}
 ${priceChart()}
 ${priceChartNote(CHART_KEY)}
@@ -1798,7 +1805,7 @@ if (ALT && altMp) {
   const daeranNote = !isDaeran && dRate !== last.base ? ` 대란 평균 ${dRate}%면 마이프로틴은 ${won(mpDaeranPg)}까지 내려갑니다.` : '';
   // 대란가가 할인 중인 다른 브랜드보다 비싸면 '대란이면 마이프로틴이 가장 쌈' 같은 문장을 쓰지 않습니다
   const mpCheap = !bestAlt || mpDaeranPg <= bestAlt.pg;
-  const p1 = PRODUCTS.find(p => p.name === altMp.p.name && p.size === '1kg');
+  const p1 = PRODUCTS.find(p => p.name === altMp.p.name && p.size === '30회분');
   const altCount = others.length;
 
   const row = r => `<tr class="${r.mp ? 'mp' : ''}${r === best ? ' best' : ''}${r.pg ? '' : ' np'}">
@@ -1822,7 +1829,7 @@ if (ALT && altMp) {
     ['마이프로틴 대안 있나요?',
      `있습니다. 한국에서 직구로 많이 사는 건 옵티멈뉴트리션 골드 스탠다드, 룰원 R1, 다이마타이즈 ISO100 정도이고, 아이허브나 쿠팡 로켓직구에서 삽니다. 다만 마이프로틴도 대란 때 코드를 쓰면 ${altMp.p.name} ${altMp.p.size}이 1kg당 ${won(altMp.kg)}${mpCheap ? '이라 여전히 싼 편입니다' : `이고 단백질 1g당 ${won(mpDaeranPg)}이라, 할인 중인 ${bestAlt.brand}(${won(bestAlt.pg)})와 비슷한 수준입니다`}. 대란이 아닐 때 급하게 사야 하면 표에서 단백질 1g당 가격이 낮은 쪽을 고르면 됩니다.`],
     ['마이프로틴이 왜 이렇게 비싸졌나요?',
-     p1 ? `정가가 올랐습니다. ${p1.name} 1kg 정가가 ${won(p1.rrp)}이라 코드 없이 보면 비싸 보입니다. 마이프로틴은 늘 코드를 전제로 한 가격이라 코드 ${last.base}%를 넣으면 ${won(p1.price * (1 - last.base / 100))}, 대란 ${dRate}%면 ${won(p1.price * (1 - dRate / 100))}입니다. 그리고 1kg보다 2.5kg이 1kg당 가격이 훨씬 내려가니, 비교할 때는 큰 용량끼리 보는 게 맞습니다.`
+     p1 ? `정가가 올랐습니다. ${p1.name} ${p1.size} 정가가 ${won(p1.rrp)}이라 코드 없이 보면 비싸 보입니다. 마이프로틴은 늘 코드를 전제로 한 가격이라 코드 ${last.base}%를 넣으면 ${won(p1.price * (1 - last.base / 100))}, 대란 ${dRate}%면 ${won(p1.price * (1 - dRate / 100))}입니다. 그리고 1kg보다 2.5kg이 1kg당 가격이 훨씬 내려가니, 비교할 때는 큰 용량끼리 보는 게 맞습니다.`
         : `정가가 올랐습니다. 마이프로틴은 늘 코드를 전제로 한 가격이라 코드 없이 정가만 보면 비싸 보입니다. 2.5kg 이상 큰 용량일수록 1kg당 가격이 많이 내려갑니다.`],
     ['단백질 1g당 가격은 어떻게 계산하나요?',
      '가격 ÷ (총 용량 × 한 스쿱 단백질 ÷ 한 스쿱 무게)입니다. 같은 1kg이라도 WPI는 단백질 비율이 높아서 1kg당 가격은 비싸도 단백질 1g당으로 보면 차이가 줄어듭니다. 맛마다 함량이 조금 달라 대표값으로 계산했습니다.'],
@@ -2000,10 +2007,11 @@ ${heroBtn.replace(' heroBtn', '').replace('pubref:pt-iherb-hero', 'pubref:pt-ihe
 <h2>아이허브 할인코드 입력 방법</h2>
 <ol class="steps">
   <li>제품을 장바구니에 담고 <b>장바구니</b>로 갑니다.</li>
-  <li>주문 요약의 <b>프로모 코드 또는 리워드 코드</b> 칸에 코드를 붙여넣고 <b>적용</b>을 누릅니다. 이 페이지의 복사 버튼을 누르면 코드가 복사됩니다.</li>
+  <li>장바구니 오른쪽 위 <b>할인코드</b> 칸(리워드 코드도 같은 칸)에 코드를 붙여넣고 <b>적용</b>을 누릅니다. 이 페이지의 복사 버튼을 누르면 코드가 복사됩니다.</li>
   <li>합계가 줄었는지 확인하고 결제로 넘어갑니다. 안 줄었으면 코드 기간이 끝났거나 조건(신규 고객, 최소 금액, 제외 브랜드)에 안 맞는 것입니다.</li>
   <li>결제 전에 <b>개인통관고유부호</b>가 들어가 있는지 보십시오. 없으면 통관에서 멈춥니다.</li>
 </ol>
+${shot('ih-cart-code.webp', '아이허브 장바구니에 할인코드를 적용한 화면', '할인코드를 적용한 장바구니. 주문당 코드 1개이고, 4만원 미만이면 배송비 6,000원이 붙습니다. <a href="./iherb-jikgu.html">주문부터 통관까지 화면으로 보기</a>')}
 </section>
 
 <section class="full">
@@ -2027,7 +2035,7 @@ ${heroBtn.replace(' heroBtn', '').replace('pubref:pt-iherb-hero', 'pubref:pt-ihe
 ${picks.map((p, i) => `<li${p.warn ? ' class="caution"' : ''}><b>${esc(p.cat)}${p.sub ? ` <small>${esc(p.sub)}</small>` : ''}</b><ul class="tips">${(p.check || []).map(t => `<li>${esc(t)}</li>`).join('')}</ul>${p.kw && !p.warn ? `<a class="go" href="${esc(ihSearch(`pt-iherb-pick${i + 1}`, p.kw))}" ${aff}>아이허브에서 ${esc(p.cat)} 보기 →</a>` : ''}</li>`).join('\n')}
 </ul>
 <p class="hint">건강기능식품은 질병을 예방하거나 치료하는 약이 아닙니다. 먹는 약이 있으면 의사나 약사와 먼저 상의하십시오.</p>
-${fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? `<p class="ihMore"><a href="./iherb-best.html">추천템 베스트셀러 전체</a><a href="./iherb-probiotics.html">유산균 고르는 법</a><a href="./iherb-omega3.html">오메가3 고르는 법</a><a href="./iherb-magnesium.html">마그네슘 고르는 법</a><a href="./iherb-blackfriday.html">블프 ${bfYear}</a></p>` : ''}
+${fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? `<p class="ihMore"><a href="./iherb-jikgu.html">직구 방법 (화면으로 보기)</a><a href="./iherb-best.html">추천템 베스트셀러 전체</a><a href="./iherb-probiotics.html">유산균 고르는 법</a><a href="./iherb-omega3.html">오메가3 고르는 법</a><a href="./iherb-magnesium.html">마그네슘 고르는 법</a><a href="./iherb-blackfriday.html">블프 ${bfYear}</a></p>` : ''}
 </section>
 
 <section class="full">
@@ -2078,7 +2086,7 @@ ${codeList}
   const more = self => `<section>
 <h2>아이허브 더 보기</h2>
 <a class="cta ghost" href="./iherb.html">아이허브 할인코드 ${m}월</a>
-${[['iherb-best.html', '아이허브 추천템 (베스트셀러)'], ...IHG.guides.map(g => [g.file, `아이허브 ${g.cat} 추천`]), ['iherb-blackfriday.html', `아이허브 블프 ${bfYear}`]].filter(([f]) => f !== self).map(([f, t]) => `<a class="cta ghost" href="./${f}">${esc(t)}</a>`).join('\n')}
+${[['iherb-jikgu.html', '아이허브 직구 방법'], ['iherb-best.html', '아이허브 추천템 (베스트셀러)'], ...IHG.guides.map(g => [g.file, `아이허브 ${g.cat} 추천`]), ['iherb-blackfriday.html', `아이허브 블프 ${bfYear}`]].filter(([f]) => f !== self).map(([f, t]) => `<a class="cta ghost" href="./${f}">${esc(t)}</a>`).join('\n')}
 </section>`;
 
   // 유산균·오메가3·마그네슘 고르는 법
@@ -2333,6 +2341,111 @@ ${bfSeason ? `<section>
 </section>` : ''}
 
 ${more('iherb-blackfriday.html')}
+`,
+    });
+  }
+
+  // 아이허브 직구 방법 (키워드: 아이허브 직구, 직구 방법·하는법·갯수·금액·관세·배송기간)
+  {
+    const ref = 'pt-iherb-jikgu';
+    const IJ_CHECKED = '2026-11-09';
+    const LIMIT_KRW = 204538;
+    const ship = IH_SHIP.freeShipKrw > 0 ? won(IH_SHIP.freeShipKrw) : '4만원';
+    const IJ_SRC = [
+      ['https://kr.iherb.com/shipping', '아이허브 대한민국 배송 정보', '개인통관고유부호, 배송업체별 한도, 수입 제한 품목, 결제 수단'],
+      ['https://kr.iherb.com/info/sales-and-offers', '아이허브 할인·특가·프로모션', '지금 쓸 수 있는 코드'],
+      ['https://kr.iherb.com/info/promo-rules-and-exclusions', '아이허브 프로모션 규정', '주문당 코드 1개, 제외 브랜드'],
+      ['https://kr.iherb.com/info/returns', '아이허브 반품 및 환불', '30일 반품, 환불 기간'],
+      ['https://kr.iherb.com/info/subscribe-save', '아이허브 정기배송', '정기배송 할인'],
+      ['https://kr.iherb.com/help/contact', '아이허브 고객 센터', '출고 시간, 배송 기간, 주문 취소'],
+    ];
+    const IJ_FAQ = [
+      ['아이허브 직구 방법이 어렵나요?', `어렵지 않습니다. 한국어 화면에서 원화로 주문하고 카카오페이나 국내 카드로 결제합니다. 다른 점은 개인통관고유부호를 넣어야 하고, 한 번에 ${won(LIMIT_KRW)}(150달러)와 영양제 6개를 넘기면 주문이 막힌다는 것입니다.`],
+      ['아이허브 직구는 몇 개까지 되나요?', '영양제(보충제)는 한 주문에 6개까지입니다. 7개째를 담으면 장바구니에 "수량 한도 6개를 초과했습니다"라는 경고가 뜨고 주문하기 버튼이 막힙니다. 세관이 6개를 넘는 주문에 처방전을 요구할 수 있다는 안내도 있습니다.'],
+      ['아이허브 직구 금액 한도는 얼마인가요?', `한국 배송은 한 주문 150달러가 한도라, ${dot(IJ_CHECKED)} 장바구니에서는 합계가 ${won(LIMIT_KRW)}를 넘자 "KR 관세 규정에 따라 주문당 총 주문이 ${won(LIMIT_KRW)}를 초과할 수 없습니다"라며 주문이 막혔습니다. 원화 한도는 환율에 따라 바뀝니다.`],
+      ['아이허브 직구 관세는 언제 붙나요?', '같은 판매처에서 같은 날 산 금액이 150달러를 넘으면 관세와 부가세가 붙을 수 있습니다. 아이허브는 한 주문을 150달러 아래로 막아 두니, 더 살 때는 날을 달리해 주문하십시오. 유청 단백질과 꿀은 하루 5kg을 넘으면 관세가 붙을 수 있다는 안내도 있습니다.'],
+      ['아이허브 배송 기간은 얼마나 걸리나요?', '아이허브 고객센터 안내로는 대부분 주문 후 1시간 안에 출고되고, 출고 뒤 한국까지 3~5영업일 걸립니다. 장바구니에 예상 도착일이 표시됩니다.'],
+      ['아이허브 배송비는 얼마인가요?', `${ship} 이상이면 무료배송이고, 그보다 적으면 기본 배송료 6,000원이 붙습니다(${dot(IJ_CHECKED)} 장바구니 기준). 정기배송 주문은 3만원 이상이면 무료입니다.`],
+      ['카카오페이나 네이버페이로 결제되나요?', '됩니다. 한국 설정 기준으로 카카오페이, 네이버페이, PAYCO, 국내 카드(KCP), 해외 카드, 실시간 계좌이체를 쓸 수 있습니다. 토스는 목록에 없습니다.'],
+      ['개인통관고유부호는 꼭 넣어야 하나요?', '필수입니다. 2026년 2월 2일부터는 고유부호에 등록된 이름·전화번호·우편번호와 주문서의 받는 사람 정보가 모두 같아야 하고, 다르면 통관이 막힐 수 있습니다.'],
+      ['아이허브 주문 취소는 언제까지 되나요?', '출고 전에만 됩니다. 대부분 1시간 안에 출고돼서, 주문 직후 내 계정의 주문 페이지에서 바로 취소해야 합니다. 주문 뒤에는 주소, 수량, 결제수단을 바꿀 수 없습니다.'],
+      ['아이허브 반품은 어떻게 하나요?', '받은 날부터 30일 안에(아이허브 자체 브랜드는 90일) 내 계정의 주문 페이지에서 신청합니다. 해외 반품은 배송비를 직접 내고, 환불은 보통 7~10영업일 걸립니다. 받지 못한 상품은 예상 배송일 24~48시간 뒤에 고객센터에 문의하십시오.'],
+      ['리워드 코드와 할인코드를 같이 쓸 수 있나요?', '아닙니다. 리워드 코드도 할인코드 칸에 넣고, 둘을 같이 넣으면 할인이 큰 쪽만 적용됩니다.'],
+    ];
+    const step = (t, d, s = '') => `<li><b>${t}</b> ${d}${s}</li>`;
+    page({
+      file: 'iherb-jikgu.html', priority: 0.8, changefreq: 'monthly', current: 'iherb-jikgu.html', lastmod: IJ_CHECKED,
+      title: `아이허브 직구 방법 ${y} | 주문 한도 150달러·6개·통관부호·배송기간 (화면으로 보기)`,
+      keywords: ['아이허브 직구', '아이허브 직구 방법', '아이허브 직구 하는법', '아이허브 직구 갯수', '아이허브 직구 금액', '아이허브 직구 한도', '아이허브 직구 관세', '아이허브 직구 배송기간', '아이허브 주문 방법', '아이허브 개인통관고유부호', '아이허브 결제 방법', '아이허브 카카오페이'],
+      desc: `아이허브 직구 방법을 실제 화면으로 정리했습니다. ${ship} 이상 무료배송(미만 6,000원), 한 주문 ${won(LIMIT_KRW)}(150달러)·영양제 6개를 넘기면 주문이 막히고, 개인통관고유부호는 필수, 출고 후 3~5영업일. 결제 수단과 반품까지. ${dot(IJ_CHECKED)} 확인.`,
+      ld: [crumbs([['홈', 'index.html'], ['아이허브 할인코드', 'iherb.html'], ['아이허브 직구 방법', 'iherb-jikgu.html']]), faqLd(IJ_FAQ),
+        { '@type': 'HowTo', name: '아이허브 직구 방법', step: ['사이트 설정', '가입·로그인', '장바구니 담기', '할인코드 넣기', '한도 확인', '통관부호와 결제', '배송과 반품'].map((n, i) => ({ '@type': 'HowToStep', position: i + 1, name: n })) }],
+      utilHtml: util,
+      stickyHtml: stickyOf(`${ref}-sticky`),
+      heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<p class="updated">${dot(IJ_CHECKED)} 아이허브 화면과 공식 안내로 확인</p>
+<h1>아이허브 직구 방법<br>주문부터 통관까지 7단계</h1>
+<p class="lede answer">아이허브는 한국어·원화로 주문하는 미국 직구입니다. <b>${ship} 이상 무료배송</b>(미만 6,000원), <b>한 주문 ${won(LIMIT_KRW)}(150달러)와 영양제 6개를 넘기면 주문이 막히고</b>, <b>개인통관고유부호는 필수</b>입니다. 대부분 1시간 안에 출고돼 3~5영업일이면 옵니다.${codeLine}</p>
+${goBtn(`${ref}-hero`, IH_HOME, '아이허브 가기')}
+${disclose}
+</div>
+<div class="heroSide">
+<dl class="stats">
+  <div><dt>무료배송</dt><dd>${ship}<small>미만 6,000원</small></dd></div>
+  <div><dt>주문 한도</dt><dd>${won(LIMIT_KRW)}<small>150달러 · 넘으면 주문 막힘</small></dd></div>
+  <div><dt>영양제</dt><dd>6개까지<small>7개부터 주문 막힘</small></dd></div>
+</dl>
+</div>
+</div>`,
+      restHtml: `
+<section class="full">
+<h2>아이허브 직구 순서</h2>
+<ol class="steps">
+  ${step('사이트 설정', '오른쪽 위 국가·언어·통화를 눌러 대한민국, 한국어, KRW로 맞춥니다.', shot('ih-site-settings.webp', '아이허브 사이트 환경 설정 창', '사이트 환경 설정 창. 아래쪽에 고를 수 있는 결제 수단이 보입니다.', 'tall'))}
+  ${step('가입·로그인', '이메일이나 휴대폰 번호, 카카오·구글·페이스북·Apple 계정으로 가입합니다.', shot('ih-login.webp', '아이허브 로그인·회원 가입 화면', '로그인/회원 가입 화면. 카카오 계정으로도 됩니다.', 'tall'))}
+  ${step('장바구니 담기', `${ship} 미만이면 배송비 6,000원이 붙고, 장바구니에 무료배송까지 남은 금액이 표시됩니다.`)}
+  ${step('할인코드 넣기', `오른쪽 위 '할인코드' 칸에 코드를 넣고 적용하기를 누릅니다. 주문당 코드 1개이고, 리워드 코드도 같은 칸에 넣습니다.${top ? ` 지금은 ${esc(top.code)}(${esc(top.label || `${top.rate}%`)})가 있습니다.` : ''}`, shot('ih-cart-code.webp', '아이허브 장바구니에 할인코드를 적용한 화면', `${dot(IJ_CHECKED)} SING2611 적용: 오메가 800 30정 14,281원 → 11,140원, 4만원 미만이라 배송비 6,000원.`))}
+  ${step('한도 확인', `합계가 ${won(LIMIT_KRW)}(150달러)를 넘거나 영양제가 7개가 되면 주문하기 버튼이 막힙니다. 넘으면 날을 달리해 나눠 주문하십시오.`, shot('ih-cart-150usd.webp', '아이허브 150달러 초과 경고', `"KR 관세 규정에 따라, 주문당 총 주문이 ${won(LIMIT_KRW)}을 초과할 수 없습니다."`) + shot('ih-cart-6bottles.webp', '아이허브 6개 초과 경고', '"장바구니에 있는 제품이 수량 한도 6개를 초과했습니다."'))}
+  ${step('통관부호와 결제', '주문서에 개인통관고유부호를 넣습니다. 이름·전화번호·우편번호가 부호에 등록된 것과 같아야 합니다. 결제는 카카오페이, 네이버페이, PAYCO, 국내·해외 카드, 실시간 계좌이체로 합니다.', shot('ih-shipping-payment.webp', '아이허브 예상 배송일과 결제 수단', '장바구니의 예상 배송일(글로벌 에어 택배)과 결제 수단 목록.'))}
+  ${step('배송과 반품', '대부분 1시간 안에 출고되고 3~5영업일이면 옵니다. 취소는 출고 전에만 됩니다. 반품은 받은 날부터 30일 안에 내 계정의 주문 페이지에서 신청합니다.')}
+</ol>
+${notMedicine}
+</section>
+
+<section class="full">
+<h2>관세와 통관, 이것만 보면 됩니다</h2>
+<div class="altWrap"><table class="alt"><thead><tr><th>기준</th><th>내용</th></tr></thead><tbody>
+<tr><td class="nw"><b>주문 한도</b></td><td>한 주문 150달러(${dot(IJ_CHECKED)} 장바구니 기준 ${won(LIMIT_KRW)}). 넘으면 아이허브가 주문을 막습니다.</td></tr>
+<tr><td class="nw"><b>관세</b></td><td>같은 판매처에서 같은 날 산 금액이 150달러를 넘으면 관세와 부가세가 붙을 수 있습니다. 영양제는 미국 발송이어도 150달러입니다.</td></tr>
+<tr><td class="nw"><b>영양제 6개</b></td><td>보충제는 한 주문 6개까지. 7개부터 주문이 막힙니다.</td></tr>
+<tr><td class="nw"><b>무게</b></td><td>배송업체마다 한 상자 최대 9kg. 유청 단백질·꿀은 하루 5kg을 넘으면 관세가 붙을 수 있습니다.</td></tr>
+<tr><td class="nw"><b>통관부호</b></td><td>필수. 2026년 2월 2일부터 이름·전화번호·우편번호까지 일치해야 합니다.</td></tr>
+<tr><td class="nw"><b>못 사는 것</b></td><td>멜라토닌, NAC, DHEA, 5-HTP, 우피 콜라겐 등은 한국으로 보낼 수 없습니다.</td></tr>
+</tbody></table></div>
+${shot('ih-pcc-carriers.webp', '아이허브 대한민국 배송 정보의 개인통관고유부호 안내와 배송업체 표', '아이허브 대한민국 배송 정보: 개인통관고유부호 안내와 배송업체별 한도(최대 9kg, 150달러).')}
+</section>
+
+${codeSection}
+
+<section class="full">
+<h2>자주 묻는 질문</h2>
+${faqHtml(IJ_FAQ)}
+</section>
+
+<section class="full">
+<h2>확인한 곳</h2>
+<ul class="steps">${IJ_SRC.map(([u, t, d]) => `<li><a href="${u}" target="_blank" rel="noopener nofollow">${t}</a> ${d}</li>`).join('')}</ul>
+<p class="hint">${dot(IJ_CHECKED)}에 아이허브 화면과 안내 페이지로 확인했습니다. 화면 캡처도 같은 날 찍었습니다. 아이허브 정책이 바뀌면 다를 수 있습니다.</p>
+</section>
+
+<section>
+<h2>관련 페이지</h2>
+<a class="cta ghost" href="./jikgu.html">마이프로틴 직구 방법</a>
+</section>
+
+${more('iherb-jikgu.html')}
 `,
     });
   }
@@ -2782,13 +2895,14 @@ ${kakaoBox}
     ['마이프로틴 관세는 얼마부터 붙나요?', `물품 가격이 ${SHOP.customsUsd}달러(${limitKrw})를 넘으면 넘은 부분이 아니라 전체 금액에 관세와 부가세가 붙습니다. 미국 발송 물건의 200달러 기준은 목록통관 물품에만 적용되고 식품은 목록통관 대상이 아니라서, 프로틴은 ${SHOP.customsUsd}달러로 보면 됩니다.`],
     ['마이프로틴 배송 기간은 얼마나 걸리나요?', '마이프로틴 공식 안내로는 출고 후 평균 2~6영업일입니다. 통관이나 택배사 사정으로 늦어질 수 있고, 통관이 끝나기 전에는 배송 조회가 안 될 수 있습니다.'],
     ['마이프로틴 배송비는 얼마인가요?', `${free} 이상 주문하면 무료배송이고, 그보다 적으면 배송비가 붙습니다. 배송비 금액은 장바구니에서 확인됩니다.`],
-    ['카카오페이나 네이버페이로 결제되나요?', '마이프로틴 약관에 적힌 결제 수단은 신용카드, 직불카드, PayPal입니다. 영국 회사라 카드사에서 해외 결제 수수료를 받을 수 있습니다. 다른 간편결제는 결제 화면에 뜨는지 확인하십시오.'],
+    ['마이프로틴 결제 수단은 뭐가 있나요?', '마이프로틴 도움말에는 "신용카드와 실시간 계좌이체 두 가지"라고 나오고, 장바구니에도 KCP 카드·계좌이체 버튼만 보입니다. 카카오페이·네이버페이·토스는 공식 안내에 없습니다. 영국 회사라 카드사에 따라 해외 결제 수수료가 붙을 수 있습니다.'],
+    ['마이프로틴 주문 취소는 언제까지 되나요?', '마이프로틴 도움말로는 주문 뒤 취소나 변경이 기본적으로 어렵고, 주문 후 10분 안에는 내 계정의 주문 내역에서 취소 요청이 될 수도 있습니다. 취소되면 1시간 안에 확정 메일이 오니, 메일을 받기 전에는 다시 주문하지 마십시오.'],
     ['개인통관고유부호가 꼭 필요한가요?', '마이프로틴 안내에는 따로 적혀 있지 않습니다. 다만 해외 직구 식품은 통관 때 받는 사람 확인에 개인통관고유부호를 쓰니, 관세청 유니패스에서 미리 발급받아 두고 주문서에 칸이 있으면 넣으십시오. 이름과 전화번호는 부호에 등록된 것과 같게 적는 게 안전합니다.'],
     ['나눠서 주문하면 관세를 안 내나요?', '같은 판매처에서 같은 날 산 물건을 여러 상자로 나눠 받으면 합쳐서 과세됩니다. 2022년 11월 17일부터는 입항일이 같다는 이유만으로는 합치지 않아서, 다른 날 주문한 건 같은 날 도착해도 따로 봅니다.'],
     ['할인코드 두 개를 같이 쓸 수 있나요?', `안 됩니다. 마이프로틴 약관상 할인코드는 한 번에 하나만 들어갑니다. 오늘은 ${codeTxt}가 가장 높습니다. 추천인 코드는 할인코드와 별개로 첫 결제 때 체크아웃 화면에 넣습니다.`],
     ['반품이나 환불은 어떻게 하나요?', '마이프로틴 반품 안내로는 받은 날부터 14일 안에 뜯지 않은 원래 포장 상태로 반품할 수 있습니다. 잘못 왔거나 파손된 물건은 바로 고객센터에 알리면 되고, 이때는 반품 배송비도 돌려받습니다. 물건이 안 오면 출고 메일을 받은 날부터 21일 안에 알려야 합니다. 환불은 보통 7영업일 안에 처리됩니다.'],
   ];
-  const step = (t, d) => `<li><b>${t}</b> ${d}</li>`;
+  const step = (t, d, sh = '') => `<li><b>${t}</b> ${d}${sh}</li>`;
   page({
     file: 'jikgu.html', priority: 0.8, changefreq: 'monthly', current: 'jikgu.html', lastmod: JK_CHECKED,
     title: `마이프로틴 직구 방법 ${Y(curYm)} | 주문·관세 ${SHOP.customsUsd}달러·배송기간·통관부호 한 번에`,
@@ -2800,7 +2914,7 @@ ${kakaoBox}
 <div class="hero">
 <div class="heroMain">
 <h1>마이프로틴 직구 방법<br>가입부터 관세까지 7단계</h1>
-<p class="updated">${dot(JK_CHECKED)} 마이프로틴 공식 안내 확인</p>
+<p class="updated">${dot(JK_CHECKED)} 마이프로틴 화면과 공식 안내로 확인</p>
 <p class="lede answer">마이프로틴 직구는 한국어 사이트에서 원화로 주문하는 해외 직구입니다. <b>${free} 이상 무료배송</b>, <b>${SHOP.customsUsd}달러(${limitKrw}) 넘으면 관세</b>, <b>할인코드는 한 번에 하나</b>. 이 세 가지만 기억하면 되고, 출고 뒤 보통 2~6영업일이면 도착합니다.</p>
 ${heroCta}
 </div>
@@ -2816,12 +2930,12 @@ ${heroCta}
 <section class="full">
 <h2>마이프로틴 직구 순서</h2>
 <ol class="steps">
-  ${step('회원가입', `myprotein.co.kr에서 가입합니다. 만 18세 이상만 가입할 수 있습니다.${db.referral ? ` 처음이면 첫 결제 때 체크아웃 화면에 추천인 코드를 넣어 첫 구매 적립금을 받으십시오. <a href="./referral.html">추천인 코드 보기</a>` : ''}`)}
-  ${step('장바구니 담기', `${free} 미만이면 배송비가 붙습니다. 할인까지 뺀 금액이 ${SHOP.customsUsd}달러(${limitKrw})를 넘지 않게 맞추면 관세가 없습니다. <a href="./calc.html">계산기로 최종 금액 보기</a>`)}
-  ${step('할인코드 넣기', `장바구니의 할인코드 칸에 코드를 넣습니다. 코드는 한 번에 하나만 들어가고, 오늘은 ${esc(codeTxt)}가 가장 높습니다. <a href="./code.html">오늘 할인코드 보기</a>`)}
+  ${step('회원가입', `myprotein.co.kr에서 가입합니다. 만 18세 이상만 가입할 수 있습니다.${db.referral ? ` 처음이면 가입 화면의 '추천 코드' 칸에 추천인 코드를 넣으십시오. 첫 구매가 12만원 이상이면 추가 할인이나 사은품을 받습니다. <a href="./referral.html">추천인 코드 보기</a>` : ''}`, shot('mp-referral-field.webp', '마이프로틴 회원가입 화면의 추천 코드 칸', '회원가입 화면 아래쪽의 \'추천 코드\' 칸.', 'tall'))}
+  ${step('장바구니 담기', `${free} 미만이면 배송비가 붙습니다. 할인까지 뺀 금액이 ${SHOP.customsUsd}달러(${limitKrw})를 넘지 않게 맞추면 관세가 없습니다. <a href="./calc.html">계산기로 최종 금액 보기</a>`, shot('mp-customs-modal.webp', '마이프로틴 장바구니의 세관 통관 안내', '장바구니 위 \'세관 통관에 대한 정보\'를 누르면 나오는 안내: 건강보조제품 6개, 150달러.'))}
+  ${step('할인코드 넣기', `장바구니의 할인코드 칸에 코드를 넣습니다. 코드는 한 번에 하나만 들어가고, 오늘은 ${esc(codeTxt)}가 가장 높습니다. <a href="./code.html">오늘 할인코드 보기</a>`, shot('mp-cart-hidden-code.webp', '마이프로틴 장바구니에 히든코드를 적용한 화면', '11월 9일 90회분 1개에 히든코드를 넣은 장바구니: 37% 할인, 합계 137,317원(앱 쇼핑지원금 5,000원 포함). 코드 이름은 가렸습니다.') + shot('mp-cart-official-code.webp', '마이프로틴 장바구니에 공식 코드를 적용한 화면', '같은 장바구니에 공식 코드(SUPER35, 35%)를 넣으면 141,835원. 히든코드 쪽이 4,518원 쌉니다.'))}
   ${step('배송지와 개인통관고유부호', '받는 사람 이름과 전화번호는 개인통관고유부호에 등록된 것과 같게 적습니다. 부호는 관세청 유니패스에서 바로 발급됩니다.')}
-  ${step('결제', '신용카드, 직불카드, PayPal로 결제합니다. 영국 회사라 카드사 해외 결제 수수료가 붙을 수 있습니다.')}
-  ${step('배송 확인', '출고 후 평균 2~6영업일 걸립니다. 통관이 끝나기 전에는 배송 조회가 안 될 수 있습니다.')}
+  ${step('결제', '\'바로 구매\'를 누르면 로그인하거나 \'비회원으로 계속하기\'로 주문합니다. 장바구니에 보이는 결제 수단은 신용카드와 실시간 계좌이체(KCP)이고, 영국 회사라 카드사에 따라 해외 결제 수수료가 붙을 수 있습니다.', shot('mp-checkout-login.webp', '마이프로틴 바로 구매 첫 화면', '\'바로 구매\' 첫 화면: 로그인, 등록, 비회원으로 계속하기.'))}
+  ${step('배송 확인', '출고 후 평균 2~6영업일 걸립니다. 발송 메일의 추적 링크, 내 계정의 주문 내역, 배송 조회 페이지(주문번호와 이메일 또는 우편번호)로 확인합니다. 통관이 끝나기 전에는 조회가 안 될 수 있습니다.', shot('mp-track-order.webp', '마이프로틴 배송 조회 페이지', '배송 조회 페이지.'))}
   ${step('받은 뒤 확인', '파손되거나 잘못 온 물건은 바로 고객센터에 알립니다. 물건이 안 오면 출고 메일을 받은 날부터 21일 안에 알려야 합니다.')}
 </ol>
 </section>
@@ -2832,15 +2946,16 @@ ${heroCta}
 <tr><td class="nw"><b>면세 한도</b></td><td>물품 가격 ${SHOP.customsUsd}달러(${limitKrw}) 이하. 식품은 목록통관 대상이 아니라 미국 발송 200달러 기준이 적용되지 않습니다.</td></tr>
 <tr><td class="nw"><b>넘으면</b></td><td>넘은 부분이 아니라 <b>전체 금액</b>에 관세와 부가세가 붙습니다.</td></tr>
 <tr><td class="nw"><b>나눠 주문</b></td><td>같은 판매처에서 같은 날 산 걸 나눠 받으면 합쳐서 과세됩니다. 다른 날 주문한 건 같은 날 도착해도 따로 봅니다(2022년 11월 17일부터).</td></tr>
-<tr><td class="nw"><b>건강기능식품</b></td><td>건강기능식품으로 분류되는 제품은 한 번에 6병까지 개인 사용으로 인정됩니다.</td></tr>
+<tr><td class="nw"><b>6개 기준</b></td><td>마이프로틴 장바구니의 세관 안내로는 건강보조제품은 개인 사용 목적으로 6개까지 살 수 있습니다.</td></tr>
 <tr><td class="nw"><b>5kg 이상</b></td><td>마이프로틴 안내로는 건강보조식품을 5kg 이상 주문해 한진택배로 받을 때 개인 소비용이라는 증빙을 요구받을 수 있습니다.</td></tr>
 </tbody></table></div>
+${shot('mp-delivery-info.webp', '마이프로틴 배송 안내 페이지', '마이프로틴 배송 안내: 8만원 이상 무료배송, 출고 후 평균 2~6영업일, 5kg 이상 증빙 안내.')}
 <p class="hint">원화 금액은 1달러 ${SHOP.usdKrw.toLocaleString('ko-KR')}원으로 어림한 값이고, 실제로는 그 주 관세청 고시 환율로 계산합니다. 배송비를 과세 가격에 넣는지는 경우마다 달라서, 기준에 아슬아슬하면 금액을 넉넉히 낮추거나 관세청 고객지원센터(125)에 물어보십시오.</p>
 </section>
 
 <section class="full">
 <h2>대란 때 직구한다면</h2>
-<p class="lede">대란 때는 한 번에 많이 사서 ${SHOP.customsUsd}달러를 넘기기 쉽습니다. 2.5kg 두 통이면 넘는 경우가 많으니, 계산기로 할인 후 금액을 먼저 보고 넘으면 날을 달리해 나눠 주문하십시오.${sureNext ? ` 다음 대란은 ${kdate(sureNext.date)}입니다.` : ''}</p>
+<p class="lede">대란 때는 한 번에 많이 사서 ${SHOP.customsUsd}달러를 넘기기 쉽습니다. 90회분(약 2.5kg) 두 통이면 넘는 경우가 많으니, 계산기로 할인 후 금액을 먼저 보고 넘으면 날을 달리해 나눠 주문하십시오.${sureNext ? ` 다음 대란은 ${kdate(sureNext.date)}입니다.` : ''}</p>
 ${sureNext && sureNext.page ? `<a class="cta ghost" href="./${sureNext.page}">${kdate(sureNext.date)} 대란 일정과 방법</a>` : '<a class="cta ghost" href="./daeran.html">대란 일정 보기</a>'}
 <a class="cta ghost" href="./calc.html">할인 계산기</a>
 </section>
@@ -2868,6 +2983,7 @@ ${faqHtml(JK_FAQ)}
 <a class="cta ghost" href="./calc.html">장바구니 최종 결제금액 계산</a>
 <a class="cta ghost" href="./price.html">평소와 대란 가격 차이</a>
 <a class="cta ghost" href="./taste.html">마이프로틴 맛 추천</a>
+${IH ? '<a class="cta ghost" href="./iherb-jikgu.html">아이허브 직구 방법</a>' : ''}
 </section>
 
 ${kakaoBox}
@@ -2954,7 +3070,7 @@ if (db.referral) {
     ['추천인 코드와 할인코드를 같이 쓸 수 있나요?',
      `됩니다. 추천인 코드는 가입할 때 한 번 넣고, 할인코드는 장바구니에서 따로 넣습니다. 오늘 쓸 할인코드는 ${pName || '할인코드'} ${last.base}%입니다.`],
     ['추천인 코드를 넣으면 뭘 받나요?',
-     `${REF_BENEFIT}을 받습니다. 추천한 쪽도 혜택을 받는 구조라 이 사이트의 코드를 쓰면 마프대란알리미에게 돌아갑니다. 구매 금액에는 차이가 없습니다.`],
+     `첫 구매가 12만원 이상이면 ${REF_BENEFIT}을 받습니다. 추천한 쪽은 적립금 5,000원을 받는 구조라, 이 사이트의 코드를 쓰면 그 적립금이 마프대란알리미에게 돌아갑니다. 구매 금액에는 차이가 없습니다.`],
     ['추천인 코드가 적용이 안 돼요.',
      '같은 이메일이나 전화번호로 이미 가입한 적이 있으면 신규로 잡히지 않습니다. 가입 화면에서 코드 칸을 못 찾으면 앱과 웹 중 다른 쪽에서 시도해 보고, 그래도 안 되면 단톡방에 물어보십시오.'],
   ];
