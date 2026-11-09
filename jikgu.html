@@ -131,8 +131,16 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta:hover{background:var(--brand-700)}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
-.shot{margin:12px 0 6px}.shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface)}.shot.tall img{max-width:420px}.shot figcaption{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}.shot .zoom{color:var(--faint)}@media(min-width:720px){.shot .zoom{display:none}}
-ol.steps li .shot{margin-bottom:4px}
+/* 화면 캡처: 사진이 있는 단계는 제목을 한 줄로 빼고, 단계 사이를 넉넉히 띄웁니다 */
+.shot{margin:20px 0 4px}.shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.shot.tall img{max-width:400px}.shot.mid img{max-width:560px}
+.shot figcaption{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.6}.shot .zoom{color:var(--faint);white-space:nowrap}@media(min-width:720px){.shot .zoom{display:none}}
+.steps li:has(.shot){margin-bottom:36px;padding-bottom:32px;border-bottom:1px solid var(--line);line-height:1.8}
+.steps li:has(.shot):last-child{border-bottom:0;padding-bottom:0}
+.steps li:has(.shot)>b:first-child{display:block;font-size:17px;margin-bottom:6px;color:var(--ink)}
+.steps li:has(.shot)+li:not(:has(.shot)){margin-top:0}
+.steps .shot+.shot{margin-top:28px}
+section>.shot{margin-top:24px}
 table.alt .tag.g{background:var(--mint-soft);color:#0B5A3A}
 table.alt td.n .sh{display:block;font-size:11px;color:var(--faint);font-weight:500;margin-top:2px}
 .ihRv{list-style:none;margin:0;padding:0}.ihRv li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
@@ -525,11 +533,11 @@ body.hasSticky{padding-bottom:0}
 <h2>마이프로틴 직구 순서</h2>
 <ol class="steps">
   <li><b>회원가입</b> myprotein.co.kr에서 가입합니다. 만 18세 이상만 가입할 수 있습니다. 처음이면 가입 화면의 '추천 코드' 칸에 추천인 코드를 넣으십시오. 첫 구매가 12만원 이상이면 추가 할인이나 사은품을 받습니다. <a href="./referral.html">추천인 코드 보기</a><figure class="shot tall"><a href="./shots/mp-referral-field.webp" target="_blank" rel="noopener"><img src="./shots/mp-referral-field.webp" alt="마이프로틴 회원가입 화면의 추천 코드 칸" width="1156" height="1240" loading="lazy" decoding="async"></a><figcaption>회원가입 화면 아래쪽의 '추천 코드' 칸. <span class="zoom">눌러서 크게 보기</span></figcaption></figure></li>
-  <li><b>장바구니 담기</b> 80,000원 미만이면 배송비가 붙습니다. 할인까지 뺀 금액이 150달러(약 21만원)를 넘지 않게 맞추면 관세가 없습니다. <a href="./calc.html">계산기로 최종 금액 보기</a><figure class="shot"><a href="./shots/mp-customs-modal.webp" target="_blank" rel="noopener"><img src="./shots/mp-customs-modal.webp" alt="마이프로틴 장바구니의 세관 통관 안내" width="1002" height="565" loading="lazy" decoding="async"></a><figcaption>장바구니 위 '세관 통관에 대한 정보'를 누르면 나오는 안내: 건강보조제품 6개, 150달러. <span class="zoom">눌러서 크게 보기</span></figcaption></figure></li>
+  <li><b>장바구니 담기</b> 80,000원 미만이면 배송비가 붙습니다. 할인까지 뺀 금액이 150달러(약 21만원)를 넘지 않게 맞추면 관세가 없습니다. <a href="./calc.html">계산기로 최종 금액 보기</a><figure class="shot mid"><a href="./shots/mp-customs-modal.webp" target="_blank" rel="noopener"><img src="./shots/mp-customs-modal.webp" alt="마이프로틴 장바구니의 세관 통관 안내" width="1002" height="335" loading="lazy" decoding="async"></a><figcaption>장바구니 위 '세관 통관에 대한 정보'를 누르면 나오는 안내: 건강보조제품 6개, 150달러. <span class="zoom">눌러서 크게 보기</span></figcaption></figure></li>
   <li><b>할인코드 넣기</b> 장바구니의 할인코드 칸에 코드를 넣습니다. 코드는 한 번에 하나만 들어가고, 오늘은 히든코드 37%가 가장 높습니다. <a href="./code.html">오늘 할인코드 보기</a><figure class="shot"><a href="./shots/mp-cart-hidden-code.webp" target="_blank" rel="noopener"><img src="./shots/mp-cart-hidden-code.webp" alt="마이프로틴 장바구니에 히든코드를 적용한 화면" width="1200" height="425" loading="lazy" decoding="async"></a><figcaption>11월 9일 90회분 1개에 히든코드를 넣은 장바구니: 37% 할인, 합계 137,317원(앱 쇼핑지원금 5,000원 포함). 코드 이름은 가렸습니다. <span class="zoom">눌러서 크게 보기</span></figcaption></figure><figure class="shot"><a href="./shots/mp-cart-official-code.webp" target="_blank" rel="noopener"><img src="./shots/mp-cart-official-code.webp" alt="마이프로틴 장바구니에 공식 코드를 적용한 화면" width="1200" height="425" loading="lazy" decoding="async"></a><figcaption>같은 장바구니에 공식 코드(SUPER35, 35%)를 넣으면 141,835원. 히든코드 쪽이 4,518원 쌉니다. <span class="zoom">눌러서 크게 보기</span></figcaption></figure></li>
   <li><b>배송지와 개인통관고유부호</b> 받는 사람 이름과 전화번호는 개인통관고유부호에 등록된 것과 같게 적습니다. 부호는 관세청 유니패스에서 바로 발급됩니다.</li>
   <li><b>결제</b> '바로 구매'를 누르면 로그인하거나 '비회원으로 계속하기'로 주문합니다. 장바구니에 보이는 결제 수단은 신용카드와 실시간 계좌이체(KCP)이고, 영국 회사라 카드사에 따라 해외 결제 수수료가 붙을 수 있습니다.<figure class="shot"><a href="./shots/mp-checkout-login.webp" target="_blank" rel="noopener"><img src="./shots/mp-checkout-login.webp" alt="마이프로틴 바로 구매 첫 화면" width="1200" height="759" loading="lazy" decoding="async"></a><figcaption>'바로 구매' 첫 화면: 로그인, 등록, 비회원으로 계속하기. <span class="zoom">눌러서 크게 보기</span></figcaption></figure></li>
-  <li><b>배송 확인</b> 출고 후 평균 2~6영업일 걸립니다. 발송 메일의 추적 링크, 내 계정의 주문 내역, 배송 조회 페이지(주문번호와 이메일 또는 우편번호)로 확인합니다. 통관이 끝나기 전에는 조회가 안 될 수 있습니다.<figure class="shot"><a href="./shots/mp-track-order.webp" target="_blank" rel="noopener"><img src="./shots/mp-track-order.webp" alt="마이프로틴 배송 조회 페이지" width="1200" height="643" loading="lazy" decoding="async"></a><figcaption>배송 조회 페이지. <span class="zoom">눌러서 크게 보기</span></figcaption></figure></li>
+  <li><b>배송 확인</b> 출고 후 평균 2~6영업일 걸립니다. 발송 메일의 추적 링크, 내 계정의 주문 내역, 배송 조회 페이지(주문번호와 이메일 또는 우편번호)로 확인합니다. 통관이 끝나기 전에는 조회가 안 될 수 있습니다.<figure class="shot mid"><a href="./shots/mp-track-order.webp" target="_blank" rel="noopener"><img src="./shots/mp-track-order.webp" alt="마이프로틴 배송 조회 페이지" width="942" height="592" loading="lazy" decoding="async"></a><figcaption>배송 조회 페이지: 주문번호와 이메일 또는 우편번호로 찾습니다. <span class="zoom">눌러서 크게 보기</span></figcaption></figure></li>
   <li><b>받은 뒤 확인</b> 파손되거나 잘못 온 물건은 바로 고객센터에 알립니다. 물건이 안 오면 출고 메일을 받은 날부터 21일 안에 알려야 합니다.</li>
 </ol>
 </section>

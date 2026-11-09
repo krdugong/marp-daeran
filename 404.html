@@ -132,8 +132,16 @@ svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .cta:hover{background:var(--brand-700)}
 .cta.hot:hover{background:#C44C22}
 .cta.ghost:hover{background:var(--surface-2)}
-.shot{margin:12px 0 6px}.shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface)}.shot.tall img{max-width:420px}.shot figcaption{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.5}.shot .zoom{color:var(--faint)}@media(min-width:720px){.shot .zoom{display:none}}
-ol.steps li .shot{margin-bottom:4px}
+/* 화면 캡처: 사진이 있는 단계는 제목을 한 줄로 빼고, 단계 사이를 넉넉히 띄웁니다 */
+.shot{margin:20px 0 4px}.shot img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.shot.tall img{max-width:400px}.shot.mid img{max-width:560px}
+.shot figcaption{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.6}.shot .zoom{color:var(--faint);white-space:nowrap}@media(min-width:720px){.shot .zoom{display:none}}
+.steps li:has(.shot){margin-bottom:36px;padding-bottom:32px;border-bottom:1px solid var(--line);line-height:1.8}
+.steps li:has(.shot):last-child{border-bottom:0;padding-bottom:0}
+.steps li:has(.shot)>b:first-child{display:block;font-size:17px;margin-bottom:6px;color:var(--ink)}
+.steps li:has(.shot)+li:not(:has(.shot)){margin-top:0}
+.steps .shot+.shot{margin-top:28px}
+section>.shot{margin-top:24px}
 table.alt .tag.g{background:var(--mint-soft);color:#0B5A3A}
 table.alt td.n .sh{display:block;font-size:11px;color:var(--faint);font-weight:500;margin-top:2px}
 .ihRv{list-style:none;margin:0;padding:0}.ihRv li{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
