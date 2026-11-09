@@ -41,6 +41,8 @@ const PRICE_BASE = Object.fromEntries((db.products || []).map(p => [`${p.name} $
 // 도메인이 있으면 그 도메인, 없으면 깃허브 페이지 주소
 const domain = String(cfg.domain || '').trim().replace(/^https?:\/\//, '').replace(/\/+$/, '');
 const SITE = { ...cfg, origin: domain ? `https://${domain}` : cfg.githubPagesUrl.replace(/\/+$/, '') };
+// 데이터에 적힌 쇼핑지원금 신청 링크가 아윈 링크면 clickref 를 'pt-<페이지>-signup' 으로 바꿔서 어느 페이지에서 눌렀는지 보이게 합니다
+const sgUrl = u => /awin1\.com/.test(String(u)) ? String(u).replace(/clickref=[^&]*/, 'clickref=pt-PAGE-signup') : u;
 
 // ── 공통 도우미 ──
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -130,7 +132,7 @@ const evBanner = EV_HOME && !isDaeran ? (() => {
 <p class="eyebrow">대란 확정${dd > 0 ? ` · D-${dd}` : ''}</p>
 <h2 class="bandTitle">${kdate(ev.date)} ${esc(ev.label)} 대란</h2>
 <p class="lede">${applyOpen ? `<b>${esc(sg.label)}</b>을 ${sg.applyUntil ? `${kdate(sg.applyUntil)}까지 ` : ''}미리 신청해 두면 할인코드와 별개로 더 빠집니다.` : ''}${ev.alert ? ` ${esc(ev.alert)} ${SITE.brand}가 알림을 보내고,` : ''}${sureOpen ? ` 할인코드는 ${sureOpen}에 공개되고, 히든코드와 최대할인조합은 ${SITE.brand}가 가장 빠르게 공개합니다.` : ''} 일정과 사는 방법은 안내 페이지에 정리했습니다.</p>
-<div class="evBtns">${applyOpen ? `<a class="cta hot" href="${esc(sg.url)}" target="_blank" rel="sponsored nofollow noopener">${esc(sg.label)} 미리 신청하기</a>` : ''}<a class="cta ${applyOpen ? 'ghost' : ''}" href="./${ev.page}">${kdate(ev.date)} 대란 일정·방법 보기</a></div>
+<div class="evBtns">${applyOpen ? `<a class="cta hot" href="${esc(sgUrl(sg.url))}" target="_blank" rel="sponsored nofollow noopener">${esc(sg.label)} 미리 신청하기</a>` : ''}<a class="cta ${applyOpen ? 'ghost' : ''}" href="./${ev.page}">${kdate(ev.date)} 대란 일정·방법 보기</a></div>
 </section>`;
 })() : '';
 
@@ -208,7 +210,15 @@ const extraOf = c => (official && c !== official && c.rate != null && official.r
 const nameOf = c => c.secret ? '히든코드' : c.code;
 // 복사용 코드는 페이지 소스에 평문으로 안 남게 base64 로 넣고, 누를 때 풀어서 복사합니다 (히든코드가 검색 캐시나 소스 보기에 글자로 안 잡히게)
 const b64 = s => Buffer.from(String(s)).toString('base64');
-const goAttrs = (code, label) => `href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(code)}"${label ? ` data-label="${esc(label)}"` : ''}`;
+// 아윈 clickref 는 'pt-<페이지>-<위치>' 로 씁니다 (아이허브 pubref 와 같은 틀). 페이지 자리는 PAGE 로 두면 page() 가 파일명으로 바꿔 줍니다.
+// ref2 는 clickref2 (상품 행처럼 종류가 많은 구분). 아윈 보고서에서 별도 열로 보입니다.
+const mpLink = (ref, dest, ref2) => {
+  let u = SITE.affiliate.replace(/clickref=[^&]*/, 'clickref=' + ref);
+  if (ref2) u = u.replace('&ued=', `&clickref2=${encodeURIComponent(ref2)}&ued=`);
+  if (dest) u = u.replace(/ued=.*$/, 'ued=' + encodeURIComponent(dest));
+  return u;
+};
+const goAttrs = (code, label, ref = 'pt-PAGE-hero') => `href="${esc(mpLink(ref))}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(code)}"${label ? ` data-label="${esc(label)}"` : ''}`;
 
 // ── 할인 계산기 ──
 // 계산 순서: 할인코드(%) → 정액 할인(쇼핑지원금 등, 할인코드 적용 후 금액이 min 이상일 때) → 나머지 % 할인(이달의 트렌드 등)
@@ -239,7 +249,7 @@ ${last.deals.length ? `<fieldset><legend class="f">숨은 할인 조건</legend>
   <table><tbody id="cLines"></tbody></table>
   <ul class="tips" id="cTips"></ul>
 </div>
-<a class="cta hot" id="cGo" ${goAttrs((CALC_CODES.includes(primary) ? primary : CALC_CODES[0]).code, nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]))}>${esc(nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]))} 복사하고 이 금액으로 사기</a>
+<a class="cta hot" id="cGo" ${goAttrs((CALC_CODES.includes(primary) ? primary : CALC_CODES[0]).code, nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]), 'pt-calc-go')}>${esc(nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]))} 복사하고 이 금액으로 사기</a>
 <p class="hint">${kdate(last.date)} 조건 기준 예상값입니다. 세일 상품은 코드가 빠질 수 있으니 장바구니에서 최종 확인하세요.</p>
 </div>
 </div>
@@ -291,7 +301,14 @@ const calcScript = `<script>
 const won = n => Math.round(n).toLocaleString('ko-KR') + '원';
 const PRODUCTS = (db.products || []).filter(p => p.price > 0);
 const dRate = daeranRate ?? TH;
-const affTo = u => SITE.affiliate.replace(/ued=.*$/, 'ued=' + encodeURIComponent(u));
+// 상품 행 링크: clickref=pt-<페이지>-row, clickref2=상품 슬러그(impact-whey-90 식). 이름 사전에 없는 제품은 URL 의 상품 번호를 씁니다.
+const PROD_SLUG = { '임팩트웨이 프로틴': 'impact-whey', '임팩트웨이 아이솔레이트': 'impact-isolate', '클리어웨이 프로틴': 'clear-whey', '임팩트 크레아틴': 'creatine' };
+const prodSlug = p => {
+  const base = PROD_SLUG[p.name] || (String(p.url || '').match(/\/(\d{6,})\/?$/) || [])[1] || 'item';
+  const size = String(p.size || '').replace(/\(.*\)/, '').replace(/(\d)\.(\d)/g, '$1-$2').replace(/[^0-9a-zA-Z-]+/g, '').replace(/^-+|-+$/g, '').toLowerCase();
+  return size ? `${base}-${size}` : base;
+};
+const affTo = (u, p) => mpLink('pt-PAGE-row', u, p ? prodSlug(p) : undefined);
 // 대안 비교 페이지 데이터. altMp = 마이프로틴 쪽 기준 제품(첫 번째)의 대란가 1kg당 가격
 const ALT = fs.existsSync(path.join(ROOT, 'data/alternatives.json')) ? readJson('data/alternatives.json') : null;
 
@@ -313,7 +330,7 @@ const priceRows = list => `<table class="pt">
 <thead><tr><th>제품</th><th class="n">표시가</th><th class="n">평소<br><small>코드 ${last.base}%</small></th><th class="n">대란<br><small>코드 ${dRate}%</small></th><th class="n">차이</th></tr></thead>
 <tbody>${list.map(p => {
   const a = p.price * (1 - last.base / 100), b = p.price * (1 - dRate / 100);
-  return `<tr><td><a href="${esc(affTo(p.url))}" target="_blank" rel="sponsored nofollow noopener"${primary ? ` data-copy="${b64(primary.code)}" data-label="${esc(nameOf(primary))}"` : ''}>${esc(p.name)} <b>${esc(p.size)}</b></a>${p.note ? `<small>${esc(p.note)}</small>` : ''}</td><td class="n muted">${won(p.price)}</td><td class="n">${won(a)}</td><td class="n hot">${won(b)}</td><td class="n">-${won(a - b)}</td></tr>`;
+  return `<tr><td><a href="${esc(affTo(p.url, p))}" target="_blank" rel="sponsored nofollow noopener"${primary ? ` data-copy="${b64(primary.code)}" data-label="${esc(nameOf(primary))}"` : ''}>${esc(p.name)} <b>${esc(p.size)}</b></a>${p.note ? `<small>${esc(p.note)}</small>` : ''}</td><td class="n muted">${won(p.price)}</td><td class="n">${won(a)}</td><td class="n hot">${won(b)}</td><td class="n">-${won(a - b)}</td></tr>`;
 }).join('')}</tbody>
 </table>`;
 
@@ -959,8 +976,8 @@ const otherCodesBox = otherCount ? `<details class="more"><summary>다른 코드
 
 const heroCta = primary ? `<a class="cta hot heroBtn" ${goAttrs(primary.code, nameOf(primary))}>${esc(nameOf(primary))} 복사하고 사러 가기</a>
 <p class="hint">${primary.until ? `<b>${kdate(primary.until)} ${(primary.untilTime || '18:59').replace(':', '시 ')}분 마감.</b> ` : ''}누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>`
-  : `<a class="cta heroBtn" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener">마이프로틴에서 할인받기</a>`;
-const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(primary))}><b>${esc(nameOf(primary))}</b> 복사하고 사러 가기 →</a>` : '';
+  : `<a class="cta heroBtn" href="${esc(mpLink('pt-PAGE-hero'))}" target="_blank" rel="sponsored nofollow noopener">마이프로틴에서 할인받기</a>`;
+const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(primary), 'pt-PAGE-sticky')}><b>${esc(nameOf(primary))}</b> 복사하고 사러 가기 →</a>` : '';
 
 // 숨은 할인 한 줄 요약
 // 금액 할인은 라벨 끝의 같은 금액('… 5천원')을 빼서 두 번 나오지 않게 합니다
@@ -1037,7 +1054,7 @@ const HEADER_LINE = SITE.headerLine || SITE.tagline || '';
 const KEY_PRODUCTS = PRODUCTS.filter(p => /임팩트웨이/.test(p.name) && !/^250g/.test(p.size));
 const ratePriceRows = (list, rate, label) => `<table class="pt">
 <thead><tr><th>제품</th><th class="n">표시가</th><th class="n">${label}<br><small>코드 ${rate}%</small></th></tr></thead>
-<tbody>${list.map(p => `<tr><td><a href="${esc(affTo(p.url))}" target="_blank" rel="sponsored nofollow noopener"${primary ? ` data-copy="${b64(primary.code)}" data-label="${esc(nameOf(primary))}"` : ''}>${esc(p.name)} <b>${esc(p.size)}</b></a></td><td class="n muted">${won(p.price)}</td><td class="n hot">${won(p.price * (1 - rate / 100))}</td></tr>`).join('')}</tbody>
+<tbody>${list.map(p => `<tr><td><a href="${esc(affTo(p.url, p))}" target="_blank" rel="sponsored nofollow noopener"${primary ? ` data-copy="${b64(primary.code)}" data-label="${esc(nameOf(primary))}"` : ''}>${esc(p.name)} <b>${esc(p.size)}</b></a></td><td class="n muted">${won(p.price)}</td><td class="n hot">${won(p.price * (1 - rate / 100))}</td></tr>`).join('')}</tbody>
 </table>`;
 function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.date, priority = 0.8, changefreq = 'weekly', current, extraScript = '', keywords = [], noindex = false, pageType = 'WebPage', utilHtml = null, stickyHtml = sticky }) {
   const url = urlOf(file);
@@ -1060,7 +1077,7 @@ function page({ file, title, desc, heroHtml, restHtml, ld = [], lastmod = last.d
   const subLinks = sec === 'ih'
     ? navLink('iherb.html', '할인코드') + (IH_MONTH_CUR ? navLink(`iherb-${IH_MONTH_CUR}.html`, `${M(IH_MONTH_CUR)}월 코드`) : '') + (hasGuides ? navLink('iherb-jikgu.html', '직구 방법') + navLink('iherb-best.html', '추천템') + navLink('iherb-probiotics.html', '유산균') + navLink('iherb-omega3.html', '오메가3') + navLink('iherb-magnesium.html', '마그네슘') + navLink('iherb-blackfriday.html', '블프') : '')
     : navLink('', '오늘 할인율') + navLink('code.html', '할인코드') + (calcWidget ? navLink('calc.html', '계산기') : '') + navLink('jikgu.html', '직구 방법') + navLink(monthFile(curYm), `${M(curYm)}월 대란`) + (EV_HOME ? navLink(EV_HOME.page, `${+EV_HOME.date.slice(8, 10)}일 대란`) : '') + (fs.existsSync(path.join(ROOT, 'data/taste.json')) ? navLink('taste.html', '맛 추천') + (readJson('data/taste.json').reviews?.length ? navLink('taste-rank.html', '맛 순위') : '') : '') + (PRODUCTS.length ? navLink('wpc-wpi.html', '<span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span>') : '') + (altMp ? navLink('alternatives.html', '가성비 비교') : '');
-  const html = `<!doctype html>
+  let html = `<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -1148,6 +1165,9 @@ ${SITE.naverAnalytics ? `<script src="https://wcs.pstatic.net/wcslog.js"></scrip
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${esc(SITE.ga4)}');</script>
 ` : ''}</body>
 </html>`;
+  // 아윈 clickref 의 PAGE 자리를 페이지 이름으로 (index→home, daeran-2026-11→daeran-2611, daeran-2026-11-11→daeran-261111)
+  const slug = file === 'index.html' ? 'home' : file.replace(/\.html$/, '').replace(/^daeran-20(\d\d)-(\d\d)(?:-(\d\d))?$/, (_, y, m, d) => `daeran-${y}${m}${d || ''}`);
+  html = html.replace(/clickref=pt-PAGE-/g, `clickref=pt-${slug}-`);
   write(file, html);
   if (!noindex) built.push({ file, url, title, desc, lastmod, priority, changefreq });
 }
@@ -1316,7 +1336,7 @@ ${calcWidget ? '<a class="cta ghost" href="./calc.html">내 장바구니 최종 
 ${db.referral ? `<section>
 <h2>마이프로틴 추천인 코드</h2>
 <p class="lede">처음 가입하는 분만 해당합니다. 추천인 코드 <b>${esc(db.referral)}</b>를 넣으면 첫 구매 12만원 이상일 때 ${esc(REF_BENEFIT)}을 받고, 할인코드와는 별개라 같이 쓸 수 있습니다. 이미 가입한 계정에는 적용되지 않습니다.</p>
-<a class="cta" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(db.referral)}">${esc(db.referral)} 복사하고 가입하기</a>
+<a class="cta" href="${esc(mpLink('pt-PAGE-join'))}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(db.referral)}">${esc(db.referral)} 복사하고 가입하기</a>
 <a class="cta ghost" href="./referral.html">추천인 코드 입력 방법과 혜택 자세히</a>
 </section>` : ''}
 
@@ -1821,7 +1841,7 @@ if (ALT && altMp) {
   const altCount = others.length;
 
   const row = r => `<tr class="${r.mp ? 'mp' : ''}${r === best ? ' best' : ''}${r.pg ? '' : ' np'}">
-<td class="p"><a href="${esc(r.mp ? affTo(r.url) : shopUrl(r))}" target="_blank" rel="sponsored nofollow noopener"${r.mp && primary ? ` data-copy="${b64(primary.code)}" data-label="${esc(nameOf(primary))}"` : ''}><small class="br">${esc(r.brand)}${r.type ? ` · ${esc(r.type)}` : ''}${r === best ? '<i class="tag">가장 쌈</i>' : ''}</small>${esc(r.product)}</a><small class="sh">${esc(r.shop)}${r.tag ? ` · ${esc(r.tag)}` : ''}${r.checked ? ` · ${dot(r.checked)} 확인` : ''}${r.extra ? `<br>${esc(r.extra)}` : ''}</small></td>
+<td class="p"><a href="${esc(r.mp ? affTo(r.url, altMp.p) : shopUrl(r))}" target="_blank" rel="sponsored nofollow noopener"${r.mp && primary ? ` data-copy="${b64(primary.code)}" data-label="${esc(nameOf(primary))}"` : ''}><small class="br">${esc(r.brand)}${r.type ? ` · ${esc(r.type)}` : ''}${r === best ? '<i class="tag">가장 쌈</i>' : ''}</small>${esc(r.product)}</a><small class="sh">${esc(r.shop)}${r.tag ? ` · ${esc(r.tag)}` : ''}${r.checked ? ` · ${dot(r.checked)} 확인` : ''}${r.extra ? `<br>${esc(r.extra)}` : ''}</small></td>
 <td class="n">${r.price ? won(r.price) : '<span class="muted">확인 중</span>'}</td>
 <td class="n">${r.kg ? won(r.kg) : '-'}</td>
 <td class="n hot">${r.pg ? won(r.pg) : '-'}</td></tr>`;
@@ -2922,11 +2942,11 @@ for (const ev of EVENT_PAGES) {
 <p class="lede">${applyOpen
     ? `마이프로틴이 ${kdate(ev.date)} ${esc(ev.label)} 전에 <b>${esc(sg.label || '사전 신청')}</b>을 받고 있습니다. ${sg.applyUntil ? `<b>${evTime(sg.applyUntil, sg.applyUntilTime)}까지</b> 신청하면 ` : '신청해 두면 '}${sg.useFrom ? `${evTime(sg.useFrom, sg.useFromTime)}부터${sg.useTo ? ` ${evTime(sg.useTo, sg.useToTime)}까지` : ''} 구매할 때 ` : '행사 때 '}자동으로 빠집니다. 할인코드와 별개라 둘 다 챙길 수 있습니다.`
     : over ? `${esc(sg.label || '사전 신청')} 신청과 사용 기간이 모두 끝났습니다.` : `${esc(sg.label || '사전 신청')} 신청은 ${sg.applyUntil ? `${evTime(sg.applyUntil, sg.applyUntilTime)}에 ` : ''}마감됐습니다.${sg.useFrom ? ` 신청해 둔 분은 ${evTime(sg.useFrom, sg.useFromTime)}부터${sg.useTo ? ` ${evTime(sg.useTo, sg.useToTime)}까지` : ''} 구매할 때 자동으로 적용됩니다.` : ''}`}</p>
-${applyOpen ? `<a class="cta hot" href="${esc(sg.url)}" target="_blank" rel="sponsored nofollow noopener">${esc(sg.label || '사전 신청')} 미리 신청하기</a>` : ''}
+${applyOpen ? `<a class="cta hot" href="${esc(sgUrl(sg.url))}" target="_blank" rel="sponsored nofollow noopener">${esc(sg.label || '사전 신청')} 미리 신청하기</a>` : ''}
 ${sg.how ? `<p class="lede">${esc(sg.how)}</p>` : ''}
 </section>` : '';
   const timeline = [
-    sg && sg.applyFrom && sg.applyUntil ? [`${kdate(sg.applyFrom)} ~ ${evTime(sg.applyUntil, sg.applyUntilTime)}`, `${esc(sg.label || '사전 신청')} 신청 기간`, sg.url && applyOpen ? `<a href="${esc(sg.url)}" target="_blank" rel="sponsored nofollow noopener">신청하기</a>` : '이메일 등록, 1인 1회'] : null,
+    sg && sg.applyFrom && sg.applyUntil ? [`${kdate(sg.applyFrom)} ~ ${evTime(sg.applyUntil, sg.applyUntilTime)}`, `${esc(sg.label || '사전 신청')} 신청 기간`, sg.url && applyOpen ? `<a href="${esc(sgUrl(sg.url))}" target="_blank" rel="sponsored nofollow noopener">신청하기</a>` : '이메일 등록, 1인 1회'] : null,
     sg && sg.useFrom ? [evTime(sg.useFrom, sg.useFromTime), `${esc(sg.label || '사전 신청')} 사용 시작`, '신청한 계정으로 구매하면 자동 적용'] : null,
     ev.alert ? [esc(ev.alert), `${SITE.brand} 대란 알림`, '단톡방·유튜브로 시작을 알립니다'] : null,
     ...(openAt && ev.openDate && ev.openDate !== ev.date ? [[openAt, '할인코드 공개', `히든코드와 최대할인조합은 ${SITE.brand}가 가장 빠르게 공개`]] : []),
@@ -2969,7 +2989,7 @@ ${sg.how ? `<p class="lede">${esc(sg.how)}</p>` : ''}
 <p class="lede answer">${over
     ? `${y}년 마이프로틴 ${m}월 대란은 <b>${kdate(ev.date)} ${esc(ev.label)}</b>이었습니다.${evMax != null ? ` 할인코드는 최고 ${evMax}%였습니다.` : ''} 날짜별 기록은 ${m}월 대란 페이지에 있습니다.`
     : `${y}년 마이프로틴 ${m}월 대란 날짜는 <b>${kdate(ev.date)} ${wd(ev.date)} ${esc(ev.label)}</b>로 확정됐습니다.${sg && applyOpen ? ` 먼저 <b>${esc(sg.label)}</b>을 ${sg.applyUntil ? `${kdate(sg.applyUntil)}까지 ` : ''}미리 신청해 두고,` : ''}${ev.alert ? ` <b>${esc(ev.alert)}</b> ${SITE.brand} 알림을 받으세요.` : ''}${openAt ? ` 할인코드는 <b>${openAt}</b>에 공개되고, 히든코드와 최대할인조합은 ${SITE.brand}가 가장 빠르게 공개할 예정입니다.` : ''}`}</p>
-${sg && applyOpen ? `<a class="cta hot heroBtn" href="${esc(sg.url)}" target="_blank" rel="sponsored nofollow noopener">${esc(sg.label)} 미리 신청하기</a>` : live ? heroCta : ''}
+${sg && applyOpen ? `<a class="cta hot heroBtn" href="${esc(sgUrl(sg.url))}" target="_blank" rel="sponsored nofollow noopener">${esc(sg.label)} 미리 신청하기</a>` : live ? heroCta : ''}
 <a class="cta ghost" href="${esc(SITE.kakao)}">대란 알림 단톡방 들어가기</a>
 </div>
 <div class="heroSide">
@@ -2997,7 +3017,7 @@ ${sgRow}
 <section class="full">
 <h2>대란 때 사는 방법</h2>
 <ol class="steps">
-  ${sg ? `<li><b>${esc(sg.label)} 미리 신청</b> ${sg.applyUntil ? `${evTime(sg.applyUntil, sg.applyUntilTime)}까지. ` : ''}로그인한 계정의 이메일로 신청해야 적용됩니다.${applyOpen ? ` <a href="${esc(sg.url)}" target="_blank" rel="sponsored nofollow noopener">신청 페이지 열기</a>` : ''}</li>` : ''}
+  ${sg ? `<li><b>${esc(sg.label)} 미리 신청</b> ${sg.applyUntil ? `${evTime(sg.applyUntil, sg.applyUntilTime)}까지. ` : ''}로그인한 계정의 이메일로 신청해야 적용됩니다.${applyOpen ? ` <a href="${esc(sgUrl(sg.url))}" target="_blank" rel="sponsored nofollow noopener">신청 페이지 열기</a>` : ''}</li>` : ''}
   <li><b>장바구니 미리 담기</b> 사고 싶은 제품과 맛을 미리 담아 둡니다. 인기 맛은 대란 초반에 품절되기도 합니다.${TASTE ? ' <a href="./taste.html">맛 추천</a>을 참고하세요.' : ''}</li>
   <li><b>${ev.alert ? `${esc(ev.alert)} 알림 확인` : '대란 시작 확인'}</b> ${ev.alert ? `${SITE.brand} 단톡방·유튜브로 알림이 갑니다. ` : ''}홈 화면이 "지금 대란입니다"로 바뀌는지 봅니다.</li>
   <li><b>히든코드 복사해서 적용</b> ${openAt ? `${openAt} 공개. ` : ''}${SITE.brand} 홈의 복사 버튼을 누르면 그날 코드가 들어갑니다. 장바구니 할인코드 칸에 붙여넣고 적용을 누르세요.</li>
@@ -3080,7 +3100,7 @@ ${heroCta}
 <section class="full">
 <h2>마이프로틴 직구 순서</h2>
 <ol class="steps">
-  ${step('회원가입', `<a href="${esc(SITE.affiliate.replace(/clickref=[^&]*/, 'clickref=howto'))}" target="_blank" rel="sponsored nofollow noopener">여기</a>를 눌러 가입합니다. 만 18세 이상만 가입할 수 있습니다.${db.referral ? ` 이 링크로 열면 추천인 코드 ${esc(db.referral)}가 들어간 가입 화면이 열리고, 안 들어가 있으면 '추천 코드' 칸에 직접 넣으십시오. 첫 구매가 12만원 이상이면 추가 할인이나 사은품을 받습니다. <a href="./referral.html">추천인 코드 보기</a>` : ''}`, shot('mp-referral-field.webp', '마이프로틴 회원가입 화면의 추천 코드 칸', '회원가입 화면 아래쪽의 \'추천 코드\' 칸.', 'tall'))}
+  ${step('회원가입', `<a href="${esc(mpLink('howto'))}" target="_blank" rel="sponsored nofollow noopener">여기</a>를 눌러 가입합니다. 만 18세 이상만 가입할 수 있습니다.${db.referral ? ` 이 링크로 열면 추천인 코드 ${esc(db.referral)}가 들어간 가입 화면이 열리고, 안 들어가 있으면 '추천 코드' 칸에 직접 넣으십시오. 첫 구매가 12만원 이상이면 추가 할인이나 사은품을 받습니다. <a href="./referral.html">추천인 코드 보기</a>` : ''}`, shot('mp-referral-field.webp', '마이프로틴 회원가입 화면의 추천 코드 칸', '회원가입 화면 아래쪽의 \'추천 코드\' 칸.', 'tall'))}
   ${step('장바구니 담기', `${free} 미만이면 배송비가 붙습니다. 할인까지 뺀 금액이 ${SHOP.customsUsd}달러(${limitKrw})를 넘지 않게 맞추면 관세가 없습니다. <a href="./calc.html">계산기로 최종 금액 보기</a>`, shot('mp-customs-modal.webp', '마이프로틴 장바구니의 세관 통관 안내', '장바구니 위 \'세관 통관에 대한 정보\'를 누르면 나오는 안내: 건강보조제품 6개, 150달러.', 'mid'))}
   ${step('할인코드 넣기', `장바구니의 할인코드 칸에 코드를 넣습니다. 코드는 한 번에 하나만 들어가고, 오늘은 ${esc(codeTxt)}가 가장 높습니다. <a href="./code.html">오늘 할인코드 보기</a>`, shot('mp-cart-hidden-code.webp', '마이프로틴 장바구니에 히든코드를 적용한 화면', '11월 9일 90회분 1개에 히든코드를 넣은 장바구니: 37% 할인, 합계 137,317원(앱 쇼핑지원금 5,000원 포함). 코드 이름은 가렸습니다.') + shot('mp-cart-official-code.webp', '마이프로틴 장바구니에 공식 코드를 적용한 화면', '같은 장바구니에 공식 코드(SUPER35, 35%)를 넣으면 141,835원. 히든코드 쪽이 4,518원 쌉니다.'))}
   ${step('배송지와 개인통관고유부호', '받는 사람 이름과 전화번호는 개인통관고유부호에 등록된 것과 같게 적습니다. 부호는 관세청 유니패스에서 바로 발급됩니다.')}
@@ -3236,7 +3256,7 @@ if (db.referral) {
 <p class="updated">${dot(last.date)} 기준 · 신규 가입 전용</p>
 <h1>마이프로틴 추천인 코드 <span class="hl">${esc(db.referral)}</span></h1>
 <p class="lede answer">처음 가입할 때 추천인 코드 <b>${esc(db.referral)}</b>를 넣으면 ${esc(REF_BENEFIT)}을 받습니다. 할인코드와는 별개라 가입 뒤 장바구니에서 ${pName || '할인코드'} ${last.base}%를 따로 넣으면 둘 다 적용됩니다. 이미 가입한 계정에는 넣을 수 없습니다.</p>
-<a class="cta hot" href="${esc(SITE.affiliate)}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(db.referral)}">${esc(db.referral)} 복사하고 가입하기</a>
+<a class="cta hot" href="${esc(mpLink('pt-PAGE-join'))}" target="_blank" rel="sponsored nofollow noopener" data-copy="${b64(db.referral)}">${esc(db.referral)} 복사하고 가입하기</a>
 <p class="hint">누르면 코드가 복사되고 추천인 코드가 적용된 가입 페이지가 열립니다.</p>
 </div>
 <div class="heroSide">
