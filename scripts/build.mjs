@@ -593,6 +593,17 @@ p{margin:0 0 12px}
 .formula{font-size:14px;color:var(--muted);margin:0 0 6px}
 .formula b{color:var(--brand);font-weight:700}
 .hint{font-size:13px;color:var(--muted);text-align:center;margin:0 0 8px;line-height:1.55}
+.endGauge{margin:14px 0 0;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-sm);text-align:left}
+.egT{display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.egDot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.egBar{height:10px;border-radius:999px;background:var(--line);overflow:hidden}
+.egBar i{display:block;height:100%;border-radius:inherit;background:var(--accent);transition:width 1s linear}
+.egL{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:8px 0 0;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.egL b{color:var(--ink);font-size:16px;font-weight:800}
+.egN{margin:8px 0 0;font-size:12px;line-height:1.55;color:var(--muted)}
+.endGauge.over .egDot{background:var(--muted)}
+@media (prefers-reduced-motion:no-preference){.egDot{animation:egPulse 1.6s ease-in-out infinite}}
+@keyframes egPulse{50%{opacity:.25}}
 svg.gauge,svg.trend{width:100%;height:auto;display:block;margin:6px 0 20px}
 .g-tick{font-size:11px;fill:var(--muted)}
 .g-note{font-size:11px;font-weight:700}
@@ -998,8 +1009,21 @@ const codeList = `<ul class="codes">${otherCodes.map(codeRow).join('')}${db.refe
 const otherCount = otherCodes.length + (db.referral ? 1 : 0);
 const otherCodesBox = otherCount ? `<details class="more"><summary>다른 코드 보기 (${otherCount}개)</summary>${codeList}</details>` : '';
 
+// announced 에 expectEnd 가 있으면 대란 중 메인 버튼 아래에 마감 예상 시각과 실시간으로 줄어드는 게이지를 붙입니다 (시각은 한국 시간 "YYYY-MM-DD HH:MM")
+const endEv = (db.announced || []).find(a => a.expectEnd && nowStamp < a.expectEnd && (!a.expectFrom || nowStamp >= a.expectFrom));
+const kstMs = s => Date.parse(`${s.replace(' ', 'T')}:00+09:00`);
+const endGauge = endEv && isDaeran ? (() => {
+  const from = kstMs(endEv.expectFrom || `${nowStamp.slice(0, 10)} 00:00`), to = kstMs(endEv.expectEnd), left = Math.max(0, to - Date.now());
+  const w = Math.max(0, Math.min(100, left / (to - from) * 100));
+  return `<div class="endGauge" data-from="${from}" data-to="${to}">
+<p class="egT"><span class="egDot" aria-hidden="true"></span><span class="egTt">${esc(endEv.expectTitle || '마감 예상')}</span></p>
+<div class="egBar" role="progressbar" aria-label="마감 예상까지 남은 시간" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(w)}"><i style="width:${w.toFixed(1)}%"></i></div>
+<p class="egL"><span>남은 시간 <b class="egLeft">${Math.floor(left / 3600e3)}시간 ${String(Math.floor(left % 3600e3 / 60e3)).padStart(2, '0')}분</b></span>${endEv.expectWhen ? `<span>${esc(endEv.expectWhen)}</span>` : ''}</p>
+${endEv.expectNote ? `<p class="egN">${esc(endEv.expectNote)}</p>` : ''}
+</div>`;
+})() : '';
 const heroCta = primary ? `<a class="cta hot heroBtn" ${goAttrs(primary.code, nameOf(primary))}>${esc(nameOf(primary))} 복사하고 사러 가기</a>
-<p class="hint">${primary.untilNote ? `<b>${esc(primary.untilNote)}</b> ` : primary.until ? `<b>${kdate(primary.until)} ${(primary.untilTime || '18:59').replace(':', '시 ')}분 마감.</b> ` : ''}누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>`
+<p class="hint">${primary.untilNote ? `<b>${esc(primary.untilNote)}</b> ` : primary.until ? `<b>${kdate(primary.until)} ${(primary.untilTime || '18:59').replace(':', '시 ')}분 마감.</b> ` : ''}누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>${endGauge}`
   : `<a class="cta heroBtn" href="${esc(mpLink('pt-PAGE-hero'))}" target="_blank" rel="sponsored nofollow noopener">마이프로틴에서 할인받기</a>`;
 const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(primary), 'pt-PAGE-sticky')}><b>${esc(nameOf(primary))}</b> 복사하고 사러 가기 →</a>` : '';
 
@@ -1173,6 +1197,13 @@ ${stickyHtml}
   function old(v){var a=document.createElement('textarea');a.value=v;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
   function copy(v){try{if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(v).catch(function(){old(v)})}else{old(v)}}catch(e){old(v)}}
   function dec(s){try{return atob(s)}catch(e){return s}}
+  var eg=document.querySelector('.endGauge');
+  if(eg){var gf=+eg.getAttribute('data-from'),gt=+eg.getAttribute('data-to'),gb=eg.querySelector('.egBar'),gi=gb.querySelector('i'),gl=eg.querySelector('.egLeft'),giv;
+    var p2=function(n){return (n<10?'0':'')+n};
+    var gtick=function(){var l=gt-Date.now();if(l<=0){clearInterval(giv);eg.classList.add('over');gi.style.width='0';gl.textContent='예상 시각 지남';eg.querySelector('.egTt').textContent='예상 마감 시각이 지났습니다. 코드가 아직 되는지 장바구니에서 확인하세요';return}
+      var w=Math.max(0,Math.min(100,l/(gt-gf)*100));gi.style.width=w.toFixed(2)+'%';gb.setAttribute('aria-valuenow',Math.round(w));
+      var s=Math.floor(l/1000);gl.textContent=Math.floor(s/3600)+'시간 '+p2(Math.floor(s%3600/60))+'분 '+p2(s%60)+'초'};
+    gtick();giv=setInterval(gtick,1000)}
   var cur=document.querySelector('.topNav a[aria-current]');if(cur&&cur.scrollIntoView){try{cur.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}}
   var st=document.querySelector('.sticky'),hb=document.querySelector('.heroBtn');
   if(st&&hb&&'IntersectionObserver' in window){new IntersectionObserver(function(es){st.classList.toggle('hide',es[0].isIntersecting)},{threshold:.4}).observe(hb)}
