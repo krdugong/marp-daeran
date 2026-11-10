@@ -150,7 +150,7 @@
     {
       "label": "마프대란알리미 히든코드",
       "code": "HORSEKING",
-      "rate": 39,
+      "rate": 41,
       "note": "공식 코드보다 높은 전용 코드. 복사하면 자동으로 들어갑니다",
       "primary": true,
       "secret": true
