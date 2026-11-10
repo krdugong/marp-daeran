@@ -257,7 +257,7 @@ ${last.deals.length ? `<fieldset><legend class="f">숨은 할인 조건</legend>
   <table><tbody id="cLines"></tbody></table>
   <ul class="tips" id="cTips"></ul>
 </div>
-<a class="cta hot" id="cGo" ${goAttrs((CALC_CODES.includes(primary) ? primary : CALC_CODES[0]).code, nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]), 'pt-calc-go')}>${esc(nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]))} 복사하고 이 금액으로 사기</a>
+<a class="cta hot" id="cGo" ${goAttrs((CALC_CODES.includes(primary) ? primary : CALC_CODES[0]).code, nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]), 'pt-PAGE-go')}>${esc(nameOf(CALC_CODES.includes(primary) ? primary : CALC_CODES[0]))} 복사하고 이 금액으로 사기</a>
 <p class="hint">${kdate(last.date)} 조건 기준 예상값입니다. 세일 상품은 코드가 빠질 수 있으니 장바구니에서 최종 확인하세요.</p>
 </div>
 </div>
@@ -2175,7 +2175,7 @@ ${[...(IH_MONTH_CUR ? [[`iherb-${IH_MONTH_CUR}.html`, `아이허브 ${M(IH_MONTH
     const rvHtml = RV.length ? `<section class="full">
 <h2>아이허브 ${esc(g.cat)} 후기</h2>
 <p class="lede">아이허브 한국어 리뷰, 디시, 네이버 블로그에서 ${RV.length}개를 골라 요약했습니다. 긍정 ${rvCnt('긍정')} · 중립 ${rvCnt('중립')} · 부정 ${rvCnt('부정')}. 협찬 글은 뺐습니다.</p>
-<ul class="ihRv">${[...RV].sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(r => `<li><span class="s ${r.sentiment === '긍정' ? 'pos' : r.sentiment === '부정' ? 'neg' : 'neu'}">${esc(r.sentiment)}</span><div><b>${esc(r.product)}</b> <span class="tp">${esc(r.topic || '')}</span><p>${esc(r.quote)}</p><small>${r.url ? `<a href="${esc(r.url)}" target="_blank" rel="noopener nofollow">${esc(r.source)}</a>` : esc(r.source)}${r.date ? ` · ${dot(r.date)}` : ''}</small></div></li>`).join('')}</ul>
+<ul class="ihRv">${[...RV].sort((a, b) => (b.date || '').localeCompare(a.date || '')).map(r => `<li><span class="s ${r.sentiment === '긍정' ? 'pos' : r.sentiment === '부정' ? 'neg' : 'neu'}">${esc(r.sentiment)}</span><div><b>${esc(r.product)}</b> <span class="tp">${esc(r.topic || '')}</span><p>${esc(r.quote)}</p><small>${r.url ? (/iherb\.com/.test(r.url) ? `<a href="${esc(ihLink(`${ref}-review`, r.url))}" ${aff}>${esc(r.source)}</a>` : `<a href="${esc(r.url)}" target="_blank" rel="noopener nofollow">${esc(r.source)}</a>`) : esc(r.source)}${r.date ? ` · ${dot(r.date)}` : ''}</small></div></li>`).join('')}</ul>
 <p class="hint">개인 후기라 효과는 사람마다 다릅니다.</p>
 </section>` : '';
     const autoFaq = cheap ? [
@@ -3115,7 +3115,7 @@ ${heroCta}
 <section class="full">
 <h2>마이프로틴 직구 순서</h2>
 <ol class="steps">
-  ${step('회원가입', `<a href="${esc(mpLink('howto'))}" target="_blank" rel="sponsored nofollow noopener">여기</a>를 눌러 가입합니다. 만 18세 이상만 가입할 수 있습니다.${db.referral ? ` 이 링크로 열면 추천인 코드 ${esc(db.referral)}가 들어간 가입 화면이 열리고, 안 들어가 있으면 '추천 코드' 칸에 직접 넣으십시오. 첫 구매가 12만원 이상이면 추가 할인이나 사은품을 받습니다. <a href="./referral.html">추천인 코드 보기</a>` : ''}`, shot('mp-referral-field.webp', '마이프로틴 회원가입 화면의 추천 코드 칸', '회원가입 화면 아래쪽의 \'추천 코드\' 칸.', 'tall'))}
+  ${step('회원가입', `<a href="${esc(mpLink('pt-PAGE-join'))}" target="_blank" rel="sponsored nofollow noopener">여기</a>를 눌러 가입합니다. 만 18세 이상만 가입할 수 있습니다.${db.referral ? ` 이 링크로 열면 추천인 코드 ${esc(db.referral)}가 들어간 가입 화면이 열리고, 안 들어가 있으면 '추천 코드' 칸에 직접 넣으십시오. 첫 구매가 12만원 이상이면 추가 할인이나 사은품을 받습니다. <a href="./referral.html">추천인 코드 보기</a>` : ''}`, shot('mp-referral-field.webp', '마이프로틴 회원가입 화면의 추천 코드 칸', '회원가입 화면 아래쪽의 \'추천 코드\' 칸.', 'tall'))}
   ${step('장바구니 담기', `${free} 미만이면 배송비가 붙습니다. 할인까지 뺀 금액이 ${SHOP.customsUsd}달러(${limitKrw})를 넘지 않게 맞추면 관세가 없습니다. <a href="./calc.html">계산기로 최종 금액 보기</a>`, shot('mp-customs-modal.webp', '마이프로틴 장바구니의 세관 통관 안내', '장바구니 위 \'세관 통관에 대한 정보\'를 누르면 나오는 안내: 건강보조제품 6개, 150달러.', 'mid'))}
   ${step('할인코드 넣기', `장바구니의 할인코드 칸에 코드를 넣습니다. 코드는 한 번에 하나만 들어가고, 오늘은 ${esc(codeTxt)}가 가장 높습니다. <a href="./code.html">오늘 할인코드 보기</a>`, shot('mp-cart-hidden-code.webp', '마이프로틴 장바구니에 히든코드를 적용한 화면', '11월 9일 90회분 1개에 히든코드를 넣은 장바구니: 37% 할인, 합계 137,317원(앱 쇼핑지원금 5,000원 포함). 코드 이름은 가렸습니다.') + shot('mp-cart-official-code.webp', '마이프로틴 장바구니에 공식 코드를 적용한 화면', '같은 장바구니에 공식 코드(SUPER35, 35%)를 넣으면 141,835원. 히든코드 쪽이 4,518원 쌉니다.'))}
   ${step('배송지와 개인통관고유부호', '받는 사람 이름과 전화번호는 개인통관고유부호에 등록된 것과 같게 적습니다. 부호는 관세청 유니패스에서 바로 발급됩니다.')}
