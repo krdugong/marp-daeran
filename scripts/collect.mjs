@@ -13,6 +13,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { collectVideos } from './videos.mjs';
 
 const SOURCE = {
   url: 'https://www.myprotein.co.kr/',
@@ -117,6 +118,7 @@ async function collectPrices(products, date) {
 // 수동 입력은 히든코드 할인율 그대로, 자동 수집은 공식 배너 코드 + hiddenCodeBonus 로 기록합니다.
 const db = JSON.parse(fs.readFileSync(FILE, 'utf8'));
 if (!manual) await collectPrices(db.products || [], today(db.codes));
+await collectVideos({ dry }); // 유튜브 최신 영상 (data/youtube.json)
 const bonus = Number(db.hiddenCodeBonus || 0);
 const got = manual ? null : await scrape();
 const official = got ? got.rate : null;

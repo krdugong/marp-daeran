@@ -87,7 +87,11 @@ const curYm = ymOf(last.date);
 
 // ── 대란: 매일 기록에서 계산 + 기록 시작 전 대란(history) ──
 const HISTORY = (db.history || []).map(h => ({ start: h.start, end: h.end || h.start, max: h.max ?? null, note: h.note || '', videos: h.videos || [], daeran: h.daeran !== false }));
-const allVideos = HISTORY.flatMap(h => h.videos).sort((a, b) => a.date.localeCompare(b.date));
+// 영상 = history 에 적은 영상 + data/youtube.json(자동 수집한 채널 최신 영상). 같은 영상은 history 쪽 정보를 씁니다
+// 자동 수집 날짜는 "1개월 전" 같은 표기로 계산한 대략값이라, history 에 적힌 가장 최근 영상보다 새 영상만 씁니다 (옛 영상이 엉뚱한 달에 붙지 않게)
+const HIST_LAST = HISTORY.flatMap(h => h.videos).reduce((m, v) => v.date > m ? v.date : m, '');
+const YT_AUTO = fs.existsSync(path.join(ROOT, 'data/youtube.json')) ? (readJson('data/youtube.json').videos || []).filter(v => v.date > HIST_LAST) : [];
+const allVideos = (() => { const seen = new Set(), out = []; for (const v of [...HISTORY.flatMap(h => h.videos), ...YT_AUTO]) if (v.id && !seen.has(v.id)) { seen.add(v.id); out.push(v); } return out.sort((a, b) => a.date.localeCompare(b.date)); })();
 
 const liveEvents = [];
 for (const d of day) {
@@ -949,9 +953,11 @@ table.cmp{font-size:15px}table.cmp thead th{font-size:15px;padding:12px 6px}tabl
 .hero .state{justify-self:start}
 .hero .sideStack{grid-column:2;grid-row:1 / span 6;align-self:start;margin-top:6px}
 .hero .sideStack .stats{margin:0 0 12px;padding:4px 22px}
+.sideStack .dealLine{margin:0 0 12px}
 .hero .sideStack .stats div{padding:16px 0}
 .hero .sideStack .stats dd{font-size:20px}
 .hero .sideStack details.more{margin:0}
+.hero .hint{text-align:left}
 .hero details.more{grid-column:2;margin:0;align-self:start}
 .hero .calc{grid-column:1 / -1;margin-top:12px}
 .hero .calc ~ details.more{grid-column:1 / -1}
@@ -1227,21 +1233,23 @@ page({
   ld: [faqLd(HOME_FAQ), ...(latestVideo && latestVideo.title && latestVideo.date ? [videoLd(latestVideo)] : [])],
   heroHtml: `
 <div class="hero">
-<span class="state ${isDaeran ? 'on' : soonDd != null ? 'soon' : 'off'}">${isDaeran ? '지금 대란입니다' : soonDd != null ? `${soonDd === 0 ? '오늘 대란 예정' : soonDd === 1 ? '내일 대란' : `D-${soonDd} 대란 확정`} · ${kdate(sureNext.date)} ${esc(sureNext.label)}` : '지금은 대란이 아닙니다'}</span>
+<span class="state ${isDaeran ? 'on' : soonDd != null ? 'soon' : 'off'}">${isDaeran ? (waitEv ? `대란 시작 · ${hmK(waitEv.time)} 공식 코드 공개` : '지금 대란입니다') : soonDd != null ? `${soonDd === 0 ? '오늘 대란 예정' : soonDd === 1 ? '내일 대란' : `D-${soonDd} 대란 확정`} · ${kdate(sureNext.date)} ${esc(sureNext.label)}` : '지금은 대란이 아닙니다'}</span>
 <h1>오늘 마이프로틴 ${pName || '할인코드'} <span class="hl">${last.base}%</span></h1>
-<p class="lede answer">${kdate(last.date)} 기준 ${isDaeran
-    ? `할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}. ${waitTxt || '지금 사면 됩니다.'}`
-    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
+<p class="lede answer">${isDaeran && waitEv
+    ? `${official && extraOf(primary) ? `공식 코드 ${official.code}(${official.rate}%)보다 ${extraOf(primary)}%p 높은 ${esc(primary.label || '할인코드')}입니다. ` : ''}지금 사도 되지만, 급하지 않으면 <b>${waitWhen}</b>까지 기다리세요. ${esc(waitEv.waitNote)}`
+    : `${kdate(last.date)} 기준 ${isDaeran
+    ? `할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}. 지금 사면 됩니다.`
+    : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${extraOf(primary)}%p 높습니다.` : ''}`}</p>
 ${!isDaeran && sureNext ? `<p class="lede next">${soonDd != null
     ? `<b>${soonDd === 0 ? '오늘' : soonDd === 1 ? '내일' : `${soonDd}일 뒤`} ${kdate(sureNext.date)} ${esc(sureNext.label)} 대란</b>이 확정입니다. 급하지 않으면 ${soonDd <= 1 ? '하루' : '며칠'} 기다리는 쪽이 쌉니다.${sureOpen ? ` 코드는 ${sureOpen} 공개.` : ''}`
     : `다음 대란은 <b>${kdate(sureNext.date)} ${esc(sureNext.label)}</b>입니다. 전날 저녁부터 할인율이 바뀌니 장바구니를 미리 채워 두세요.`}${sureNext.page ? ` <a href="./${sureNext.page}">일정과 방법 보기 →</a>` : ''}</p>` : !isDaeran && announced ? `<p class="lede next">마이프로틴 공식 사이트에 ${esc(announced.label)} 예고(${kdate(announced.date)})가 올라와 있습니다.</p>` : ''}
 ${heroCta}
-${dealLine}
 <div class="sideStack">
+${dealLine}
 <dl class="stats">
-  <div><dt>마지막 대란</dt><dd>${lastEvent ? kdate(lastEvent.end) : '기록 없음'}</dd></div>
+  <div><dt>${isDaeran ? '이번 대란' : '마지막 대란'}</dt><dd>${lastEvent ? (isDaeran ? `${kdate(lastEvent.start)} 시작` : kdate(lastEvent.end)) : '기록 없음'}</dd></div>
   <div><dt>평균 주기</dt><dd>${cycle ? `약 ${cycle}일` : '집계 중'}</dd></div>
-  <div><dt>${sureNext ? '다음 대란' : '다음 예상 대란'}</dt><dd>${isDaeran ? '진행 중' : nextGuess ? `${kdate(nextGuess)}${GUESS_TAG}` : '-'}</dd></div>${announced && !sureNext ? `
+  <div><dt>${isDaeran ? (waitEv ? '공식 코드 공개' : '지금') : sureNext ? '다음 대란' : '다음 예상 대란'}</dt><dd>${isDaeran ? (waitEv ? waitWhen : '대란 진행 중') : nextGuess ? `${kdate(nextGuess)}${GUESS_TAG}` : '-'}</dd></div>${announced && !sureNext ? `
   <div><dt>예고된 행사</dt><dd>${kdate(announced.date)}<small class="aiTag">${esc(announced.label)} · 마이프로틴 예고</small></dd></div>` : ''}
 </dl>
 ${otherCodesBox}
