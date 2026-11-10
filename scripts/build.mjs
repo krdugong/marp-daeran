@@ -197,6 +197,10 @@ const kstNow = new Date(Date.now() + 9 * 3600e3).toISOString();
 const nowStamp = kstNow.slice(0, 10) + ' ' + kstNow.slice(11, 16);
 const nowDay = (() => { const n = new Date(Date.now() + 9 * 3600e3); const d = n.toISOString().slice(0, 10), hm = n.toISOString().slice(11, 16); const ext = (db.codes || []).some(c => c.until === d && c.untilTime && hm < c.untilTime); if (n.getUTCHours() >= ROLLOVER_HOUR && !ext) n.setUTCDate(n.getUTCDate() + 1); return n.toISOString().slice(0, 10); })();
 const codeDay = nowDay > last.date ? nowDay : last.date;
+// announced 에 waitNote 가 있으면 코드 공개 시각(openDate + time) 전까지는 대란이어도 "지금 사도 되지만 그때까지 기다려 보세요"로 안내합니다
+const waitEv = (db.announced || []).find(a => a.waitNote && a.time && nowStamp < `${a.openDate || a.date} ${a.time}`);
+const waitWhen = waitEv ? `${(waitEv.openDate || waitEv.date) === nowStamp.slice(0, 10) ? '오늘' : kdate(waitEv.openDate || waitEv.date)} ${hmK(waitEv.time)}` : '';
+const waitTxt = waitEv ? `지금 사도 되지만 ${waitWhen}까지 기다려 보세요. ${esc(waitEv.waitNote)}` : '';
 const endStamp = c => `${c.until} ${c.untilTime || String(ROLLOVER_HOUR).padStart(2, '0') + ':00'}`;
 const CODES = (db.codes || []).filter(c => !c.until || (c.until >= codeDay && nowStamp < endStamp(c))).map(c => ({ ...c }));
 // 자동 수집이 배너에서 공식 코드 이름까지 읽었으면 공식 코드를 그 이름과 할인율로 채웁니다 (목록의 공식 코드와 이름이 다르면 배너 쪽을 씀)
@@ -488,8 +492,9 @@ function lowGauge() {
   const tag = isDaeran ? '대란 중' : diff >= 1 ? '평소보다 좋음' : diff <= -1 ? '평소보다 낮음' : '평소 수준';
   const when = sureNext ? `${+sureNext.date.slice(8, 10)}일 대란` : '다음 대란';
   const left = sureNext ? daysBetween(last.date, sureNext.date) : null;
-  const head = buy ? '지금 사세요' : '기다리세요';
-  const sub = isDaeran ? `지금이 대란입니다. ${josa(name, '이', '가')} 정가보다 <b>${won(reg - now)}</b> 쌉니다.`
+  const head = buy && waitEv ? `${waitWhen}까지 기다려 보세요` : buy ? '지금 사세요' : '기다리세요';
+  const sub = isDaeran && waitEv ? `지금 사도 ${josa(name, '이', '가')} 정가보다 <b>${won(reg - now)}</b> 싸지만, ${esc(waitEv.waitNote)}`
+    : isDaeran ? `지금이 대란입니다. ${josa(name, '이', '가')} 정가보다 <b>${won(reg - now)}</b> 쌉니다.`
     : buy ? `지난 대란 평균(${dRate}%)만큼 할인 중입니다.`
     : `${when}${left > 0 ? `(${left}일 뒤)` : ''}에 사면 ${josa(name, '이', '가')} <b>${won(now - dPrice)}</b> 더 쌉니다.`;
   const right = isDaeran ? ['코드 없이', null, reg] : buy ? null : [when, dRate, dPrice];
@@ -1225,7 +1230,7 @@ page({
 <span class="state ${isDaeran ? 'on' : soonDd != null ? 'soon' : 'off'}">${isDaeran ? '지금 대란입니다' : soonDd != null ? `${soonDd === 0 ? '오늘 대란 예정' : soonDd === 1 ? '내일 대란' : `D-${soonDd} 대란 확정`} · ${kdate(sureNext.date)} ${esc(sureNext.label)}` : '지금은 대란이 아닙니다'}</span>
 <h1>오늘 마이프로틴 ${pName || '할인코드'} <span class="hl">${last.base}%</span></h1>
 <p class="lede answer">${kdate(last.date)} 기준 ${isDaeran
-    ? `할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}. 지금 사면 됩니다.`
+    ? `할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}. ${waitTxt || '지금 사면 됩니다.'}`
     : `대란이 아닙니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${nameOf(primary)}가 ${extraOf(primary)}%p 높습니다.` : ''}</p>
 ${!isDaeran && sureNext ? `<p class="lede next">${soonDd != null
     ? `<b>${soonDd === 0 ? '오늘' : soonDd === 1 ? '내일' : `${soonDd}일 뒤`} ${kdate(sureNext.date)} ${esc(sureNext.label)} 대란</b>이 확정입니다. 급하지 않으면 ${soonDd <= 1 ? '하루' : '며칠'} 기다리는 쪽이 쌉니다.${sureOpen ? ` 코드는 ${sureOpen} 공개.` : ''}`
@@ -1368,7 +1373,7 @@ ${(() => { const v = allVideos.find(x => /쇼핑지원금 신청/.test(x.title))
 
 <section>
 <h2>지금이 살 때일까</h2>
-<p class="lede">${isDaeran ? `지금은 대란입니다. 할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}.` : `지금은 대란이 아닙니다. 할인코드 기준 대란(${TH}%)까지 ${gap}%p 남았습니다.`}${nextGuess ? ` 평균 주기로 단순 계산한 다음 예상 대란일은 ${kdate(nextGuess)}입니다.` : ''}</p>
+<p class="lede">${isDaeran ? `지금은 대란입니다. 할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}.${waitTxt ? ` ${waitTxt}` : ''}` : `지금은 대란이 아닙니다. 할인코드 기준 대란(${TH}%)까지 ${gap}%p 남았습니다.`}${nextGuess ? ` 평균 주기로 단순 계산한 다음 예상 대란일은 ${kdate(nextGuess)}입니다.` : ''}</p>
 <a class="cta ghost" href="./">오늘 할인율 자세히 보기</a>
 <a class="cta ghost" href="./${monthFile(curYm)}">${M(curYm)}월 대란 정리 보기</a>
 </section>
@@ -3325,7 +3330,7 @@ ${kakaoBox}
   const summary = phase === 'before'
     ? `${bfYear}년 마이프로틴 블랙프라이데이는 ${kdate(bfDate)} ${wd(bfDate)}, 오늘 기준 ${bfDays}일 남았습니다. 보통 전주(${kdate(bfWeekStart)} 전후)부터 예열 행사가 걸리고 사이버먼데이 ${kdate(cmDate)}까지 이어집니다. 지금 쓸 수 있는 히든코드는 ${last.base}%이고, 블프 할인율이 확정되면 이 페이지에 날짜별로 기록합니다.`
     : phase === 'during'
-      ? `지금 블랙프라이데이 주간입니다. 본행사는 ${kdate(bfDate)}, 사이버먼데이 ${kdate(cmDate)}까지 이어집니다. 오늘 ${pName || "할인코드"} ${last.base}%${isDaeran ? `로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}. 지금 사면 됩니다.` : `입니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}`
+      ? `지금 블랙프라이데이 주간입니다. 본행사는 ${kdate(bfDate)}, 사이버먼데이 ${kdate(cmDate)}까지 이어집니다. 오늘 ${pName || "할인코드"} ${last.base}%${isDaeran ? `로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}. ${waitTxt || '지금 사면 됩니다.'}` : `입니다. 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`}`
       : `${bfYear}년 블랙프라이데이(${kdate(bfDate)})는 끝났습니다.${bfPeak != null ? ` 그 주간 최고 할인코드는 ${bfPeak}%였습니다.` : ''} 다음 큰 행사까지는 평소 대란 주기(약 ${cycle ?? '-'}일)를 참고하십시오.`;
   const BF_FAQ = [
     [`마이프로틴 블랙프라이데이 ${bfYear}은 언제인가요?`,
