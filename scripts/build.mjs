@@ -1592,7 +1592,7 @@ ${mixDiagram}
     desc: `마이프로틴 맛 추천. 실패 없는 S등급부터 피해야 할 맛까지 등급표로 정리하고, 블로그·카페·디시·유튜브 댓글 후기를 맛별로 모았습니다. 임팩트웨이·아이솔레이트·클리어웨이 맛 종류와 물·우유 궁합. 6천만 원 넘게 사 먹은 마프대란알리미 기준.`,
     keywords: [...new Set(['마이프로틴 맛 추천', '마이프로틴 맛 종류', '마이프로틴 맛 후기', '마이프로틴 맛 비교', '마이프로틴 추천 맛', '임팩트웨이 맛 추천', '클리어웨이 맛 추천', '마이프로틴 wpi 맛 추천', '마이프로틴 맛 추천 디시', ...KW_EXTRA])].slice(0, 30),
     ld: [crumbs([['홈', 'index.html'], ['마이프로틴 맛 추천', 'taste.html']]), faqLd(TASTE_FAQ),
-      ...(TASTE.video ? [{ '@type': 'VideoObject', name: '마이프로틴 맛 추천 : 6천만원 쓰고 만들어본 마프 맛 등급표', thumbnailUrl: `https://i.ytimg.com/vi/${TASTE.video}/hqdefault.jpg`, uploadDate: '2026-03-22', embedUrl: `https://www.youtube.com/embed/${TASTE.video}`, contentUrl: ytWatch(TASTE.video) }] : [])],
+      ...(TASTE.video ? [{ '@type': 'VideoObject', name: '마이프로틴 맛 추천 : 6천만원 쓰고 만들어본 마프 맛 등급표', description: '마프대란알리미가 마이프로틴을 6천만 원 넘게 사 먹으며 정리한 맛 등급표(S·A·B·F) 영상입니다. 임팩트웨이 프로틴 맛별 추천과 피해야 할 맛을 정리했습니다.', thumbnailUrl: `https://i.ytimg.com/vi/${TASTE.video}/hqdefault.jpg`, uploadDate: '2026-03-22', embedUrl: `https://www.youtube.com/embed/${TASTE.video}`, contentUrl: ytWatch(TASTE.video) }] : [])],
     heroHtml: `
 <div class="hero">
 <div class="heroMain">
