@@ -1023,7 +1023,7 @@ ${endEv.expectNote ? `<p class="egN">${esc(endEv.expectNote)}</p>` : ''}
 </div>`;
 })() : '';
 const heroCta = primary ? `<a class="cta hot heroBtn" ${goAttrs(primary.code, nameOf(primary))}>${esc(nameOf(primary))} 복사하고 사러 가기</a>
-<p class="hint">${primary.untilNote ? `<b>${esc(primary.untilNote)}</b> ` : primary.until ? `<b>${kdate(primary.until)} ${(primary.untilTime || '18:59').replace(':', '시 ')}분 마감.</b> ` : ''}누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>${endGauge}`
+<p class="hint">${endGauge ? '' : primary.untilNote ? `<b>${esc(primary.untilNote)}</b> ` : primary.until ? `<b>${kdate(primary.until)} ${(primary.untilTime || '18:59').replace(':', '시 ')}분 마감.</b> ` : ''}누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p>${endGauge}`
   : `<a class="cta heroBtn" href="${esc(mpLink('pt-PAGE-hero'))}" target="_blank" rel="sponsored nofollow noopener">마이프로틴에서 할인받기</a>`;
 const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(primary), 'pt-PAGE-sticky')}><b>${esc(nameOf(primary))}</b> 복사하고 사러 가기 →</a>` : '';
 
