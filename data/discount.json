@@ -503,6 +503,13 @@
       "official": 35,
       "officialCode": "SUPER35",
       "source": "manual"
+    },
+    {
+      "date": "2026-11-11",
+      "base": 39,
+      "official": 37,
+      "officialCode": "SUPER37",
+      "source": "auto"
     }
   ]
 }
