@@ -1004,16 +1004,17 @@ const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(prima
 // 금액 할인은 라벨 끝의 같은 금액('… 5천원')을 빼서 두 번 나오지 않게 합니다
 const AI_TAG = '<small class="aiTag">AI로 생성됨</small>';
 const GUESS_TAG = sureNext ? `<small class="aiTag">${sureNext.time ? `확정 · ${sureNext.openDate && sureNext.openDate !== sureNext.date ? `${+sureNext.openDate.slice(8, 10)}일 ` : ''}${hmK(sureNext.time)} 공개` : '확정'}</small>` : AI_TAG;
+const dealTip = d => d.tip ? (d.url ? ` · <a href="${esc(mpLink(`pt-PAGE-deal-${d.id.replace(/-\d+$/, '')}`, d.url))}" target="_blank" rel="sponsored nofollow noopener">${esc(d.tip)} →</a>` : ` · <small>${esc(d.tip)}</small>`) : '';
 const dealShort = d => d.type === 'amount'
-  ? `<b>+${(d.amount / 1000).toLocaleString('ko-KR')}천원</b><span>${esc(d.label.replace(new RegExp(`\\s*${d.amount / 1000}천\\s*원$`), ''))}</span>`
-  : `<b>+${d.rate}%</b><span>${esc(d.label)}</span>`;
+  ? `<b>+${(d.amount / 1000).toLocaleString('ko-KR')}천원</b><span>${esc(d.label.replace(new RegExp(`\\s*${d.amount / 1000}천\\s*원$`), ''))}${dealTip(d)}</span>`
+  : `<b>+${d.rate}%</b><span>${esc(d.label)}${dealTip(d)}</span>`;
 const dealLine = last.deals.length
   ? `<div class="dealLine"><p class="dh">같이 챙기면 더 싸집니다</p><ul>${last.deals.map(d => `<li>${dealShort(d)}</li>`).join('')}</ul><div class="dt"><span>다 챙기면 <b>${pct(last.eff)}</b></span>${calcWidget ? `<a href="./calc.html">내 금액으로 계산 →</a>` : ''}</div></div>`
   : '';
 
 const dealItems = ds => `<ul class="hidden-deals">${ds.map(d => `
-  <li><div class="row"><span class="t">${esc(d.label)}</span><span class="r">+${d.rate}%</span></div>
-  ${d.howto ? `<div class="d">${esc(d.howto)}</div>` : ''}
+  <li><div class="row"><span class="t">${esc(d.label)}</span><span class="r">${d.type === 'amount' ? `+${(d.amount / 1000).toLocaleString('ko-KR')}천원` : `+${d.rate}%`}</span></div>
+  ${d.howto ? `<div class="d">${esc(d.howto)}${d.url ? ` <a href="${esc(mpLink(`pt-PAGE-deal-${d.id.replace(/-\d+$/, '')}`, d.url))}" target="_blank" rel="sponsored nofollow noopener">${esc(d.tip || '보러 가기')} →</a>` : ''}</div>` : ''}
   <div class="when">${kdate(d.start)}부터 ${kdate(d.end)}까지</div></li>`).join('')}</ul>`;
 const dealList = last.deals.length ? dealItems(last.deals)
   : '<p class="lede">지금 확인된 추가 할인은 없습니다. 새로 발견되면 이 자리에 올립니다.</p>';
@@ -1401,7 +1402,7 @@ const amountDeal = last.deals.find(d => d.type === 'amount');
 const CALC_FAQ = [
   ['계산은 어떤 순서로 하나요?',
    '장바구니 금액에 할인코드를 먼저 적용하고, 쇼핑지원금 같은 정액 할인을 뺀 다음, 이달의 트렌드처럼 최종 결제 금액에 붙는 % 할인을 마지막에 적용합니다.'],
-  ...(amountDeal ? [[`쇼핑지원금 ${(amountDeal.min / 10000)}만원 기준은 할인 전 금액인가요?`,
+  ...(amountDeal && amountDeal.min ? [[`쇼핑지원금 ${(amountDeal.min / 10000)}만원 기준은 할인 전 금액인가요?`,
    `이 계산기는 할인코드를 적용한 뒤 금액이 ${amountDeal.min.toLocaleString('ko-KR')}원 이상일 때 지원금을 붙입니다. 마이프로틴 안내가 결제 금액 기준이라 그렇게 잡았습니다. 기준이 모자라면 장바구니를 얼마나 더 담아야 하는지도 알려드립니다.`]] : []),
   ['계산 결과와 실제 결제금액이 다를 수 있나요?',
    '이미 세일 중인 상품이나 일부 번들은 할인코드가 빠질 수 있고, 마이프로틴이 조건을 바꾸면 결과가 달라집니다. 이 계산기는 예상값이니 결제 전에 장바구니에서 최종 금액을 확인하십시오.'],
@@ -1431,7 +1432,7 @@ ${otherCodesBox}
 <h2>계산 방법</h2>
 <ol class="steps">
   <li>장바구니 금액에 할인코드(${primary ? `${nameOf(primary)} ${primary.rate}%` : '%'})를 적용합니다.</li>
-  ${amountDeal ? `<li>할인코드 적용 후 금액이 ${amountDeal.min.toLocaleString('ko-KR')}원 이상이면 ${esc(amountDeal.label.replace(/.*?(쇼핑지원금.*)/, '$1'))}을 뺍니다.</li>` : ''}
+  ${amountDeal ? `<li>${amountDeal.min ? `할인코드 적용 후 금액이 ${amountDeal.min.toLocaleString('ko-KR')}원 이상이면 ` : '쇼핑지원금을 미리 신청했다면 '}${esc(amountDeal.label.replace(/.*?(쇼핑지원금.*)/, '$1'))}을 뺍니다.</li>` : ''}
   ${last.deals.filter(d => d.type !== 'amount').map(d => `<li>${esc(d.label)} 조건이면 남은 금액에서 ${d.rate}%를 더 뺍니다.</li>`).join('')}
   <li>무료배송(${SHOP.freeShipping.toLocaleString('ko-KR')}원)과 관세(${SHOP.customsUsd}달러) 기준을 확인합니다.</li>
 </ol>
