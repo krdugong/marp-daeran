@@ -1014,10 +1014,11 @@ const endEv = (db.announced || []).find(a => a.expectEnd && nowStamp < a.expectE
 const kstMs = s => Date.parse(`${s.replace(' ', 'T')}:00+09:00`);
 const endGauge = endEv && isDaeran ? (() => {
   const from = kstMs(endEv.expectFrom || `${nowStamp.slice(0, 10)} 00:00`), to = kstMs(endEv.expectEnd), left = Math.max(0, to - Date.now());
-  const w = Math.max(0, Math.min(100, left / (to - from) * 100));
+  // 막대는 행사 시작(expectFrom)부터 지난 시간만큼 차오릅니다 (남은 비율로 줄어들면 막 시작한 것처럼 보여서)
+  const w = Math.max(0, Math.min(100, (1 - left / (to - from)) * 100));
   return `<div class="endGauge" data-from="${from}" data-to="${to}">
 <p class="egT"><span class="egDot" aria-hidden="true"></span><span class="egTt">${esc(endEv.expectTitle || '마감 예상')}</span></p>
-<div class="egBar" role="progressbar" aria-label="마감 예상까지 남은 시간" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(w)}"><i style="width:${w.toFixed(1)}%"></i></div>
+<div class="egBar" role="progressbar" aria-label="행사 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(w)}"><i style="width:${w.toFixed(1)}%"></i></div>
 <p class="egL"><span>남은 시간 <b class="egLeft">${Math.floor(left / 3600e3)}시간 ${String(Math.floor(left % 3600e3 / 60e3)).padStart(2, '0')}분</b></span>${endEv.expectWhen ? `<span>${esc(endEv.expectWhen)}</span>` : ''}</p>
 ${endEv.expectNote ? `<p class="egN">${esc(endEv.expectNote)}</p>` : ''}
 </div>`;
@@ -1200,8 +1201,8 @@ ${stickyHtml}
   var eg=document.querySelector('.endGauge');
   if(eg){var gf=+eg.getAttribute('data-from'),gt=+eg.getAttribute('data-to'),gb=eg.querySelector('.egBar'),gi=gb.querySelector('i'),gl=eg.querySelector('.egLeft'),giv;
     var p2=function(n){return (n<10?'0':'')+n};
-    var gtick=function(){var l=gt-Date.now();if(l<=0){clearInterval(giv);eg.classList.add('over');gi.style.width='0';gl.textContent='예상 시각 지남';eg.querySelector('.egTt').textContent='예상 마감 시각이 지났습니다. 코드가 아직 되는지 장바구니에서 확인하세요';return}
-      var w=Math.max(0,Math.min(100,l/(gt-gf)*100));gi.style.width=w.toFixed(2)+'%';gb.setAttribute('aria-valuenow',Math.round(w));
+    var gtick=function(){var l=gt-Date.now();if(l<=0){clearInterval(giv);eg.classList.add('over');gi.style.width='100%';gl.textContent='예상 시각 지남';eg.querySelector('.egTt').textContent='예상 마감 시각이 지났습니다. 코드가 아직 되는지 장바구니에서 확인하세요';return}
+      var w=Math.max(0,Math.min(100,(1-l/(gt-gf))*100));gi.style.width=w.toFixed(2)+'%';gb.setAttribute('aria-valuenow',Math.round(w));
       var s=Math.floor(l/1000);gl.textContent=Math.floor(s/3600)+'시간 '+p2(Math.floor(s%3600/60))+'분 '+p2(s%60)+'초'};
     gtick();giv=setInterval(gtick,1000)}
   var cur=document.querySelector('.topNav a[aria-current]');if(cur&&cur.scrollIntoView){try{cur.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}}

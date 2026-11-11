@@ -535,10 +535,10 @@ body.hasSticky{padding-bottom:0}
 <p class="lede">2026년 5월 마이프로틴 대란은 2번 있었습니다. 5월 3일 – 5월 5일(할인코드 43%), 5월 27일(할인코드 39%)입니다. 마프대란알리미 채널 영상 기준입니다.</p>
 
 <a class="cta hot heroBtn" href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=pt-daeran-2605-hero&amp;ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3" target="_blank" rel="sponsored nofollow noopener" data-copy="MTExMVNFQ1JFVA==" data-label="1111SECRET">1111SECRET 복사하고 사러 가기</a>
-<p class="hint">누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p><div class="endGauge" data-from="1794279600000" data-to="1794412800000">
+<p class="hint">누르면 코드가 복사되고 마이프로틴이 열립니다. 장바구니 할인코드 칸에 붙여넣으세요.</p><div class="endGauge" data-from="1794301200000" data-to="1794412800000">
 <p class="egT"><span class="egDot" aria-hidden="true"></span><span class="egTt">마감 확정 · 12일 새벽 1시 (마이프로틴 공식)</span></p>
-<div class="egBar" role="progressbar" aria-label="마감 예상까지 남은 시간" aria-valuemin="0" aria-valuemax="100" aria-valuenow="33"><i style="width:32.7%"></i></div>
-<p class="egL"><span>남은 시간 <b class="egLeft">12시간 05분</b></span><span>12일 새벽 1시</span></p>
+<div class="egBar" role="progressbar" aria-label="행사 진행률" aria-valuemin="0" aria-valuemax="100" aria-valuenow="61"><i style="width:61.1%"></i></div>
+<p class="egL"><span>남은 시간 <b class="egLeft">12시간 04분</b></span><span>12일 새벽 1시</span></p>
 <p class="egN">마이프로틴 메인 배너 카운트다운 기준이고, 쇼핑지원금 사용 기한(12일 0시 59분)과 같습니다. 마이프로틴은 안내 없이 일찍 끝날 수도 있다고 적어 두었습니다.</p>
 </div>
 </div>
@@ -628,8 +628,8 @@ body.hasSticky{padding-bottom:0}
   var eg=document.querySelector('.endGauge');
   if(eg){var gf=+eg.getAttribute('data-from'),gt=+eg.getAttribute('data-to'),gb=eg.querySelector('.egBar'),gi=gb.querySelector('i'),gl=eg.querySelector('.egLeft'),giv;
     var p2=function(n){return (n<10?'0':'')+n};
-    var gtick=function(){var l=gt-Date.now();if(l<=0){clearInterval(giv);eg.classList.add('over');gi.style.width='0';gl.textContent='예상 시각 지남';eg.querySelector('.egTt').textContent='예상 마감 시각이 지났습니다. 코드가 아직 되는지 장바구니에서 확인하세요';return}
-      var w=Math.max(0,Math.min(100,l/(gt-gf)*100));gi.style.width=w.toFixed(2)+'%';gb.setAttribute('aria-valuenow',Math.round(w));
+    var gtick=function(){var l=gt-Date.now();if(l<=0){clearInterval(giv);eg.classList.add('over');gi.style.width='100%';gl.textContent='예상 시각 지남';eg.querySelector('.egTt').textContent='예상 마감 시각이 지났습니다. 코드가 아직 되는지 장바구니에서 확인하세요';return}
+      var w=Math.max(0,Math.min(100,(1-l/(gt-gf))*100));gi.style.width=w.toFixed(2)+'%';gb.setAttribute('aria-valuenow',Math.round(w));
       var s=Math.floor(l/1000);gl.textContent=Math.floor(s/3600)+'시간 '+p2(Math.floor(s%3600/60))+'분 '+p2(s%60)+'초'};
     gtick();giv=setInterval(gtick,1000)}
   var cur=document.querySelector('.topNav a[aria-current]');if(cur&&cur.scrollIntoView){try{cur.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}}

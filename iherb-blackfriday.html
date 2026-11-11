@@ -624,8 +624,8 @@ body.hasSticky{padding-bottom:0}
   var eg=document.querySelector('.endGauge');
   if(eg){var gf=+eg.getAttribute('data-from'),gt=+eg.getAttribute('data-to'),gb=eg.querySelector('.egBar'),gi=gb.querySelector('i'),gl=eg.querySelector('.egLeft'),giv;
     var p2=function(n){return (n<10?'0':'')+n};
-    var gtick=function(){var l=gt-Date.now();if(l<=0){clearInterval(giv);eg.classList.add('over');gi.style.width='0';gl.textContent='예상 시각 지남';eg.querySelector('.egTt').textContent='예상 마감 시각이 지났습니다. 코드가 아직 되는지 장바구니에서 확인하세요';return}
-      var w=Math.max(0,Math.min(100,l/(gt-gf)*100));gi.style.width=w.toFixed(2)+'%';gb.setAttribute('aria-valuenow',Math.round(w));
+    var gtick=function(){var l=gt-Date.now();if(l<=0){clearInterval(giv);eg.classList.add('over');gi.style.width='100%';gl.textContent='예상 시각 지남';eg.querySelector('.egTt').textContent='예상 마감 시각이 지났습니다. 코드가 아직 되는지 장바구니에서 확인하세요';return}
+      var w=Math.max(0,Math.min(100,(1-l/(gt-gf))*100));gi.style.width=w.toFixed(2)+'%';gb.setAttribute('aria-valuenow',Math.round(w));
       var s=Math.floor(l/1000);gl.textContent=Math.floor(s/3600)+'시간 '+p2(Math.floor(s%3600/60))+'분 '+p2(s%60)+'초'};
     gtick();giv=setInterval(gtick,1000)}
   var cur=document.querySelector('.topNav a[aria-current]');if(cur&&cur.scrollIntoView){try{cur.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}}
