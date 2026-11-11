@@ -539,6 +539,12 @@
       "official": 39,
       "officialCode": "1111SALE",
       "source": "manual"
+    },
+    {
+      "date": "2026-11-12",
+      "base": 41,
+      "official": 39,
+      "source": "auto"
     }
   ]
 }
