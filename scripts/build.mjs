@@ -1263,9 +1263,10 @@ const HOME_FAQ = [
 // ── 메인 ──
 page({
   file: 'index.html', priority: 1.0, changefreq: 'daily', current: '',
-  title: `마이프로틴 대란 · ${M(curYm)}월 할인코드 · 히든코드 안내 | ${SITE.brand}`,
-  keywords: ['프로티파이', '마이프로틴 대란 일정', '마프대란 일정', '마이프로틴 대란 날짜', '마이프로틴 할인 기간', '마프대란알리미', `마이프로틴 대란 ${M(curYm)}월`, `마이프로틴 할인 ${M(curYm)}월`],
-  desc: `${SITE.brand}는 마이프로틴 대란을 실시간으로 판정해 주는 도우미입니다. ${kdate(last.date)} 기준 ${codeWord}, 숨은 할인 포함 ${pct(last.eff)}${isDaeran ? '로 지금 대란입니다.' : `이고, 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`} 이번 달 할인코드와 마프대란 일정을 매일 정리합니다.`,
+  // 구글 검색어 1위가 '마프대란'(서치콘솔 2026-11): 제목 맨 앞에 두고 오늘 할인율을 숫자로 보여 클릭을 늘립니다
+  title: `${isDaeran ? `마프대란 진행 중 ${last.base}%` : `마프대란 언제? 오늘 할인코드 ${last.base}%`} | 마이프로틴 대란·${M(curYm)}월 할인코드 - ${SITE.brand}`,
+  keywords: ['마프대란', '마프 대란', '마이프로틴 대란', '프로티파이', '마이프로틴 대란 일정', '마프대란 일정', '마이프로틴 대란 날짜', '마이프로틴 할인 기간', '마프대란알리미', `마이프로틴 대란 ${M(curYm)}월`, `마이프로틴 할인 ${M(curYm)}월`],
+  desc: `마프대란(마이프로틴 대란)을 매일 판정합니다. ${kdate(last.date)} 기준 ${codeWord}, 숨은 할인 포함 ${pct(last.eff)}${isDaeran ? '로 지금 대란입니다.' : `이고, 대란 기준 ${TH}%까지 ${gap}%p 남았습니다.`} 이번 달 할인코드와 마프대란 일정을 매일 정리합니다.`,
   ld: [faqLd(HOME_FAQ), ...(latestVideo && latestVideo.title && latestVideo.date ? [videoLd(latestVideo)] : [])],
   heroHtml: `
 <div class="hero">
@@ -1372,7 +1373,7 @@ const CODE_FAQ = [
 
 page({
   file: 'code.html', priority: 0.9, changefreq: 'daily', current: 'code.html',
-  title: `마이프로틴 할인코드 ${Y(curYm)}년 ${M(curYm)}월 최신 | ${pName ? `${pName} ${primary.rate}%` : '숨은 할인 정리'} · 중복 적용 · 추천코드`,
+  title: `마이프로틴 할인코드 ${M(curYm)}월 최신 ${pName ? `${primary.rate}%` : ''} (${Y(curYm)}) | ${pName && pName !== '히든코드' ? `${pName} · ` : ''}히든코드 · 중복 적용 · 추천인`,
   keywords: ['마이프로틴 할인코드 중복', '마이프로틴 할인코드 모음', '마이프로틴 추천인 코드', '마이프로틴 추천인 입력', '마이프로틴 추천코드', '마이프로틴 쇼핑지원금', `마이프로틴 할인 ${M(curYm)}월`, `마이프로틴 ${M(curYm)}월 할인코드`],
   desc: `${M(curYm)}월 마이프로틴 할인코드 정리. ${pName ? `${pName} ${primary.rate}%` : ''}${official ? `, 공식 코드 ${official.code} ${official.rate}%` : ''}${db.referral ? `, 추천인 코드 ${db.referral}` : ''}. 숨은 할인까지 합치면 ${pct(last.eff)}. ${dot(last.date)} 업데이트.`,
   ld: [crumbs([['홈', 'index.html'], ['마이프로틴 할인코드', 'code.html']]), faqLd(CODE_FAQ)],
@@ -3039,7 +3040,7 @@ ${sg.how ? `<p class="lede">${esc(sg.how)}</p>` : ''}
     keywords: ['마프대란', '마이프로틴대란', `마이프로틴 ${m}월 대란`, `마이프로틴 ${m}월 대란 일정`, `마이프로틴 ${m}월 대란 날짜`, '마이프로틴 대란 일정', '마이프로틴 대란 날짜', '마이프로틴 대란 방법', '마이프로틴 대란 언제', `마이프로틴 ${m}.${+ev.date.slice(8, 10)} 대란`, `마이프로틴 ${ev.label}`, ...(sg ? [`마이프로틴 ${sg.label}`, `마이프로틴 ${sg.label} 신청`] : []), '마프대란 일정', '마프대란 날짜'],
     title: over
       ? `마이프로틴 ${m}월 대란 (${y}) | ${kdate(ev.date)} ${ev.label} 기록·할인코드 | ${SITE.brand}`
-      : `마이프로틴 ${m}월 대란 일정·날짜·방법 | ${kdate(ev.date)} ${ev.label} 확정${sg ? ` · ${sg.label} 미리 신청` : ''} | ${SITE.brand}`,
+      : `마이프로틴 ${kdate(ev.date)} ${ev.label} 대란${m === +ev.date.slice(8, 10) ? ` (${m}${m})` : ''} | 할인코드·${sg ? `${sg.label}·` : ''}마감 시각 - ${SITE.brand}`,
     desc: over
       ? `${y}년 마이프로틴 ${m}월 대란은 ${kdate(ev.date)} ${ev.label}이었습니다.${evMax != null ? ` 할인코드 최고 ${evMax}%.` : ''} 날짜·할인코드·방법 기록.`
       : `마이프로틴 ${m}월 대란 날짜는 ${kdate(ev.date)} ${wd(ev.date)} ${ev.label}로 확정.${sg && applyOpen ? ` ${sg.label}은 ${sg.applyUntil ? `${kdate(sg.applyUntil)}까지 ` : ''}미리 신청.` : ''}${ev.alert ? ` ${ev.alert} ${SITE.brand} 알림,` : ''}${openAt ? ` 할인코드 ${openAt} 공개.` : ''} 마프대란 일정·준비 방법·자주 묻는 질문 정리.`,
@@ -3310,7 +3311,7 @@ if (db.referral) {
   ];
   page({
     file: 'referral.html', priority: 0.8, changefreq: 'weekly', current: 'referral.html',
-    title: `마이프로틴 추천인 코드 ${db.referral} | 추천코드 입력 방법 · ${REF_BENEFIT} · 할인코드와 중복`,
+    title: `마이프로틴 추천인 코드 ${db.referral} (${Y(curYm)}) | 추천인 입력 방법 · ${REF_BENEFIT} · 할인코드 중복`,
     keywords: ['마이프로틴 추천인 코드', '마이프로틴 추천코드', '마이프로틴 추천인 코드 입력', '마이프로틴 추천인 입력 방법', '마이프로틴 친구 추천', '마이프로틴 가입 혜택', '마이프로틴 신규가입 할인', '마이프로틴 첫 구매 할인'],
     desc: `마이프로틴 추천인 코드 ${db.referral}. 처음 가입할 때 넣으면 ${REF_BENEFIT}을 받고, 할인코드(${pName || '할인코드'} ${last.base}%)와 같이 적용됩니다. 입력 위치, 가입부터 결제까지 순서, 안 될 때 확인할 것. ${dot(last.date)} 기준.`,
     ld: [crumbs([['홈', 'index.html'], ['마이프로틴 할인코드', 'code.html'], ['추천인 코드', 'referral.html']]), faqLd(REF_FAQ)],
