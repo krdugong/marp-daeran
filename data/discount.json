@@ -545,6 +545,12 @@
       "base": 41,
       "official": 39,
       "source": "auto"
+    },
+    {
+      "date": "2026-11-13",
+      "base": 40,
+      "official": 38,
+      "source": "auto"
     }
   ]
 }
