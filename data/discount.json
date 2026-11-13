@@ -551,6 +551,13 @@
       "base": 40,
       "official": 38,
       "source": "auto"
+    },
+    {
+      "date": "2026-11-14",
+      "base": 37,
+      "official": 35,
+      "officialCode": "MP35",
+      "source": "auto"
     }
   ]
 }
