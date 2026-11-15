@@ -592,7 +592,12 @@ body.hasSticky{padding-bottom:0}
 })();
 </script>
 
-<script src="https://wcs.pstatic.net/wcslog.js"></script>
-<script>window.wcs_add=window.wcs_add||{};window.wcs_add.wa="be301fec561120";if(window.wcs){wcs_do();}</script>
+<script>
+/* 방문 통계는 실제 사이트 주소에서만 켭니다 (내 컴퓨터에서 열어 본 기록이 섞이지 않게) */
+(function(){if(location.hostname!=="proteify.kr"&&location.hostname!=="www.proteify.kr")return;function add(src,cb){var s=document.createElement('script');s.src=src;s.async=true;if(cb)s.onload=cb;document.head.appendChild(s)}
+add('https://wcs.pstatic.net/wcslog.js',function(){window.wcs_add=window.wcs_add||{};window.wcs_add.wa="be301fec561120";if(window.wcs)wcs_do()});
+
+})();
+</script>
 </body>
 </html>

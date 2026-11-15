@@ -192,6 +192,10 @@ const seasonal = ym => {
   }
   return list.sort((a, b) => a.date.localeCompare(b.date));
 };
+// 평균 주기로 계산한 날보다 먼저 오는 연례 행사(블랙프라이데이 등)가 있으면 그날을 다음 대란으로 봅니다
+const seasonNext = !isDaeran && !sureNext ? [curYm, shiftYm(curYm, 1)].flatMap(seasonal).filter(s => !s.minor && s.date > last.date && (!nextGuess || s.date < nextGuess))[0] || null : null;
+if (seasonNext) nextGuess = seasonNext.date;
+const nextWhy = d => seasonNext ? `다음 대란은 해마다 행사가 걸리는 ${seasonNext.label.replace(/\s*\(.*\)$/, '')}(${kdate(seasonNext.date)})로 예상합니다.` : `평균 주기로 단순 계산한 다음 예상 대란일은 ${kdate(d)}입니다.`;
 // 월말 10일 동안은 다음 달 페이지를 미리 만들어 둡니다 ("마이프로틴 N월 대란" 검색은 그 달이 오기 전부터 생깁니다)
 const upcomingYm = (+last.date.slice(8, 10) > daysIn(curYm) - 10) ? shiftYm(curYm, 1) : null;
 const monthPages = upcomingYm && !months.includes(upcomingYm) ? [...months, upcomingYm] : months;
@@ -1031,7 +1035,7 @@ const sticky = primary ? `<a class="sticky" ${goAttrs(primary.code, nameOf(prima
 // 숨은 할인 한 줄 요약
 // 금액 할인은 라벨 끝의 같은 금액('… 5천원')을 빼서 두 번 나오지 않게 합니다
 const AI_TAG = '<small class="aiTag">AI로 생성됨</small>';
-const GUESS_TAG = sureNext ? `<small class="aiTag">${sureNext.time ? `확정 · ${sureNext.openDate && sureNext.openDate !== sureNext.date ? `${+sureNext.openDate.slice(8, 10)}일 ` : ''}${hmK(sureNext.time)} 공개` : '확정'}</small>` : AI_TAG;
+const GUESS_TAG = !sureNext && seasonNext ? `<small class="aiTag">${esc(seasonNext.label.replace(/\s*\(.*\)$/, ''))}</small>` : sureNext ? `<small class="aiTag">${sureNext.time ? `확정 · ${sureNext.openDate && sureNext.openDate !== sureNext.date ? `${+sureNext.openDate.slice(8, 10)}일 ` : ''}${hmK(sureNext.time)} 공개` : '확정'}</small>` : AI_TAG;
 const dealTip = d => d.tip ? (d.url ? ` · <a href="${esc(mpLink(`pt-PAGE-deal-${d.id.replace(/-\d+$/, '')}`, d.url))}" target="_blank" rel="sponsored nofollow noopener">${esc(d.tip)} →</a>` : ` · <small>${esc(d.tip)}</small>`) : '';
 const dealShort = d => d.type === 'amount'
   ? `<b>+${(d.amount / 1000).toLocaleString('ko-KR')}천원</b><span>${esc(d.label.replace(new RegExp(`\\s*${d.amount / 1000}천\\s*원$`), ''))}${dealTip(d)}</span>`
@@ -1218,10 +1222,13 @@ ${stickyHtml}
 })();
 </script>
 ${extraScript}
-${SITE.naverAnalytics ? `<script src="https://wcs.pstatic.net/wcslog.js"></script>
-<script>window.wcs_add=window.wcs_add||{};window.wcs_add.wa="${esc(SITE.naverAnalytics)}";if(window.wcs){wcs_do();}</script>
-` : ''}${SITE.ga4 ? `<script async src="https://www.googletagmanager.com/gtag/js?id=${esc(SITE.ga4)}"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${esc(SITE.ga4)}');</script>
+${SITE.naverAnalytics || SITE.ga4 ? `<script>
+/* 방문 통계는 실제 사이트 주소에서만 켭니다 (내 컴퓨터에서 열어 본 기록이 섞이지 않게) */
+(function(){if(${SITE.domain ? `location.hostname!=="${esc(SITE.domain)}"&&location.hostname!=="www.${esc(SITE.domain)}"` : `location.protocol==="file:"||/^(localhost|127\.0\.0\.1)$/.test(location.hostname)`})return;function add(src,cb){var s=document.createElement('script');s.src=src;s.async=true;if(cb)s.onload=cb;document.head.appendChild(s)}
+${SITE.naverAnalytics ? `add('https://wcs.pstatic.net/wcslog.js',function(){window.wcs_add=window.wcs_add||{};window.wcs_add.wa="${esc(SITE.naverAnalytics)}";if(window.wcs)wcs_do()});` : ''}
+${SITE.ga4 ? `window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments)};gtag('js',new Date());gtag('config','${esc(SITE.ga4)}');add('https://www.googletagmanager.com/gtag/js?id=${esc(SITE.ga4)}');` : ''}
+})();
+</script>
 ` : ''}</body>
 </html>`;
   // 아윈 clickref 의 PAGE 자리를 페이지 이름으로 (index→home, daeran-2026-11→daeran-2611, daeran-2026-11-11→daeran-261111)
@@ -1299,6 +1306,7 @@ ${priceGauge() ? `<section class="full">
 <h2>지금 사도 될까</h2>
 ${lowGauge()}
 <a class="cta ghost" href="./price.html">가격 흐름 그래프와 제품별 대란 가격 보기</a>
+${!isDaeran ? `<a class="cta" href="${esc(SITE.kakao)}">${seasonNext ? `${esc(seasonNext.label.replace(/\s*\(.*\)$/, ''))} ${kdate(seasonNext.date)} ` : '다음 대란 '}시작 알림 받기 (단톡방)</a>` : ''}
 </section>` : ''}
 ${calcWidget ? `<section>
 <h2>내 장바구니는 얼마에 살까</h2>
@@ -1418,7 +1426,7 @@ ${(() => { const v = allVideos.find(x => /쇼핑지원금 신청/.test(x.title))
 
 <section>
 <h2>지금이 살 때일까</h2>
-<p class="lede">${isDaeran ? `지금은 대란입니다. 할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}.${waitTxt ? ` ${waitTxt}` : ''}` : `지금은 대란이 아닙니다. 할인코드 기준 대란(${TH}%)까지 ${gap}%p 남았습니다.`}${nextGuess ? ` 평균 주기로 단순 계산한 다음 예상 대란일은 ${kdate(nextGuess)}입니다.` : ''}</p>
+<p class="lede">${isDaeran ? `지금은 대란입니다. 할인코드 ${last.base}%로 대란 기준 ${TH}%${last.base > TH ? "를 넘었습니다" : "에 닿았습니다"}.${waitTxt ? ` ${waitTxt}` : ''}` : `지금은 대란이 아닙니다. 할인코드 기준 대란(${TH}%)까지 ${gap}%p 남았습니다.`}${nextGuess ? ` ${nextWhy(nextGuess)}` : ''}</p>
 <a class="cta ghost" href="./">오늘 할인율 자세히 보기</a>
 <a class="cta ghost" href="./${monthFile(curYm)}">${M(curYm)}월 대란 정리 보기</a>
 </section>
@@ -1500,7 +1508,7 @@ if (PRODUCTS.length) {
   ];
   page({
     file: 'price.html', priority: 0.8, current: 'price.html',
-    title: `마이프로틴 대란 가격 비교 | 임팩트웨이 평소 vs 대란 얼마나 싸질까 (${M(curYm)}월 표시가 기준)`,
+    title: `마이프로틴 대란 가격 비교·할인율 그래프 | 임팩트웨이 평소 vs 대란 얼마나 싸질까 (${M(curYm)}월)`,
     desc: `임팩트웨이 30회분·90회분·166회분, 아이솔레이트, 크레아틴의 평소 가격(코드 ${last.base}%)과 대란 가격(코드 ${dRate}%) 비교표. ${josa(`${ex.name} ${ex.size}`, '은', '는')} 대란 때 ${won(exA - exB)} 더 쌉니다. ${dot(db.priceDate || last.date)} 표시가 기준.`,
     keywords: ['마이프로틴 대란 가격', '마이프로틴 대란 가격 차이', '마이프로틴 대란 가격 비교', '마이프로틴 임팩트웨이 가격', '마이프로틴 5kg', '마이프로틴 2.5kg', '마이프로틴 아이솔레이트 가격', '마이프로틴 크레아틴 가격'],
     ld: [crumbs([['홈', 'index.html'], ['대란 가격 비교', 'price.html']]), faqLd(PRICE_FAQ)],
@@ -1527,7 +1535,7 @@ ${priceRows(PRODUCTS)}
 <p class="lede">할인코드만 적용한 금액입니다. 이달의 트렌드 ${TREND}나 쇼핑지원금까지 넣은 최종 금액은 <a href="./calc.html?amt=${ex.price}">계산기</a>에서 확인하십시오.</p>
 </section>
 ${priceChart() ? `<section class="full">
-<h2>임팩트웨이 30회분 가격 흐름</h2>
+<h2>임팩트웨이 30회분 가격 흐름 그래프</h2>
 ${priceGauge()}
 ${priceChart()}
 ${priceChartNote(CHART_KEY)}
@@ -2780,7 +2788,7 @@ for (const ym of monthPages) {
   const yearEvents = events.filter(e => Y(ymOf(e.start)) === y && e.start < `${ym}-01`);
   const upFaq = isUpcoming ? [
     [`마이프로틴 ${m}월 대란은 언제인가요?`,
-     `아직 시작 전입니다.${cycle ? ` 올해 대란은 평균 ${cycle}일 간격으로 돌아왔고` : ''}${guessHere ? ` 단순 계산한 다음 예상 대란일은 ${kdate(nextGuess)}입니다.` : cycle ? ' 아직 다음 예상 대란일은 안 잡혔습니다.' : ''}${season.length ? ` ${m}월에는 ${seasonShort} 행사가 있어 그 전후로 할인율이 오르는 경우가 많습니다.` : ''} 시작되면 이 페이지와 단톡방에 바로 올립니다.`],
+     `아직 시작 전입니다.${cycle ? ` 올해 대란은 평균 ${cycle}일 간격으로 돌아왔고` : ''}${guessHere ? ` ${nextWhy(nextGuess)}` : cycle ? ' 아직 다음 예상 대란일은 안 잡혔습니다.' : ''}${season.length ? ` ${m}월에는 ${seasonShort} 행사가 있어 그 전후로 할인율이 오르는 경우가 많습니다.` : ''} 시작되면 이 페이지와 단톡방에 바로 올립니다.`],
     [`${m}월 대란 전에 지금 사도 되나요?`,
      `지금 히든코드는 ${last.base}%입니다. 대란 때와 차이는 몇 %p라 당장 필요하면 지금 사도 손해가 크지 않습니다. 2.5kg 이상 대량 구매라면 ${season.length ? `${kdate(season[0].date)} 전후` : '다음 대란'}까지 기다리는 편이 낫습니다.`],
     [`${m}월 대란 할인율은 얼마나 되나요?`,
@@ -3020,7 +3028,9 @@ ${sg.how ? `<p class="lede">${esc(sg.how)}</p>` : ''}
   ].filter(Boolean);
   const EV_FAQ = [
     [`마이프로틴 ${m}월 대란은 언제인가요?`,
-     `${y}년 ${kdate(ev.date)} ${wd(ev.date)} ${ev.label}입니다. 마이프로틴은 보통 대란 날짜를 미리 알려주지 않는데, 이번에는 공식 사이트에 행사가 걸려 날짜가 확정됐습니다.${openAt ? ` 할인코드는 ${openAt}에 공개되고, 히든코드와 최대할인조합은 ${SITE.brand}가 가장 빠르게 공개할 예정입니다.` : ''}`],
+     over
+      ? `${y}년 ${m}월 대란은 ${kdate(ev.date)} ${wd(ev.date)} ${ev.label}이었고 끝났습니다.${openAt ? ` 할인코드는 ${openAt}에 공개됐고` : ''}${evMax != null ? `${openAt ? '' : ' 할인코드는'} 최고 ${evMax}%였습니다.` : openAt ? ' 지금은 끝났습니다.' : ''}${nextGuess && nextGuess > ev.date ? ` ${nextWhy(nextGuess)}` : ''}`
+      : `${y}년 ${kdate(ev.date)} ${wd(ev.date)} ${ev.label}입니다. 마이프로틴은 보통 대란 날짜를 미리 알려주지 않는데, 이번에는 공식 사이트에 행사가 걸려 날짜가 확정됐습니다.${openAt ? ` 할인코드는 ${openAt}에 공개되고, 히든코드와 최대할인조합은 ${SITE.brand}가 가장 빠르게 공개할 예정입니다.` : ''}`],
     ['마프대란이 뭔가요?',
      `마이프로틴 대란을 줄여 부르는 말입니다. 할인코드 할인율이 평소보다 확실히 올라가는 날이고, ${SITE.brand}는 할인코드 ${TH}% 이상인 날을 대란으로 기록합니다.${knownRange ? ` 올해 대란 때 히든코드는 ${knownRange}였습니다.` : ''}`],
     ...(sg ? [[`${sg.label || '사전 신청'}이 뭔가요? 꼭 신청해야 하나요?`,
@@ -3052,9 +3062,9 @@ ${sg.how ? `<p class="lede">${esc(sg.how)}</p>` : ''}
 <span class="state ${live ? 'on' : 'off'}">${over ? '끝난 대란' : live ? '지금 대란입니다' : `대란 확정 · D-${dd}`}</span>
 <h1>마이프로틴 ${m}월 대란<br>${kdate(ev.date)} ${esc(ev.label)}</h1>
 <p class="lede answer">${over
-    ? `${y}년 마이프로틴 ${m}월 대란은 <b>${kdate(ev.date)} ${esc(ev.label)}</b>이었습니다.${evMax != null ? ` 할인코드는 최고 ${evMax}%였습니다.` : ''} 날짜별 기록은 ${m}월 대란 페이지에 있습니다.`
+    ? `${y}년 마이프로틴 ${m}월 대란은 <b>${kdate(ev.date)} ${esc(ev.label)}</b>이었습니다.${evMax != null ? ` 할인코드는 최고 ${evMax}%였습니다.` : ''}${nextGuess && nextGuess > ev.date ? ` ${nextWhy(nextGuess)}` : ''} 날짜별 기록은 ${m}월 대란 페이지에 있습니다.`
     : `${y}년 마이프로틴 ${m}월 대란 날짜는 <b>${kdate(ev.date)} ${wd(ev.date)} ${esc(ev.label)}</b>로 확정됐습니다.${sg && applyOpen ? ` 먼저 <b>${esc(sg.label)}</b>을 ${sg.applyUntil ? `${kdate(sg.applyUntil)}까지 ` : ''}미리 신청해 두고,` : ''}${ev.alert ? ` <b>${esc(ev.alert)}</b> ${SITE.brand} 알림을 받으세요.` : ''}${openAt ? ` 할인코드는 <b>${openAt}</b>에 공개되고, 히든코드와 최대할인조합은 ${SITE.brand}가 가장 빠르게 공개할 예정입니다.` : ''}`}</p>
-${sg && applyOpen ? `<a class="cta hot heroBtn" href="${esc(sgUrl(sg.url))}" target="_blank" rel="sponsored nofollow noopener">${esc(sg.label)} 미리 신청하기</a>` : live ? heroCta : ''}
+${sg && applyOpen ? `<a class="cta hot heroBtn" href="${esc(sgUrl(sg.url))}" target="_blank" rel="sponsored nofollow noopener">${esc(sg.label)} 미리 신청하기</a>` : live ? heroCta : over && seasonNext && seasonNext.date > ev.date ? `<a class="cta hot heroBtn" href="./${esc(seasonNext.link || 'daeran.html')}">다음 대란 ${esc(seasonNext.label.replace(/\s*\(.*\)$/, ''))} ${kdate(seasonNext.date)} 준비하기</a>` : ''}
 <a class="cta ghost" href="${esc(SITE.kakao)}">대란 알림 단톡방 들어가기</a>
 </div>
 <div class="heroSide">
