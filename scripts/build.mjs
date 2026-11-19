@@ -682,6 +682,14 @@ tr.hot td{color:var(--accent)}
 .codes .crate{font-size:14px;font-weight:800;color:var(--brand);white-space:nowrap}
 .codes button{border:0;background:var(--surface-2);border-radius:999px;padding:8px 13px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--ink);white-space:nowrap;transition:transform .15s,background .2s}
 .codes button:active{transform:scale(.96)}
+.codeCard{background:var(--surface);border-radius:var(--r);padding:18px 20px 14px}
+.codeCard .ccT{display:flex;align-items:baseline;gap:6px;margin:0 0 4px;font-size:14px;color:var(--muted)}
+.codeCard .ccT b{color:var(--ink);font-size:16px}
+.codeCard .ccT small{font-size:12px;margin-left:auto}
+.codeCard .codes li.top .name{color:var(--ink)}
+.codeCard .codes li.top .crate{color:var(--accent);font-size:20px}
+.codeCard .codes .tag{font-style:normal;font-size:11px;font-weight:700;color:#fff;background:var(--accent);border-radius:999px;padding:2px 7px;margin-right:6px}
+.codeCard .ccN{font-size:12.5px;color:var(--muted);margin:10px 0 0;line-height:1.6}
 details.more{border:0;background:var(--surface);border-radius:var(--r);padding:4px 16px;margin:18px 0 0}
 details.more summary{font-size:14px;color:var(--muted);padding:12px 0}
 details.more[open] summary{color:var(--ink);border-bottom:1px solid var(--line)}
@@ -1011,6 +1019,14 @@ const codeRow = c => `<li><span class="name">${esc(nameOf(c))}<em>${esc(c.label)
 const otherCodes = CODES.filter(c => c !== primary);
 const codeList = `<ul class="codes">${otherCodes.map(codeRow).join('')}${db.referral ? `<li><span class="name">${esc(db.referral)}<em>신규 가입 추천인 코드 · 첫 구매 12만원 이상이면 ${esc(db.referralBenefit || '추가 혜택')}, 할인코드와 같이 씁니다</em></span><span class="crate"></span><button type="button" data-copy="${b64(db.referral)}">복사</button></li>` : ''}</ul>`;
 const otherCount = otherCodes.length + (db.referral ? 1 : 0);
+// 할인코드 페이지 오른쪽 카드: 오늘 쓸 수 있는 코드 전부를 할인율 높은 순으로 펼쳐 둡니다 (접힌 목록 하나만 있으면 칸이 비어 보여서)
+const codeCard = (() => {
+  const list = [...CODES].sort((a, b) => (b.rate ?? -1) - (a.rate ?? -1));
+  if (!list.length) return '';
+  const row = c => codeRow(c).replace('<li>', `<li${c === primary ? ' class="top"' : ''}>`).replace('<em>', c === primary ? '<em><i class="tag">가장 높음</i>' : '<em>');
+  const ref = db.referral ? `<li><span class="name">${esc(db.referral)}<em>신규 가입 추천인 코드 · 할인코드와 같이 씁니다</em></span><span class="crate"></span><button type="button" data-copy="${b64(db.referral)}">복사</button></li>` : '';
+  return `<div class="sideStack"><div class="codeCard"><p class="ccT">오늘 쓸 수 있는 코드 <b>${list.length + (db.referral ? 1 : 0)}개</b><small>${dot(last.date)} 확인</small></p><ul class="codes">${list.map(row).join('')}${ref}</ul><p class="ccN">한 주문에 할인코드는 하나만 들어갑니다. 추천인 코드는 첫 가입 때 따로 넣습니다.</p></div></div>`;
+})();
 const otherCodesBox = otherCount ? `<details class="more"><summary>다른 코드 보기 (${otherCount}개)</summary>${codeList}</details>` : '';
 
 // announced 에 expectEnd 가 있으면 대란 중 메인 버튼 아래에 마감 예상 시각과 실시간으로 줄어드는 게이지를 붙입니다 (시각은 한국 시간 "YYYY-MM-DD HH:MM")
@@ -1392,7 +1408,7 @@ page({
 <p class="lede answer">오늘 쓸 코드는 ${pName || '할인코드'} <b>${last.base}%</b>입니다.${official && extraOf(primary) ? ` 공식 코드 ${official.code}(${official.rate}%)보다 ${extraOf(primary)}%p 높습니다.` : ''} 한 주문에 코드는 하나만 들어갑니다.</p>
 ${heroCta}
 ${dealLine}
-${otherCodesBox}
+${codeCard || otherCodesBox}
 </div>`,
   restHtml: `
 <section class="full">
