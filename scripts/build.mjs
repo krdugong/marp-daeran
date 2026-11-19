@@ -231,6 +231,7 @@ if (primary && !primary.official && primary.rate != null && primary.rate !== las
 }
 const extraOf = c => (official && c !== official && c.rate != null && official.rate != null && c.rate > official.rate) ? r1(c.rate - official.rate) : null;
 const nameOf = c => c.secret ? '히든코드' : c.code;
+const SECRET_CODES = (db.codes || []).filter(c => c.secret).map(c => c.code);
 // 복사용 코드는 페이지 소스에 평문으로 안 남게 base64 로 넣고, 누를 때 풀어서 복사합니다 (히든코드가 검색 캐시나 소스 보기에 글자로 안 잡히게)
 const b64 = s => Buffer.from(String(s)).toString('base64');
 // 아윈 clickref 는 'pt-<페이지>-<위치>' 로 씁니다 (아이허브 pubref 와 같은 틀). 페이지 자리는 PAGE 로 두면 page() 가 파일명으로 바꿔 줍니다.
@@ -1228,9 +1229,15 @@ ${stickyHtml}
   var cur=document.querySelector('.topNav a[aria-current]');if(cur&&cur.scrollIntoView){try{cur.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}}
   var st=document.querySelector('.sticky'),hb=document.querySelector('.heroBtn');
   if(st&&hb&&'IntersectionObserver' in window){new IntersectionObserver(function(es){st.classList.toggle('hide',es[0].isIntersecting)},{threshold:.4}).observe(hb)}
+  /* GA4 이벤트: 복사(copy_code)와 제휴 링크(aff_click). 코드는 화면용 이름(data-label)만 보냅니다. 히든코드 실제 글자는 안 나갑니다 */
+  function ga(n,p){try{if(window.gtag)window.gtag('event',n,p)}catch(e){}}
+  function spotOf(el){if(el.id==='cGo')return 'calc';if(el.classList.contains('heroBtn'))return 'hero';if(el.classList.contains('sticky'))return 'sticky';if(el.closest('.codes'))return 'list';if(el.closest('table'))return 'row';if(el.closest('.evBand'))return 'event';return 'body'}
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="awin1.com"],a[href*="prf.hn"]');if(!a)return;var h=a.href,iw=/prf\.hn/.test(h),m=iw?h.match(/pubref:([^/]+)/):h.match(/[?&]clickref=([^&]+)/),m2=h.match(/[?&]clickref2=([^&]+)/),ref=m?decodeURIComponent(m[1]):'';
+    ga('aff_click',{shop:iw?'iherb':'myprotein',ref:ref,ref2:m2?decodeURIComponent(m2[1]):'',spot:spotOf(a),with_copy:a.hasAttribute('data-copy')?'yes':'no',link_text:(a.textContent||'').trim().slice(0,60)})},true);
   document.querySelectorAll('[data-copy]').forEach(function(el){
     el.addEventListener('click',function(){
       var v=dec(el.getAttribute('data-copy')),lb=el.getAttribute('data-label')||v;copy(v);
+      ga('copy_code',{code_label:lb,spot:spotOf(el)});
       show(lb+' 복사됨 · 장바구니 할인코드 칸에 붙여넣으세요');
       if(el.tagName==='BUTTON'){var t=el.textContent;el.textContent='복사됨';setTimeout(function(){el.textContent=t},1200)}
     });
@@ -1250,6 +1257,8 @@ ${SITE.ga4 ? `window.dataLayer=window.dataLayer||[];window.gtag=function(){dataL
   // 아윈 clickref 의 PAGE 자리를 페이지 이름으로 (index→home, daeran-2026-11→daeran-2611, daeran-2026-11-11→daeran-261111)
   const slug = file === 'index.html' ? 'home' : file.replace(/\.html$/, '').replace(/^daeran-20(\d\d)-(\d\d)(?:-(\d\d))?$/, (_, y, m, d) => `daeran-${y}${m}${d || ''}`);
   html = html.replace(/clickref=pt-PAGE-/g, `clickref=pt-${slug}-`);
+  // 복사 버튼에 data-label 이 없으면 복사 값이 그대로 통계로 나가므로, 그런 버튼에 히든코드가 들어 있으면 빌드를 멈춥니다
+  for (const m of html.matchAll(/<[^>]*data-copy="([^"]+)"[^>]*>/g)) if (!/data-label=/.test(m[0]) && SECRET_CODES.includes(Buffer.from(m[1], 'base64').toString())) throw new Error(`${file}: data-label 없는 복사 버튼에 히든코드가 있습니다`);
   write(file, html);
   if (!noindex) built.push({ file, url, title, desc, lastmod, priority, changefreq });
 }

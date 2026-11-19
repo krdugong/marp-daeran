@@ -709,9 +709,15 @@ body.hasSticky{padding-bottom:0}
   var cur=document.querySelector('.topNav a[aria-current]');if(cur&&cur.scrollIntoView){try{cur.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}}
   var st=document.querySelector('.sticky'),hb=document.querySelector('.heroBtn');
   if(st&&hb&&'IntersectionObserver' in window){new IntersectionObserver(function(es){st.classList.toggle('hide',es[0].isIntersecting)},{threshold:.4}).observe(hb)}
+  /* GA4 이벤트: 복사(copy_code)와 제휴 링크(aff_click). 코드는 화면용 이름(data-label)만 보냅니다. 히든코드 실제 글자는 안 나갑니다 */
+  function ga(n,p){try{if(window.gtag)window.gtag('event',n,p)}catch(e){}}
+  function spotOf(el){if(el.id==='cGo')return 'calc';if(el.classList.contains('heroBtn'))return 'hero';if(el.classList.contains('sticky'))return 'sticky';if(el.closest('.codes'))return 'list';if(el.closest('table'))return 'row';if(el.closest('.evBand'))return 'event';return 'body'}
+  document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href*="awin1.com"],a[href*="prf.hn"]');if(!a)return;var h=a.href,iw=/prf.hn/.test(h),m=iw?h.match(/pubref:([^/]+)/):h.match(/[?&]clickref=([^&]+)/),m2=h.match(/[?&]clickref2=([^&]+)/),ref=m?decodeURIComponent(m[1]):'';
+    ga('aff_click',{shop:iw?'iherb':'myprotein',ref:ref,ref2:m2?decodeURIComponent(m2[1]):'',spot:spotOf(a),with_copy:a.hasAttribute('data-copy')?'yes':'no',link_text:(a.textContent||'').trim().slice(0,60)})},true);
   document.querySelectorAll('[data-copy]').forEach(function(el){
     el.addEventListener('click',function(){
       var v=dec(el.getAttribute('data-copy')),lb=el.getAttribute('data-label')||v;copy(v);
+      ga('copy_code',{code_label:lb,spot:spotOf(el)});
       show(lb+' 복사됨 · 장바구니 할인코드 칸에 붙여넣으세요');
       if(el.tagName==='BUTTON'){var t=el.textContent;el.textContent='복사됨';setTimeout(function(){el.textContent=t},1200)}
     });
