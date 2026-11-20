@@ -532,6 +532,75 @@ h2{font-size:24px}
 body.hasSticky{padding-bottom:0}
 .toast{bottom:28px}
 }
+
+:root{--page:#F3F3F1;--card:#FFFFFF;--cardLine:rgba(0,0,0,.06);--tabH:62px}
+body{background:var(--page);font-size:16px}
+header.top{background:rgba(243,243,241,.86)}
+.utilBar{background:transparent}
+.utilInner{font-size:12px;gap:6px;padding-top:12px;padding-bottom:2px;justify-content:flex-start;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.utilInner::-webkit-scrollbar{display:none}
+.utilInner span{flex:none;background:var(--card);border:1px solid var(--cardLine);border-radius:999px;padding:4px 10px;color:var(--ink-2);font-weight:600;white-space:nowrap}
+@media(min-width:880px){.utilInner{justify-content:center;-webkit-mask-image:none}}
+.heroInner{padding-top:28px}
+h1{font-size:29px;line-height:1.25}
+.lede{font-size:16.5px;line-height:1.75}
+p,li{line-height:1.75}
+/* 본문 묶음은 흰 카드로 */
+.cols > section{background:var(--card);border:1px solid var(--cardLine);border-radius:22px;padding:22px 20px 18px;margin:0 0 14px}
+.cols > section > h2:first-child,.cols > section > .eyebrow:first-child + h2{margin-top:0}
+.cols > section.evBand{background:var(--accent-soft);border-color:transparent}
+.cols > section.brandBand{background:transparent;border:0;padding:0}
+.cols > section.brandBand .eyebrow{margin-top:28px}
+h2{font-size:21px;line-height:1.35;margin:44px 0 12px}
+.cols > section > h2{font-size:21px}
+.cta.ghost{background:var(--page)}
+.cols > section .cta.ghost{background:var(--page)}
+.hero .stats,.hero .sideStack .stats,.hero details.more,.codeCard,.dealLine{background:var(--card);border:1px solid var(--cardLine)}
+details.more{background:var(--card);border:1px solid var(--cardLine)}
+/* 코드 목록: 왼쪽 큰 할인율, 가운데 이름, 오른쪽 복사 */
+.codes li{display:grid;grid-template-columns:62px 1fr auto;align-items:center;gap:4px 12px}
+.codes .crate{order:-1;font-size:21px;font-weight:800;color:var(--accent);letter-spacing:-.02em;text-align:left}
+.codes .crate:empty:before{content:"가입";font-size:13px;color:var(--muted);font-weight:700}
+.codes .name{font-size:16px}
+.codes em{display:block;margin-top:2px}
+.codes button{background:var(--brand);color:#fff;padding:9px 14px}
+/* 위 메뉴: PC는 줄바꿈으로 다 보이게, 휴대폰은 숨기고 아래 탭바로 */
+.topNav{flex-wrap:wrap;overflow:visible}
+@media(max-width:879px){.subBar{display:none}header.top{top:0}}
+.tabBar{display:none}
+@media(max-width:879px){
+.tabBar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:40;height:calc(var(--tabH) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.94);-webkit-backdrop-filter:saturate(180%) blur(18px);backdrop-filter:saturate(180%) blur(18px);border-top:1px solid var(--line)}
+.tabBar a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-decoration:none;color:var(--muted);font-size:11.5px;font-weight:700;letter-spacing:-.01em}
+.tabBar svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabBar a[aria-current]{color:var(--brand)}
+body{padding-bottom:calc(var(--tabH) + env(safe-area-inset-bottom))}
+body.hasSticky{padding-bottom:calc(var(--tabH) + 70px + env(safe-area-inset-bottom))}
+.sticky{bottom:calc(var(--tabH) + 10px + env(safe-area-inset-bottom));padding:13px;font-size:15px}
+.toast{bottom:calc(var(--tabH) + 78px + env(safe-area-inset-bottom))}
+}
+/* 전체 메뉴 시트 */
+.sheet{display:none;position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.36)}
+.sheet:target,.sheet.on{display:block}
+.sheetIn{position:absolute;left:0;right:0;bottom:0;max-height:86vh;overflow:auto;background:var(--page);border-radius:24px 24px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom))}
+@media(min-width:880px){.sheetIn{left:50%;right:auto;bottom:auto;top:10vh;transform:translateX(-50%);width:640px;border-radius:24px}}
+.sheetHead{display:flex;justify-content:space-between;align-items:center;margin:0 4px 10px}
+.sheetHead b{font-size:19px;letter-spacing:-.02em}
+.sheetHead a{font-size:14px;font-weight:700;color:var(--muted);text-decoration:none;padding:8px}
+.sheet h3{font-size:13px;color:var(--muted);margin:16px 4px 8px;font-weight:700}
+.sheetGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sheetGrid a{background:var(--card);border:1px solid var(--cardLine);border-radius:16px;padding:14px 10px;text-align:center;text-decoration:none;color:var(--ink);font-size:14px;font-weight:700;line-height:1.35;min-height:56px;display:flex;align-items:center;justify-content:center}
+.sheetGrid a[aria-current]{background:var(--brand);color:#fff;border-color:transparent}
+.sheetGrid .nl{display:none}
+footer{border-top:0}
+/* 카드 안의 넓은 표는 카드 안에서만 옆으로 밀리게 (페이지 전체가 가로로 넘치지 않게) */
+.cols > section table:not(.altWrap table):not(.cmpWrap table):not(.nutWrap table){display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:479px){.cols > section{padding:20px 16px 16px;border-radius:20px}}
+@media(min-width:880px){
+body{font-size:16px}
+.cols{gap:14px 14px}
+.cols > section{margin:0}
+.cols > section.full{grid-column:1 / -1}
+}
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://proteify.kr/#website","name":"프로티파이","alternateName":["Proteify","마프대란","마프대란알리미","마이프로틴 대란 알리미"],"url":"https://proteify.kr/","inLanguage":"ko-KR","publisher":{"@id":"https://proteify.kr/#org"}},{"@type":"Organization","@id":"https://proteify.kr/#org","name":"프로티파이","alternateName":"마프대란 알리미","url":"https://proteify.kr/","logo":"https://proteify.kr/icon-512.png","sameAs":["https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA"]},{"@type":"WebPage","@id":"https://proteify.kr/","url":"https://proteify.kr/","name":"마프대란 언제? 오늘 할인코드 37% | 마이프로틴 대란·11월 할인코드 - 프로티파이","description":"마프대란(마이프로틴 대란)을 매일 판정합니다. 11월 21일 기준 히든코드 37%, 숨은 할인 포함 40.2%이고, 대란 기준 39%까지 2%p 남았습니다. 이번 달 할인코드와 마프대란 일정을 매일 정리합니다.","inLanguage":"ko-KR","dateModified":"2026-11-21","isPartOf":{"@id":"https://proteify.kr/#website"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"마프대란이 뭔가요?","acceptedAnswer":{"@type":"Answer","text":"마이프로틴 할인코드 할인율이 평소보다 확실히 올라가는 날을 구매자들이 부르는 말입니다. 공식 행사 이름은 아닙니다. 마프대란알리미 채널에서 3월부터 따라가 보니 대란 때 히든코드는 39~43%였습니다. 이 사이트는 할인코드 할인율이 39% 이상인 날을 대란으로 기록합니다."}},{"@type":"Question","name":"마프대란 일정은 어떻게 확인하나요?","acceptedAnswer":{"@type":"Answer","text":"마이프로틴은 대란 날짜를 미리 공지하지 않습니다. 이 사이트는 마이프로틴 할인율을 하루 네 번 확인해 대란이 시작되면 바로 표시하고, 단톡방과 유튜브로도 알립니다. 지금까지 대란은 평균 21일 간격으로 왔습니다. 지난 대란 날짜는 대란 기록 페이지에 모아 두었습니다."}},{"@type":"Question","name":"마이프로틴 대란 때는 어떤 순서로 사면 되나요?","acceptedAnswer":{"@type":"Answer","text":"장바구니를 미리 채워 두는 게 핵심입니다. 사고 싶은 제품을 미리 담아 두고, 할인율이 바뀌는 전날 저녁 7시 전후에 이 페이지에서 대란인지 확인합니다. 대란이면 히든코드를 복사해 장바구니 할인코드 칸에 넣고, 이달의 트렌드 제품이나 앱 쇼핑지원금 같은 숨은 할인 조건을 맞춥니다. 마지막으로 8만원 이상 무료배송, 150달러 이하인지 보고 결제하십시오. 인기 맛은 대란 초반에 품절되기도 합니다."}},{"@type":"Question","name":"마이프로틴 대란과 평소 할인은 뭐가 다른가요?","acceptedAnswer":{"@type":"Answer","text":"평소에도 메인 배너에 공식 할인코드가 걸려 있습니다(오늘 MP35 35%). 대란은 이 코드 할인율이 39% 이상으로 올라간 날입니다. 기록된 대란은 1~4일 이어졌습니다."}},{"@type":"Question","name":"히든코드가 뭔가요?","acceptedAnswer":{"@type":"Answer","text":"마이프로틴 메인 배너에 걸린 공식 코드 말고 유튜버나 팬카페에 따로 주어지는 코드입니다. 대부분 공식 코드보다 1~2%p 높게 나옵니다. 4월 4일 대란 때 공식 코드 0404는 40%였고 히든코드는 42%였습니다. 코드는 복사 버튼을 누르면 자동으로 들어갑니다."}},{"@type":"Question","name":"숨은 할인이 뭔가요?","acceptedAnswer":{"@type":"Answer","text":"할인코드와 별개로 장바구니 조건을 맞추면 더 빠지는 할인입니다. 이달의 트렌드 제품을 같이 사면 최종 금액에서 5%가 더 빠지거나, 쇼핑지원금이 붙는 식입니다. 이 사이트는 이런 조건을 할인코드 위에 쌓아 실제로 받는 할인율을 따로 계산합니다."}},{"@type":"Question","name":"실제 할인율이 39%를 넘는데 왜 대란이 아닌가요?","acceptedAnswer":{"@type":"Answer","text":"대란 판정은 할인코드 할인율로만 합니다. 숨은 할인은 평소에도 붙는 경우가 많아서, 합친 숫자로 판정하면 거의 매일이 대란이 되기 때문입니다."}},{"@type":"Question","name":"마이프로틴 말고 대안은 없나요?","acceptedAnswer":{"@type":"Answer","text":"있습니다. 옵티멈뉴트리션, 룰원, 다이마타이즈처럼 한국에서 직구로 많이 사는 브랜드를 단백질 1g당 가격으로 비교한 페이지를 따로 뒀습니다. 다만 대란 때는 임팩트웨이 프로틴 90회분이 1kg당 49,363원이라 여전히 싼 편이라, 대란이면 기다릴 이유가 없습니다."}},{"@type":"Question","name":"대란이면 무조건 사는 게 이득인가요?","acceptedAnswer":{"@type":"Answer","text":"아닙니다. 평소와 차이는 몇 %p 수준입니다. 지금 당장 필요한 제품이라면 대란을 기다리며 미루는 것보다 히든코드와 숨은 할인을 챙겨 지금 사는 편이 나을 수 있습니다."}}]},{"@type":"VideoObject","name":"룰루레몬이 블프에 이렇게까지 내린다고? | 남자 패딩 179달러·레깅스 39달러","description":"룰루레몬이 블프에 이렇게까지 내린다고? | 남자 패딩 179달러·레깅스 39달러 · 마프대란알리미 유튜브 2026.11.20","thumbnailUrl":"https://i.ytimg.com/vi/A-DVtlBq-ig/hqdefault.jpg","uploadDate":"2026-11-20","embedUrl":"https://www.youtube.com/embed/A-DVtlBq-ig","contentUrl":"https://www.youtube.com/watch?v=A-DVtlBq-ig"}]}</script>
 </head>
@@ -691,6 +760,13 @@ body.hasSticky{padding-bottom:0}
   <p>마이프로틴(Myprotein)은 THG plc의 상표, 아이허브(iHerb)는 iHerb, LLC의 상표이며 본 사이트와 무관합니다.</p>
 </footer>
 </main>
+<nav class="tabBar" aria-label="빠른 메뉴"><a href="./" aria-current="page"><svg viewBox="0 0 24 24"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg><span>오늘</span></a><a href="./code.html"><svg viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg><span>할인코드</span></a><a href="./calc.html"><svg viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="19" rx="2.5"/><path d="M8.5 7h7M9 12h.01M12 12h.01M15 12h.01M9 15.5h.01M12 15.5h.01M15 15.5h.01M9 19h.01M12 19h.01M15 19h.01"/></svg><span>계산기</span></a><a href="./daeran.html"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg><span>대란 일정</span></a><a href="#menu"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg><span>전체</span></a></nav>
+<div class="sheet" id="menu" role="dialog" aria-modal="true" aria-label="전체 메뉴"><div class="sheetIn">
+<div class="sheetHead"><b>전체 메뉴</b><a href="#" data-close>닫기</a></div>
+<h3>마이프로틴</h3><div class="sheetGrid"><a href="./" aria-current="page">오늘 할인율</a><a href="./code.html">할인코드</a><a href="./calc.html">계산기</a><a href="./jikgu.html">직구 방법</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./taste.html">맛 추천</a><a href="./taste-rank.html">맛 순위</a><a href="./wpc-wpi.html"><span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span></a><a href="./alternatives.html">가성비 비교</a><a href="./price.html">대란 가격 비교</a><a href="./referral.html">추천인 코드</a><a href="./daeran.html">대란 일정·기록</a><a href="./blackfriday.html">블랙프라이데이</a><a href="./about.html">소개</a></div>
+<h3>아이허브</h3><div class="sheetGrid"><a href="./iherb.html">할인코드</a><a href="./iherb-2026-11.html">11월 코드</a><a href="./iherb-jikgu.html">직구 방법</a><a href="./iherb-best.html">추천템</a><a href="./iherb-probiotics.html">유산균</a><a href="./iherb-omega3.html">오메가3</a><a href="./iherb-magnesium.html">마그네슘</a><a href="./iherb-blackfriday.html">블프</a></div>
+<h3>알림</h3><div class="sheetGrid"><a href="https://open.kakao.com/o/gh0XALIi">알림 단톡방</a><a href="https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1">유튜브</a></div>
+</div></div>
 <a class="sticky" href="https://www.awin1.com/cread.php?awinmid=10751&amp;awinaffid=325265&amp;clickref=pt-home-sticky&amp;ued=https://www.myprotein.co.kr/referrals.list?applyCode=NED6-R3" target="_blank" rel="sponsored nofollow noopener" data-copy="SE9SU0VLSU5H" data-label="히든코드"><b>히든코드</b> 복사하고 사러 가기 →</a>
 <div class="toast" role="status" aria-live="polite"></div>
 <script>
@@ -707,6 +783,10 @@ body.hasSticky{padding-bottom:0}
       var w=Math.max(0,Math.min(100,(1-l/(gt-gf))*100));gi.style.width=w.toFixed(2)+'%';gb.setAttribute('aria-valuenow',Math.round(w));
       var s=Math.floor(l/1000);gl.textContent=Math.floor(s/3600)+'시간 '+p2(Math.floor(s%3600/60))+'분 '+p2(s%60)+'초'};
     gtick();giv=setInterval(gtick,1000)}
+  var sh=document.getElementById('menu');
+  if(sh){document.querySelectorAll('a[href="#menu"]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();sh.classList.add('on')})});
+    sh.addEventListener('click',function(e){if(e.target===sh||e.target.hasAttribute('data-close')){e.preventDefault();sh.classList.remove('on');if(location.hash==='#menu')history.replaceState(null,'',location.pathname+location.search)}});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')sh.classList.remove('on')})}
   var cur=document.querySelector('.topNav a[aria-current]');if(cur&&cur.scrollIntoView){try{cur.scrollIntoView({inline:'center',block:'nearest'})}catch(e){}}
   var st=document.querySelector('.sticky'),hb=document.querySelector('.heroBtn');
   if(st&&hb&&'IntersectionObserver' in window){new IntersectionObserver(function(es){st.classList.toggle('hide',es[0].isIntersecting)},{threshold:.4}).observe(hb)}
