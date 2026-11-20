@@ -592,6 +592,12 @@ body.hasSticky{padding-bottom:calc(var(--tabH) + 70px + env(safe-area-inset-bott
 .sheetGrid a[aria-current]{background:var(--brand);color:#fff;border-color:transparent}
 .sheetGrid .nl{display:none}
 footer{border-top:0}
+.upd h2{margin:0 0 10px}
+.upd .updDate{font-size:13px;font-weight:700;color:var(--accent);margin:0 0 4px;letter-spacing:.02em}
+.upd ul{margin:0;padding-left:20px;color:var(--ink-2)}
+.upd li{margin:4px 0}
+.updLinks{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.updLinks a{background:var(--page);border-radius:999px;padding:7px 13px;font-size:14px;font-weight:700;text-decoration:none;color:var(--brand)}
 /* 카드 안의 넓은 표는 카드 안에서만 옆으로 밀리게 (페이지 전체가 가로로 넘치지 않게) */
 .cols > section table:not(.altWrap table):not(.cmpWrap table):not(.nutWrap table){display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 @media(max-width:479px){.cols > section{padding:20px 16px 16px;border-radius:20px}}
@@ -695,7 +701,7 @@ body{font-size:16px}
   <div class="fBrand"><b>프로티파이</b><i aria-hidden="true"></i><span>PROTEIFY</span></div>
   <p class="fSlogan">단백질은 가장 쌀 때. 영양제는 가장 맞는 걸로.</p>
   <p class="fLine">마이프로틴 대란 알림부터 아이허브 비교까지</p>
-  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a><a href="./calc.html">할인 계산기</a><a href="./jikgu.html">직구 방법</a><a href="./price.html">대란 가격 비교</a><a href="./alternatives.html">마이프로틴 대안</a><a href="./referral.html">추천인 코드</a><a href="./daeran.html">대란 기록</a><a href="./daeran-1111.html">11월 11일 대란</a><a href="./daeran-2026-12.html">12월 대란</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./daeran-2026-10.html">10월 대란</a><a href="./blackfriday.html">블랙프라이데이</a><a href="./iherb.html">아이허브 할인코드</a><a href="./iherb-jikgu.html">아이허브 직구 방법</a><a href="./iherb-best.html">아이허브 추천템</a><a href="./iherb-blackfriday.html">아이허브 블프</a><a href="./about.html">소개</a><a href="https://open.kakao.com/o/gh0XALIi">알림 단톡방</a><a href="https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1">유튜브</a></nav>
+  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a><a href="./calc.html">할인 계산기</a><a href="./jikgu.html">직구 방법</a><a href="./price.html">대란 가격 비교</a><a href="./alternatives.html">마이프로틴 대안</a><a href="./referral.html">추천인 코드</a><a href="./daeran.html">대란 기록</a><a href="./daeran-1111.html">11월 11일 대란</a><a href="./daeran-2026-12.html">12월 대란</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./daeran-2026-10.html">10월 대란</a><a href="./blackfriday.html">블랙프라이데이</a><a href="./iherb.html">아이허브 할인코드</a><a href="./iherb-jikgu.html">아이허브 직구 방법</a><a href="./iherb-best.html">아이허브 추천템</a><a href="./iherb-blackfriday.html">아이허브 블프</a><a href="./about.html">소개</a><a href="./updates.html">업데이트 내역</a><a href="https://open.kakao.com/o/gh0XALIi">알림 단톡방</a><a href="https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1">유튜브</a></nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 쇼핑몰에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표, 아이허브(iHerb)는 iHerb, LLC의 상표이며 본 사이트와 무관합니다.</p>
@@ -704,7 +710,7 @@ body{font-size:16px}
 <nav class="tabBar" aria-label="빠른 메뉴"><a href="./"><svg viewBox="0 0 24 24"><path d="M4 19V10M10 19V5M16 19v-7M22 19H2"/></svg><span>오늘</span></a><a href="./code.html"><svg viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg><span>할인코드</span></a><a href="./calc.html"><svg viewBox="0 0 24 24"><rect x="5" y="2.5" width="14" height="19" rx="2.5"/><path d="M8.5 7h7M9 12h.01M12 12h.01M15 12h.01M9 15.5h.01M12 15.5h.01M15 15.5h.01M9 19h.01M12 19h.01M15 19h.01"/></svg><span>계산기</span></a><a href="./daeran.html"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg><span>대란 일정</span></a><a href="#menu"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg><span>전체</span></a></nav>
 <div class="sheet" id="menu" role="dialog" aria-modal="true" aria-label="전체 메뉴"><div class="sheetIn">
 <div class="sheetHead"><b>전체 메뉴</b><a href="#" data-close>닫기</a></div>
-<h3>마이프로틴</h3><div class="sheetGrid"><a href="./">오늘 할인율</a><a href="./code.html">할인코드</a><a href="./calc.html">계산기</a><a href="./jikgu.html">직구 방법</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./taste.html">맛 추천</a><a href="./taste-rank.html">맛 순위</a><a href="./wpc-wpi.html"><span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span></a><a href="./alternatives.html">가성비 비교</a><a href="./price.html">대란 가격 비교</a><a href="./referral.html">추천인 코드</a><a href="./daeran.html">대란 일정·기록</a><a href="./blackfriday.html">블랙프라이데이</a><a href="./about.html">소개</a></div>
+<h3>마이프로틴</h3><div class="sheetGrid"><a href="./">오늘 할인율</a><a href="./code.html">할인코드</a><a href="./calc.html">계산기</a><a href="./jikgu.html">직구 방법</a><a href="./daeran-2026-11.html">11월 대란</a><a href="./taste.html">맛 추천</a><a href="./taste-rank.html">맛 순위</a><a href="./wpc-wpi.html"><span class="nl">임팩트웨이 vs 아이솔레이트</span><span class="ns">임팩트 vs 아이솔</span></a><a href="./alternatives.html">가성비 비교</a><a href="./price.html">대란 가격 비교</a><a href="./referral.html">추천인 코드</a><a href="./daeran.html">대란 일정·기록</a><a href="./blackfriday.html">블랙프라이데이</a><a href="./about.html">소개</a><a href="./updates.html">업데이트 내역</a></div>
 <h3>아이허브</h3><div class="sheetGrid"><a href="./iherb.html">할인코드</a><a href="./iherb-2026-11.html">11월 코드</a><a href="./iherb-jikgu.html">직구 방법</a><a href="./iherb-best.html">추천템</a><a href="./iherb-probiotics.html">유산균</a><a href="./iherb-omega3.html">오메가3</a><a href="./iherb-magnesium.html">마그네슘</a><a href="./iherb-blackfriday.html">블프</a></div>
 <h3>알림</h3><div class="sheetGrid"><a href="https://open.kakao.com/o/gh0XALIi">알림 단톡방</a><a href="https://www.youtube.com/channel/UC7xfEdYZQQ-to53AnjCerbA?sub_confirmation=1">유튜브</a></div>
 </div></div>

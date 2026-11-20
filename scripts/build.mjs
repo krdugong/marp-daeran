@@ -47,6 +47,8 @@ const sgUrl = u => /awin1\.com/.test(String(u)) ? String(u).replace(/clickref=[^
 // ── 공통 도우미 ──
 const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 // ── 화면 캡처 (shots/*.webp, 크기는 shots/sizes.json). tall 은 세로로 긴 캡처라 폭을 줄여 보여 줍니다 ──
+// 업데이트 내역 (data/updates.json, 최신이 위)
+const UPDATES = fs.existsSync(path.join(ROOT, 'data/updates.json')) ? (readJson('data/updates.json').entries || []) : [];
 const SHOT_SIZES = fs.existsSync(path.join(ROOT, 'shots/sizes.json')) ? readJson('shots/sizes.json') : {};
 const shot = (f, alt, cap, cls = '') => SHOT_SIZES[f] ? `<figure class="shot${cls ? ' ' + cls : ''}"><a href="./shots/${f}" target="_blank" rel="noopener"><img src="./shots/${f}" alt="${esc(alt)}" width="${SHOT_SIZES[f][0]}" height="${SHOT_SIZES[f][1]}" loading="lazy" decoding="async"></a><figcaption>${cap} <span class="zoom">눌러서 크게 보기</span></figcaption></figure>` : '';
 const pct = n => (Number.isInteger(n) ? n : n.toFixed(1)) + '%';
@@ -1100,6 +1102,12 @@ body.hasSticky{padding-bottom:calc(var(--tabH) + 70px + env(safe-area-inset-bott
 .sheetGrid a[aria-current]{background:var(--brand);color:#fff;border-color:transparent}
 .sheetGrid .nl{display:none}
 footer{border-top:0}
+.upd h2{margin:0 0 10px}
+.upd .updDate{font-size:13px;font-weight:700;color:var(--accent);margin:0 0 4px;letter-spacing:.02em}
+.upd ul{margin:0;padding-left:20px;color:var(--ink-2)}
+.upd li{margin:4px 0}
+.updLinks{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.updLinks a{background:var(--page);border-radius:999px;padding:7px 13px;font-size:14px;font-weight:700;text-decoration:none;color:var(--brand)}
 /* 카드 안의 넓은 표는 카드 안에서만 옆으로 밀리게 (페이지 전체가 가로로 넘치지 않게) */
 .cols > section table:not(.altWrap table):not(.cmpWrap table):not(.nutWrap table){display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 @media(max-width:479px){.cols > section{padding:20px 16px 16px;border-radius:20px}}
@@ -1301,7 +1309,7 @@ ${restHtml}
   <div class="fBrand"><b>${esc(SITE.brand)}</b>${SITE.brandEn ? `<i aria-hidden="true"></i><span>${esc(SITE.brandEn)}</span>` : ''}</div>
   ${SITE.slogan ? `<p class="fSlogan">${esc(SITE.slogan)}</p>` : ''}
   ${HEADER_LINE ? `<p class="fLine">${esc(HEADER_LINE)}</p>` : ''}
-  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}<a href="./jikgu.html">직구 방법</a>${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${altMp ? '<a href="./alternatives.html">마이프로틴 대안</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${EVENT_PAGES.map(ev => `<a href="./${ev.page}">${kdate(ev.date)} 대란</a>`).join('')}${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}${IH ? '<a href="./iherb.html">아이허브 할인코드</a>' : ''}${IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? '<a href="./iherb-jikgu.html">아이허브 직구 방법</a><a href="./iherb-best.html">아이허브 추천템</a><a href="./iherb-blackfriday.html">아이허브 블프</a>' : ''}<a href="./about.html">소개</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
+  <nav><a href="./">오늘 할인율</a><a href="./code.html">마이프로틴 할인코드</a>${calcWidget ? '<a href="./calc.html">할인 계산기</a>' : ''}<a href="./jikgu.html">직구 방법</a>${PRODUCTS.length ? '<a href="./price.html">대란 가격 비교</a>' : ''}${altMp ? '<a href="./alternatives.html">마이프로틴 대안</a>' : ''}${db.referral ? '<a href="./referral.html">추천인 코드</a>' : ''}<a href="./daeran.html">대란 기록</a>${EVENT_PAGES.map(ev => `<a href="./${ev.page}">${kdate(ev.date)} 대란</a>`).join('')}${[...monthPages].reverse().slice(0, 3).map(ym => `<a href="./${monthFile(ym)}">${M(ym)}월 대란</a>`).join('')}${bfSeason ? '<a href="./blackfriday.html">블랙프라이데이</a>' : ''}${IH ? '<a href="./iherb.html">아이허브 할인코드</a>' : ''}${IH && fs.existsSync(path.join(ROOT, 'data/iherb-guides.json')) ? '<a href="./iherb-jikgu.html">아이허브 직구 방법</a><a href="./iherb-best.html">아이허브 추천템</a><a href="./iherb-blackfriday.html">아이허브 블프</a>' : ''}<a href="./about.html">소개</a><a href="./updates.html">업데이트 내역</a><a href="${esc(SITE.kakao)}">알림 단톡방</a>${SITE.youtubeChannel ? `<a href="${esc(SITE.youtubeChannel)}">유튜브</a>` : ''}</nav>
   <p>이 사이트는 제휴 링크를 통해 수수료를 받을 수 있습니다. 구매 금액에는 차이가 없습니다.</p>
   <p>표시된 할인율은 확인 시점의 값이며 실제 결제 금액과 다를 수 있습니다. 숨은 할인은 조건과 기간에 따라 적용되지 않을 수 있습니다. 구매 전 쇼핑몰에서 최종 금액을 확인하십시오.</p>
   <p>마이프로틴(Myprotein)은 THG plc의 상표${IH ? ', 아이허브(iHerb)는 iHerb, LLC의 상표' : ''}이며 본 사이트와 무관합니다.</p>
@@ -1313,8 +1321,8 @@ ${(() => {
   const tabs = sec === 'ih'
     ? tab('iherb.html', '할인코드', 'code') + (hasGuides ? tab('iherb-best.html', '추천템', 'star') + tab('iherb-jikgu.html', '직구 방법', 'box') + tab('iherb-blackfriday.html', '블프', 'tag') : tab('', '마이프로틴', 'today') + tab('code.html', '마프 코드', 'code') + tab('daeran.html', '대란 일정', 'cal'))
     : tab('', '오늘', 'today') + tab('code.html', '할인코드', 'code') + (calcWidget ? tab('calc.html', '계산기', 'calc') : tab('price.html', '가격', 'calc')) + tab('daeran.html', '대란 일정', 'cal');
-  const extra = [['price.html', '대란 가격 비교', PRODUCTS.length], ['referral.html', '추천인 코드', db.referral], ['daeran.html', '대란 일정·기록', true], ['blackfriday.html', '블랙프라이데이', true], ['about.html', '소개', true]]
-    .filter(([h, , ok]) => ok && fs.existsSync(path.join(ROOT, h)) && !mpSub.includes(`href="./${h}"`)).map(([h, l]) => navLink(h, l)).join('');
+  const extra = [['price.html', '대란 가격 비교', PRODUCTS.length], ['referral.html', '추천인 코드', db.referral], ['daeran.html', '대란 일정·기록', true], ['blackfriday.html', '블랙프라이데이', true], ['about.html', '소개', true], ['updates.html', '업데이트 내역', UPDATES.length]]
+    .filter(([h, , ok]) => ok && (h === 'updates.html' || fs.existsSync(path.join(ROOT, h))) && !mpSub.includes(`href="./${h}"`)).map(([h, l]) => navLink(h, l)).join('');
   return `<nav class="tabBar" aria-label="빠른 메뉴">${tabs}${tab('#menu', '전체', 'all')}</nav>
 <div class="sheet" id="menu" role="dialog" aria-modal="true" aria-label="전체 메뉴"><div class="sheetIn">
 <div class="sheetHead"><b>전체 메뉴</b><a href="#" data-close>닫기</a></div>
@@ -3449,6 +3457,30 @@ ${ytUrl ? `<a class="cta" href="${esc(SITE.youtubeChannel)}" target="_blank" rel
 </section>
 `,
 });
+
+// ── 업데이트 내역 ──
+if (UPDATES.length) {
+  const upLast = UPDATES[0].date;
+  page({
+    file: 'updates.html', priority: 0.4, changefreq: 'weekly', current: 'updates.html', lastmod: upLast,
+    title: `업데이트 내역 | ${SITE.brand}에 새로 생긴 기능과 페이지`,
+    keywords: ['프로티파이 업데이트', '프로티파이 새 기능'],
+    desc: `${SITE.brand}에 새로 생긴 페이지와 바뀐 점을 날짜순으로 정리했습니다. 마지막 업데이트 ${dot(upLast)}: ${UPDATES[0].title}.`,
+    ld: [crumbs([['홈', 'index.html'], ['업데이트 내역', 'updates.html']])],
+    heroHtml: `
+<div class="hero"><div class="heroMain">
+<p class="updated">마지막 업데이트 ${dot(upLast)}</p>
+<h1>업데이트 내역</h1>
+<p class="lede answer">${esc(SITE.brand)}에 새로 생긴 페이지와 바뀐 점을 최신순으로 적습니다. 할인율과 가격은 매일 자동으로 갱신되므로 여기에는 적지 않습니다.</p>
+</div></div>`,
+    restHtml: UPDATES.map(u => `<section class="full upd">
+<p class="updDate">${dot(u.date)}</p>
+<h2>${esc(u.title)}</h2>
+<ul>${(u.items || []).map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+${(u.links || []).filter(([h]) => fs.existsSync(path.join(ROOT, h))).length ? `<p class="updLinks">${u.links.filter(([h]) => fs.existsSync(path.join(ROOT, h))).map(([h, l]) => `<a href="./${h}">${esc(l)} →</a>`).join('')}</p>` : ''}
+</section>`).join('\n'),
+  });
+}
 
 // ── 추천인 코드 (키워드: 마이프로틴 추천인 코드) ──
 if (db.referral) {
