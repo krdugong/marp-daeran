@@ -223,6 +223,20 @@ button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--
 .hidden-deals .when{font-size:13px;color:var(--muted);margin-top:6px}
 .steps{padding-left:20px;margin:0 0 12px;font-size:15px;line-height:1.7}
 .steps li{margin-bottom:8px}
+.deals{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.deals li{border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:baseline}
+.deals .dn{font-weight:700;font-size:16px;line-height:1.4}
+.deals .dc{grid-column:1;font-size:13px;color:var(--muted)}
+.deals .dp{grid-column:2;grid-row:1;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.deals .dp s{color:var(--muted);font-size:13px;margin-right:6px}
+.deals .dp b{font-size:18px;color:var(--accent)}
+.deals .doff{grid-column:2;text-align:right;font-size:12px;font-weight:700;color:var(--accent)}
+.deals .dnote{grid-column:1/-1;font-size:13px;color:var(--ink-2);margin:2px 0 0}
+.deals .go{grid-column:1/-1;justify-self:start;margin-top:6px}
+.postVid{margin:16px 0 0;border-radius:var(--r-sm);overflow:hidden;background:#000;aspect-ratio:16/9}
+.postVid iframe,.postVid img{display:block;width:100%;height:100%;border:0;object-fit:cover}
+.moreBtns{display:grid;gap:8px;margin:14px 0 4px}.moreBtns .cta{margin:0}@media(min-width:640px){.moreBtns{grid-template-columns:2fr 1fr 1fr}}
+.postVidNote{font-size:13px;color:var(--muted);margin:8px 0 0}
 .linkList{list-style:none;padding:0;margin:0;display:grid;gap:6px}
 .linkList a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;background:var(--surface);border-radius:var(--r-sm);text-decoration:none;font-size:14px;transition:background .2s}
 .linkList a:hover{background:var(--surface-2)}

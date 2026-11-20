@@ -135,6 +135,15 @@ const sureOpen = sureNext && sureNext.time ? `${kdate(sureNext.openDate || sureN
 const soonDd = (() => { if (!sureNext) return null; const d = daysBetween(last.date, sureNext.date); return d >= 0 && d <= 3 ? d : null; })();
 const EVENT_PAGES = (db.announced || []).filter(a => a.date && a.page && a.sure);
 const EV_HOME = EVENT_PAGES.find(ev => last.date <= (ev.signup && ev.signup.useTo ? ev.signup.useTo : addDays(ev.date, 1))) || null;
+// 영상 글 목록 (data/posts.json). home 이 있는 글은 홈에 띠와 버튼으로 걸립니다 (until 날짜까지)
+const POSTS = fs.existsSync(path.join(ROOT, 'data/posts.json')) ? (readJson('data/posts.json').posts || []) : [];
+const PUBLIC_VIDS = new Set(fs.existsSync(path.join(ROOT, 'data/youtube.json')) ? (readJson('data/youtube.json').videos || []).map(v => v.id) : []);
+const postBand = POSTS.filter(p => p.home && p.home.label && (!p.home.until || last.date <= p.home.until)).map(p => `<section class="full evBand postBand">
+${p.home.eyebrow ? `<p class="eyebrow">${esc(p.home.eyebrow)}</p>` : ''}
+${p.home.title ? `<h2 class="bandTitle">${esc(p.home.title)}</h2>` : ''}
+${p.home.lede ? `<p class="lede">${esc(p.home.lede)}</p>` : ''}
+<div class="evBtns"><a class="cta hot" href="./${esc(p.file)}">${esc(p.home.label)}</a></div>
+</section>`).join('\n');
 const evBanner = EV_HOME && !isDaeran ? (() => {
   const ev = EV_HOME, sg = ev.signup, dd = daysBetween(last.date, ev.date), applyOpen = sg && (!sg.applyUntil || last.date <= sg.applyUntil);
   return `<section class="full evBand">
@@ -716,6 +725,20 @@ button:focus-visible,.cta:focus-visible,a:focus-visible{outline:2px solid var(--
 .hidden-deals .when{font-size:13px;color:var(--muted);margin-top:6px}
 .steps{padding-left:20px;margin:0 0 12px;font-size:15px;line-height:1.7}
 .steps li{margin-bottom:8px}
+.deals{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.deals li{border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:baseline}
+.deals .dn{font-weight:700;font-size:16px;line-height:1.4}
+.deals .dc{grid-column:1;font-size:13px;color:var(--muted)}
+.deals .dp{grid-column:2;grid-row:1;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.deals .dp s{color:var(--muted);font-size:13px;margin-right:6px}
+.deals .dp b{font-size:18px;color:var(--accent)}
+.deals .doff{grid-column:2;text-align:right;font-size:12px;font-weight:700;color:var(--accent)}
+.deals .dnote{grid-column:1/-1;font-size:13px;color:var(--ink-2);margin:2px 0 0}
+.deals .go{grid-column:1/-1;justify-self:start;margin-top:6px}
+.postVid{margin:16px 0 0;border-radius:var(--r-sm);overflow:hidden;background:#000;aspect-ratio:16/9}
+.postVid iframe,.postVid img{display:block;width:100%;height:100%;border:0;object-fit:cover}
+.moreBtns{display:grid;gap:8px;margin:14px 0 4px}.moreBtns .cta{margin:0}@media(min-width:640px){.moreBtns{grid-template-columns:2fr 1fr 1fr}}
+.postVidNote{font-size:13px;color:var(--muted);margin:8px 0 0}
 .linkList{list-style:none;padding:0;margin:0;display:grid;gap:6px}
 .linkList a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;background:var(--surface);border-radius:var(--r-sm);text-decoration:none;font-size:14px;transition:background .2s}
 .linkList a:hover{background:var(--surface-2)}
@@ -1327,6 +1350,7 @@ ${otherCodesBox}
   extraScript: calcWidget ? calcScript : '',
   restHtml: `
 ${evBanner}
+${postBand}
 ${priceGauge() ? `<section class="full">
 <h2>지금 사도 될까</h2>
 ${lowGauge()}
@@ -3492,10 +3516,70 @@ ${bfRows.length ? `<table>
 <h2>자주 묻는 질문</h2>
 ${faqHtml(BF_FAQ)}
 </section>
+${(() => { const ps = fs.existsSync(path.join(ROOT, 'data/posts.json')) ? (readJson('data/posts.json').posts || []).filter(p => p.tag === 'blackfriday') : []; return ps.length ? `
+<section class="full">
+<h2>같이 보면 좋은 블프 직구 글</h2>
+<ul class="steps">${ps.map(p => `<li><a href="./${esc(p.file)}">${esc(p.crumb || p.title)}</a> · ${esc(p.desc.split('.')[0])}</li>`).join('')}</ul>
+</section>` : ''; })()}
 
 ${ytPromo}
 ${kakaoBox}
 `,
+  });
+}
+
+// ── 영상 글 (data/posts.json): 유튜브 영상을 글로 옮긴 페이지 ──
+for (const po of POSTS) {
+  const aff = 'target="_blank" rel="sponsored nofollow noopener"';
+  const cur = po.currency || '';
+  const money = n => `${cur}${Number(n).toLocaleString('en-US')}`;
+  const vid = po.video && (po.video.public || PUBLIC_VIDS.has(po.video.id)) ? po.video : null;
+  const src = po.source && po.source.name ? po.source : null;
+  const srcLink = src ? (src.url ? `<a href="${esc(src.url)}" target="_blank" rel="noopener">${esc(src.name)}</a>` : esc(src.name)) : '';
+  const vidHtml = vid
+    ? `<div class="postVid"><iframe src="https://www.youtube-nocookie.com/embed/${esc(vid.id)}" title="${esc(vid.title || po.crumb)}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
+    : po.thumb ? `<div class="postVid"><img src="./${esc(po.thumb)}" alt="${esc(po.thumbAlt || '')}" width="1200" height="675"></div><p class="postVidNote">영상은 곧 마프대란알리미 유튜브에 공개됩니다.</p>` : '';
+  const items = (po.items || []).map((it, i) => `<li><span class="dn">${i + 1}. ${esc(it.name)}</span><span class="dp">${it.was ? `<s>${money(it.was)}</s>` : ''}<b>${money(it.price)}</b></span>${it.color ? `<span class="dc">${esc(it.color)}</span>` : '<span class="dc"></span>'}${it.was ? `<span class="doff">${Math.round((1 - it.price / it.was) * 100)}% 할인</span>` : ''}${it.note ? `<p class="dnote">${esc(it.note)}</p>` : ''}${it.url ? `<a class="go" href="${esc(it.url)}" ${aff}>상품 보러 가기 →</a>` : ''}</li>`).join('\n');
+  page({
+    file: po.file, priority: 0.7, current: po.file, lastmod: po.date,
+    title: po.title, desc: po.desc, keywords: po.keywords || [], pageType: 'Article',
+    ld: [crumbs([['홈', 'index.html'], ...(po.tag === 'blackfriday' && bfSeason ? [['블랙프라이데이', 'blackfriday.html']] : []), [po.crumb || po.title, po.file]]), ...(po.faq && po.faq.length ? [faqLd(po.faq)] : []),
+      ...(vid ? [{ '@type': 'VideoObject', name: vid.title, description: po.desc, thumbnailUrl: `https://i.ytimg.com/vi/${vid.id}/hqdefault.jpg`, uploadDate: po.date, embedUrl: `https://www.youtube.com/embed/${vid.id}`, contentUrl: ytWatch(vid.id) }] : [])],
+    stickyHtml: '',
+    heroHtml: `
+<div class="hero">
+<div class="heroMain">
+<h1>${po.h1 || esc(po.title)}</h1>
+<p class="updated">${esc(po.checked || dot(po.date))}${src ? ` · 출처 ${srcLink}` : ''}</p>
+<p class="lede">${po.lede || ''}</p>
+${vidHtml}
+</div>
+</div>`,
+    restHtml: `
+${items ? `<section class="full">
+<h2>할인 폭 큰 상품 ${po.items.length}가지</h2>
+<ul class="deals">${items}</ul>
+${po.more && po.more.length ? `<div class="moreBtns">${po.more.map((m, i) => `<a class="cta ${i ? 'ghost' : 'hot'}" href="${esc(m.url)}" ${aff}>${esc(m.label)}</a>`).join('')}</div>` : ''}
+${src ? `<p class="hint">출처: ${srcLink}${src.note ? ` · ${esc(src.note)}` : ''}</p>` : ''}
+${po.affNote ? `<p class="hint">${esc(po.affNote)}</p>` : ''}
+</section>` : ''}
+${po.warn && po.warn.length ? `<section class="full">
+<h2>사기 전에 꼭 알아둘 것</h2>
+<ul class="steps">${po.warn.map(w => `<li>${esc(w)}</li>`).join('')}</ul>
+</section>` : ''}
+${po.steps && po.steps.length ? `<section class="full">
+<h2>${esc(po.stepsTitle || '사는 순서')}</h2>
+<ol class="steps">${po.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+</section>` : ''}
+${po.box ? `<section class="full">
+<h2>${esc(po.boxTitle || '')}</h2>
+<p>${esc(po.box)}</p>
+</section>` : ''}
+${po.faq && po.faq.length ? `<section>
+<h2>자주 묻는 질문</h2>
+${faqHtml(po.faq)}
+</section>` : ''}
+${vid ? '' : po.video ? `<a class="cta ghost" href="${esc(SITE.youtubeChannel)}" target="_blank" rel="noopener">마프대란알리미 유튜브 보기</a>` : ''}`,
   });
 }
 
