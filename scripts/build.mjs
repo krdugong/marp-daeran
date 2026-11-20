@@ -3539,7 +3539,12 @@ for (const po of POSTS) {
   const vidHtml = vid
     ? `<div class="postVid"><iframe src="https://www.youtube-nocookie.com/embed/${esc(vid.id)}" title="${esc(vid.title || po.crumb)}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`
     : po.thumb ? `<div class="postVid"><img src="./${esc(po.thumb)}" alt="${esc(po.thumbAlt || '')}" width="1200" height="675"></div><p class="postVidNote">영상은 곧 마프대란알리미 유튜브에 공개됩니다.</p>` : '';
-  const items = (po.items || []).map((it, i) => `<li><span class="dn">${i + 1}. ${esc(it.name)}</span><span class="dp">${it.was ? `<s>${money(it.was)}</s>` : ''}<b>${money(it.price)}</b></span>${it.color ? `<span class="dc">${esc(it.color)}</span>` : '<span class="dc"></span>'}${it.was ? `<span class="doff">${Math.round((1 - it.price / it.was) * 100)}% 할인</span>` : ''}${it.note ? `<p class="dnote">${esc(it.note)}</p>` : ''}${it.url ? `<a class="go" href="${esc(it.url)}" ${aff}>상품 보러 가기 →</a>` : ''}</li>`).join('\n');
+  const items = (po.items || []).map((it, i) => `<li><span class="dn">${i + 1}. ${esc(it.name)}</span><span class="dp">${it.was ? `<s>${money(it.was)}</s>` : ''}<b>${money(it.price)}</b></span><span class="dc">${[it.color ? esc(it.color) : '', cur === '$' ? `약 ${won(Math.round(it.price * SHOP.usdKrw / 1000) * 1000)}` : ''].filter(Boolean).join(' · ')}</span>${it.was ? `<span class="doff">${Math.round((1 - it.price / it.was) * 100)}% 할인</span>` : ''}${it.note ? `<p class="dnote">${esc(it.note)}</p>` : ''}${it.url ? `<a class="go" href="${esc(it.url)}" ${aff}>상품 보러 가기 →</a>` : ''}</li>`).join('\n');
+  const off = it => it.was ? Math.round((1 - it.price / it.was) * 100) : 0;
+  const top3 = [...(po.items || [])].filter(it => it.was).sort((a, b) => off(b) - off(a)).slice(0, 3);
+  const itemsNote = top3.length ? `<p class="lede">할인율로 줄 세우면 ${top3.map(it => `${esc(it.short || it.name.replace(/^(남성|여성)\s*/, '').split(' ').slice(0, 2).join(' '))}(${off(it)}%)`).join(', ')} 순입니다.${cur === '$' ? ` 원화는 1달러 ${SHOP.usdKrw.toLocaleString('ko-KR')}원으로 어림한 값이고, 배대지 배송비는 따로 듭니다.` : ''}</p>` : '';
+  const cb = po.combos && po.combos.sets ? po.combos : null;
+  const comboRows = cb ? cb.sets.map(s => { const its = s.map(n => po.items[n - 1]).filter(Boolean), sum = its.reduce((a, it) => a + it.price, 0), ok = sum <= cb.limit; return `<tr${ok ? '' : ' class="hot"'}><td>${its.map(it => `${esc(it.short || it.name.replace(/^(남성|여성)\s*/, '').split(' ').slice(0, 2).join(' '))} ${money(it.price)}`).join(' + ')}</td><td class="n">${money(sum)}</td><td>${ok ? '면세' : `${money(cb.limit)} 초과 · 전체 과세`}</td></tr>`; }).join('') : '';
   page({
     file: po.file, priority: 0.7, current: po.file, lastmod: po.date,
     title: po.title, desc: po.desc, keywords: po.keywords || [], pageType: 'Article',
@@ -3558,6 +3563,7 @@ ${vidHtml}
     restHtml: `
 ${items ? `<section class="full">
 <h2>할인 폭 큰 상품 ${po.items.length}가지</h2>
+${itemsNote}
 <ul class="deals">${items}</ul>
 ${po.more && po.more.length ? `<div class="moreBtns">${po.more.map((m, i) => `<a class="cta ${i ? 'ghost' : 'hot'}" href="${esc(m.url)}" ${aff}>${esc(m.label)}</a>`).join('')}</div>` : ''}
 ${src ? `<p class="hint">출처: ${srcLink}${src.note ? ` · ${esc(src.note)}` : ''}</p>` : ''}
@@ -3570,6 +3576,13 @@ ${po.warn && po.warn.length ? `<section class="full">
 ${po.steps && po.steps.length ? `<section class="full">
 <h2>${esc(po.stepsTitle || '사는 순서')}</h2>
 <ol class="steps">${po.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+${po.stepsNote ? `<p class="hint">${esc(po.stepsNote)}</p>` : ''}
+</section>` : ''}
+${cb ? `<section class="full">
+<h2>${esc(cb.title || '면세 조합')}</h2>
+${cb.intro ? `<p class="lede">${esc(cb.intro)}</p>` : ''}
+<table><thead><tr><th>담는 조합</th><th class="n">합계</th><th>관부가세</th></tr></thead><tbody>${comboRows}</tbody></table>
+${cb.note ? `<p class="hint">${esc(cb.note)}</p>` : ''}
 </section>` : ''}
 ${po.box ? `<section class="full">
 <h2>${esc(po.boxTitle || '')}</h2>
