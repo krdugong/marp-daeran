@@ -2021,6 +2021,8 @@ ${heroCta}
 <p class="lede">${verdict}</p>
 ${altTable}
 <p class="hint">단백질 1g당 가격이 낮을수록 가성비가 좋습니다. 가격은 적힌 확인일 기준이라 지금과 다를 수 있고, 마이프로틴 줄은 표시가에 코드만 적용한 값입니다. 마이프로틴 링크는 제휴 링크이고 다른 쇼핑몰 링크도 제휴 링크일 수 있습니다.</p>
+${ALT.items.some(it => /coupang\.com/.test(it.aff || '')) ? '<p class="hint">이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>' : ''}
+${ALT.items.some(it => /naver\.me|brandconnect\.naver/.test(it.aff || '')) ? '<p class="hint">네이버 상품 링크는 네이버 쇼핑 커넥트 제휴 링크라, 이 링크로 구매하면 판매처에서 일정 수수료를 받습니다. 구매 가격은 같습니다.</p>' : ''}
 </section>
 
 <section class="full">
