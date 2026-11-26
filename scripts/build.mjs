@@ -224,7 +224,8 @@ const waitEv = (db.announced || []).find(a => a.waitNote && a.time && nowStamp <
 const waitWhen = waitEv ? `${(waitEv.openDate || waitEv.date) === nowStamp.slice(0, 10) ? '오늘' : kdate(waitEv.openDate || waitEv.date)} ${hmK(waitEv.time)}` : '';
 const waitTxt = waitEv ? `지금 사도 되지만 ${waitWhen}까지 기다려 보세요. ${esc(waitEv.waitNote)}` : '';
 const endStamp = c => `${c.until} ${c.untilTime || String(ROLLOVER_HOUR).padStart(2, '0') + ':00'}`;
-const CODES = (db.codes || []).filter(c => !c.until || (c.until >= codeDay && nowStamp < endStamp(c))).map(c => ({ ...c }));
+// pauseUntil("2026-11-30")을 넣은 코드는 그날까지 목록에서 잠시 빠집니다 (행사 전용 히든코드가 있을 때 상시 히든코드를 숨길 때 씀)
+const CODES = (db.codes || []).filter(c => (!c.until || (c.until >= codeDay && nowStamp < endStamp(c))) && !(c.pauseUntil && codeDay <= c.pauseUntil)).map(c => ({ ...c }));
 // 자동 수집이 배너에서 공식 코드 이름까지 읽었으면 공식 코드를 그 이름과 할인율로 채웁니다 (목록의 공식 코드와 이름이 다르면 배너 쪽을 씀)
 const lastRow = rows.at(-1);
 if (lastRow.source === 'auto' && lastRow.officialCode && lastRow.official != null) {
