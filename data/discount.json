@@ -128,16 +128,12 @@
   ],
   "codes": [
     {
-      "label": "블랙프라이데이 히든코드",
-      "code": "VIPBF40",
+      "label": "마프대란알리미 히든코드",
+      "code": "HORSEKING",
       "rate": 40,
-      "note": "공식 코드 BFSALE39보다 1%p 높은 블프 전용 코드. 복사하면 자동으로 들어갑니다",
+      "note": "공식 코드보다 높은 전용 코드. 복사하면 자동으로 들어갑니다",
       "primary": true,
-      "secret": true,
-      "fixed": true,
-      "until": "2026-11-30",
-      "untilTime": "23:59",
-      "untilNote": "마감 시각은 공개되지 않았습니다."
+      "secret": true
     },
     {
       "label": "11.11 얼리 액세스 코드",
@@ -167,15 +163,6 @@
       "primary": true,
       "until": "2026-11-02",
       "untilTime": "23:59"
-    },
-    {
-      "label": "마프대란알리미 히든코드",
-      "code": "HORSEKING",
-      "rate": 41,
-      "note": "공식 코드보다 높은 전용 코드. 복사하면 자동으로 들어갑니다",
-      "primary": true,
-      "secret": true,
-      "pauseUntil": "2026-11-30"
     },
     {
       "label": "팬카페 코드",
