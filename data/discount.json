@@ -657,6 +657,12 @@
       "official": 39,
       "officialCode": "BFSALE39",
       "source": "manual"
+    },
+    {
+      "date": "2026-11-28",
+      "base": 40,
+      "official": 39,
+      "source": "auto"
     }
   ]
 }
