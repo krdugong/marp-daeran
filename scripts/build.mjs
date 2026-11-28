@@ -1814,6 +1814,19 @@ ${tierHtml}
 <p class="lede">영상에서 공개한 S·A·B·F 등급을 표로 옮기는 중입니다. 지금은 영상에서 확인하십시오.</p>
 </section>`}
 
+${TASTE.gone && (TASTE.gone.items || []).length ? `<section class="full">
+<h2>지금 목록에서 빠진 맛</h2>
+<p class="lede">${esc(TASTE.gone.note || '')}</p>
+<ul class="fl cmts">${TASTE.gone.items.map(g => `<li class="bad"><span class="fn">${esc(g.name)}</span>${g.note ? `<span class="fnote">${esc(g.note)}</span>` : ''}</li>`).join('')}</ul>
+</section>` : ''}
+
+${(TASTE.tips || []).length ? `<section class="full">
+<h2>맛있게 타는 법 · 실전 팁</h2>
+<p class="lede">네이버 블로그·카페, 디시 보충제갤, 마이프로틴 구매 리뷰에서 여러 번 나온 방법만 모았습니다.${TASTE.gone?.checked ? ` ${dot(TASTE.gone.checked)} 기준.` : ''}</p>
+${TASTE.tips.map(tp => `<h3>${esc(tp.title)}</h3>
+<ul>${tp.items.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`).join('\n')}
+</section>` : ''}
+
 ${(TASTE.comments || []).length ? `<section class="full">
 <h2>영상 댓글에 올라온 한 줄 평</h2>
 <p class="lede">맛 등급표 영상에 시청자들이 남긴 후기입니다.</p>
